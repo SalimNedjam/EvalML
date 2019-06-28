@@ -1,17 +1,20 @@
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
+from djongo.models import ListField, ArrayModelField
 
 from authentification.models import Users
 
 
 class Course(models.Model):
     class Meta:
-        unique_together = (('course_id', 'owner',),)
         db_table = "course"
 
-    REQUIRED_FIELDS = ['owner', 'course_id']
+    REQUIRED_FIELDS = ['course_id']
+
     course_id = models.AutoField(primary_key=True)
-    owner = models.ForeignKey(Users, on_delete=models.CASCADE)
+    owner = models.ForeignKey(Users, on_delete=models.CASCADE, null=True)
+    description = models.TextField()
+
 
 
 class Challenges(models.Model):
@@ -23,17 +26,27 @@ class Challenges(models.Model):
 
     challenge_id = models.AutoField(primary_key=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    is_visible = models.BooleanField(default=False)
+    title = models.TextField()
+    description = models.TextField()
+    categories = ListField(default=[])
+    input_types = ListField(default=[])
+
+
+
 
 
 class Groups(models.Model):
     class Meta:
-        unique_together = (('group_id', 'user', 'challenge'),)
         db_table = "groups"
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'challenge'], name='UNIQUE_GROUP_ENTRY')
+        ]
 
     REQUIRED_FIELDS = ['group_id', 'user', 'challenge']
 
     group_id = models.IntegerField()
-    user = models.ForeignKey(Users, on_delete=models.CASCADE)
+    user = models.ForeignKey(Users, on_delete=models.CASCADE, null=True)
     challenge = models.ForeignKey(Challenges, on_delete=models.CASCADE)
 
     def __str__(self):
