@@ -2,7 +2,6 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 
 
-
 class MyUserManager(BaseUserManager):
     use_in_migrations = True
 
@@ -29,9 +28,10 @@ class MyUserManager(BaseUserManager):
 
 class Users(AbstractBaseUser):
     user_id = models.AutoField(primary_key=True)
-    username = models.EmailField(max_length=127, unique=True, null=False, blank=False)
+    username = models.EmailField(max_length=127, unique=True, null=True,
+                                 blank=False, error_messages={'unique': 'n\'est pas disponible'})
     password = models.CharField(max_length=255)
-    matricule = models.CharField(max_length=255, unique=True)
+    matricule = models.BigIntegerField(unique=True, error_messages={'unique': 'n\'est pas disponible'})
     first_name = models.CharField(max_length=127)
     last_name = models.CharField(max_length=127)
     is_staff = models.BooleanField(default=False)
@@ -45,7 +45,6 @@ class Users(AbstractBaseUser):
     # but should not contain the USERNAME_FIELD or password as these fields will always be prompted for.
 
     class Meta:
-        app_label = "users"
         db_table = "users"
 
     def __str__(self):
@@ -64,4 +63,3 @@ class Users(AbstractBaseUser):
     # this methods are require to login super user from admin panel
     def has_module_perms(self, app_label):
         return self.is_staff
-

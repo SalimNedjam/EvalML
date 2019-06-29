@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import {login} from "../../actions/auth";
 
-export class Login extends Component {
+class Login extends Component {
     static propTypes = {
         login: PropTypes.func.isRequired,
         isAuthenticated: PropTypes.bool
@@ -67,8 +67,9 @@ export class Login extends Component {
     }
 }
 
-const mapStateToProps = state => ({
-    isAuthenticated: state.auth.isAuthenticated
-});
+const mapStateToProps = state =>  {
+    console.log(state)
+    return {isAuthenticated: state.auth.isAuthenticated}
+};
 
 export default connect(mapStateToProps, {login})(Login);

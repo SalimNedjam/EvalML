@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users',
+    'application',
     'authentification',
     'rest_framework',
     'knox',
@@ -93,13 +93,12 @@ WSGI_APPLICATION = 'Challenges.wsgi.application'
 # }
 
 DATABASES = {
-        'default':
-            {
-                'ENGINE': 'djongo',
-                'NAME': 'Challenge'
-            }
+    'default':
+        {
+            'ENGINE': 'djongo',
+            'NAME': 'Challenge'
+        }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -139,7 +138,7 @@ CSRF_COOKIE_SECURE = True
 
 STATIC_URL = '/static/'
 
-AUTH_USER_MODEL = 'users.Users'
+AUTH_USER_MODEL = 'authentification.Users'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -147,3 +146,7 @@ REST_FRAMEWORK = {
     ),
 }
 
+EMAIL_HOST = 'smtp.mailtrap.io'
+EMAIL_HOST_USER = '9c678f0070d249'
+EMAIL_HOST_PASSWORD = '4a0628de95e0e5'
+EMAIL_PORT = '2525'

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 # User Serializer
-from users.models import Challenges, Course, Groups
+from application.models import Challenges, Course, Groups
 
 
 class ChallengeSerialize(serializers.ModelSerializer):
@@ -13,17 +13,14 @@ class ChallengeSerialize(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# Register Serializer
+# CreateUser Serializer
 class CourseSerialize(serializers.ModelSerializer):
-
     class Meta:
         model = Course
         fields = '__all__'
 
 
 class GroupSerialize(serializers.ModelSerializer):
-
     class Meta:
         model = Groups
         fields = '__all__'
-

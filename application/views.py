@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 
-from users.models import Users
+from application.models import Users
 
 
 @csrf_exempt
@@ -72,7 +72,6 @@ def exist_username(username):
 
 
 def exist_mail(mail):
-
     try:
         Users.objects.get(email=mail)
     except Users.DoesNotExist:
@@ -81,7 +80,6 @@ def exist_mail(mail):
 
 
 def exist_matricule(matricule):
-
     try:
         Users.objects.get(matricule=matricule)
     except Users.DoesNotExist:

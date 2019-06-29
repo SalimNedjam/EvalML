@@ -1,22 +1,28 @@
 from knox.auth import TokenAuthentication
 from knox.models import AuthToken
 from rest_framework import generics
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer
 
 
-# Register API
+# CreateUser API
 class RegisterAPI(generics.GenericAPIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)
     serializer_class = RegisterSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        return Response({
-            "user": UserSerializer(user, context=self.get_serializer_context()).data        })
+        if self.request.user.has_perm(self):
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            user = serializer.save()
+            return Response({
+                "user": UserSerializer(user, context=self.get_serializer_context()).data})
+        else:
+            raise PermissionDenied("Vous n'avez pas les autorisations")
 
 
 # Login API
@@ -42,4 +48,3 @@ class UserAPI(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
-

@@ -10,6 +10,7 @@ import store from "../store";
 import {loadUser} from "../actions/auth";
 import ChallengeList from "./layout/ChallengeList";
 import Headers from "./layout/Header";
+import Register from "./layout/CreateUser";
 
 
 export default class App extends Component {
@@ -23,9 +24,13 @@ export default class App extends Component {
                 <Headers/>
                 <Alerts/>
                 <div className="container">
+
                     <Switch>
                         <PrivateRoute exact path="/" component={ChallengeList}/>
                         <Route exact path="/login" component={Login}/>
+                        <Route exact path="/register" component={Register}/>
+
+
                     </Switch>
                 </div>
             </Fragment>

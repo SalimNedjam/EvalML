@@ -1,15 +1,15 @@
 import axios from "axios";
-import {returnErrors} from "./messages";
+import {createMessage, returnErrors} from "./messages";
 
 import {
-  AUTH_ERROR,
-  LOGIN_FAIL,
-  LOGIN_SUCCESS,
-  LOGOUT_SUCCESS,
-  REGISTER_FAIL,
-  REGISTER_SUCCESS,
-  USER_LOADED,
-  USER_LOADING
+    AUTH_ERROR, CREATE_MESSAGE,
+    LOGIN_FAIL,
+    LOGIN_SUCCESS,
+    LOGOUT_SUCCESS,
+    REGISTER_FAIL,
+    REGISTER_SUCCESS,
+    USER_LOADED,
+    USER_LOADING
 } from "./types";
 
 // CHECK TOKEN & LOAD USER
@@ -63,26 +63,24 @@ export const login = (username, password) => dispatch => {
 };
 
 // REGISTER USER
-export const register = ({username, password, email}) => dispatch => {
-    // Headers
-    const config = {
-        headers: {
-            "Content-Type": "application/json"
-        }
-    };
+export const createUser = ({matricule, username}) => (dispatch, getState) => {
 
-    // Request Body
-    const body = JSON.stringify({username, email, password});
+
+
+    const password='rand'
+    const body = JSON.stringify({matricule, username,password});
 
     axios
-        .post("/api/auth/register", body, config)
+        .post("/api/auth/createUser", body, tokenConfig(getState))
         .then(res => {
+            dispatch(createMessage({ addUser: "Le compte à été crée."}));
             dispatch({
                 type: REGISTER_SUCCESS,
                 payload: res.data
             });
         })
         .catch(err => {
+            console.log(err)
             dispatch(returnErrors(err.response.data, err.response.status));
             dispatch({
                 type: REGISTER_FAIL

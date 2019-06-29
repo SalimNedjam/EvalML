@@ -1,8 +1,12 @@
+import string
+
 from django.contrib.auth import authenticate
+from django.core.mail import send_mail
+from django.utils.crypto import random
 from rest_framework import serializers
 
 # User Serializer
-from users.models import Users
+from application.models import Users
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -11,7 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('user_id', 'matricule', 'username', 'first_name', 'last_name', 'is_staff')
 
 
-# Register Serializer
+# CreateUser Serializer
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
@@ -19,7 +23,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        user = Users.objects.create_user(validated_data['username'], validated_data['password'],
+        password = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+        send_mail('Your account has been created.', 'Here is the password:' + password,
+                  'dzdeepapps@gmail.com', [validated_data['username']],
+                  fail_silently=False)
+        user = Users.objects.create_user(validated_data['username'], password,
                                          validated_data['matricule'])
 
         return user

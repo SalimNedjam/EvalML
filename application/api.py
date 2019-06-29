@@ -4,9 +4,9 @@ from rest_framework import generics, permissions
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from application.models import Challenges, Course
 from authentification.models import Users
 from authentification.serializers import UserSerializer
-from users.models import Challenges, Course, Groups
 from .serializers import ChallengeSerialize, CourseSerialize, GroupSerialize
 
 
