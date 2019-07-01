@@ -16,6 +16,9 @@ class ChallengeList extends Component {
     }
 
     render() {
+        if (this.props.isAuthenticated===false) {
+            return <Redirect to="/login"/>;
+        }
         return (<div>
             {<ChallengeSelected/>}
             {this.renderList()}
@@ -32,6 +35,7 @@ class ChallengeList extends Component {
 }
 
 const mapStateToProps = (state) => {
+    console.log(state)
     return {listChallenge: state.application.listChallenge};
 };
 

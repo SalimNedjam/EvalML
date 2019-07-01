@@ -2,13 +2,12 @@ import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { createUser } from "../../actions/auth";
+import { createCourse } from "../../actions/application";
 import { createMessage } from "../../actions/messages";
 
 export class CreateUser extends Component {
   state = {
-    matricule: "",
-    username: "",
+    description: "",
 
   };
 
@@ -19,42 +18,32 @@ export class CreateUser extends Component {
 
   onSubmit = e => {
     e.preventDefault();
-    const { matricule, username } = this.state;
-    const newUser = {
-        matricule,
-        username
+    const { description } = this.state;
+    const newCourse = {
+        description,
     }
-      this.props.createUser(newUser);
+
+      this.props.createCourse(newCourse);
   };
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
   render() {
 
-    const { matricule, username } = this.state;
+    const { description } = this.state;
     return (
       <div className="col-md-6 m-auto">
         <div className="card card-body mt-5">
-          <h2 className="text-center">Ajouter un étudient</h2>
+          <h2 className="text-center">Ajouter un cours</h2>
           <form onSubmit={this.onSubmit}>
             <div className="form-group">
-              <label>Matricule</label>
+              <label>Nom du cours</label>
               <input
                 type="text"
                 className="form-control"
-                name="matricule"
+                name="description"
                 onChange={this.onChange}
-                value={matricule}
-              />
-            </div>
-            <div className="form-group">
-              <label>Email</label>
-              <input
-                type="username"
-                className="form-control"
-                name="username"
-                onChange={this.onChange}
-                value={username}
+                value={description}
               />
             </div>
             <div className="form-group">
@@ -77,4 +66,4 @@ const mapStateToProps = (state) => {
     return {isAuthenticated: state.auth.isAuthenticated};
 };
 
-export default connect(mapStateToProps, { createUser, createMessage })(CreateUser);
+export default connect(mapStateToProps, { createCourse, createMessage })(CreateUser);

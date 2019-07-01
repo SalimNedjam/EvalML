@@ -90,7 +90,7 @@ const ResultsTab = props => {
     return <div>
         <div className="card-body">
             <h5 className="card-title">{props.challenge.title}</h5>
-            <p className="card-text">{props.challenge.body}</p>
+            <p className="card-text">{props.challenge.description}</p>
         </div>
     </div>
 };
@@ -100,7 +100,7 @@ const ChallengeTab = props => {
     return <div>
         <div className="card-body">
             <h5 className="card-title">{props.challenge.title}</h5>
-            <p className="card-text">{props.challenge.body}</p>
+            <p className="card-text">{props.challenge.description}</p>
             <a href="#" className="btn btn-primary" onClick={() => props.selectChallenge(props.challenge)}>Open the
                 challenge</a>
         </div>

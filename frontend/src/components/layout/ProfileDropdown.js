@@ -5,7 +5,6 @@ export default class SignIn extends Component {
     render() {
         return (
             <div>
-
                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                    aria-expanded="false"> <span className="caret">Profile</span></a>
 

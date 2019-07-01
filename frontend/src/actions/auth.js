@@ -2,6 +2,7 @@ import axios from "axios";
 import {createMessage, returnErrors} from "./messages";
 
 import {
+    ADD_COURSE, ADD_COURSE_FAIL,
     AUTH_ERROR, CREATE_MESSAGE,
     LOGIN_FAIL,
     LOGIN_SUCCESS,
@@ -87,6 +88,9 @@ export const createUser = ({matricule, username}) => (dispatch, getState) => {
             });
         });
 };
+
+
+
 
 // LOGOUT USER
 export const logout = () => (dispatch, getState) => {
