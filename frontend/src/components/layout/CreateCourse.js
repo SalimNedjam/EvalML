@@ -13,7 +13,6 @@ export class CreateUser extends Component {
 
   static propTypes = {
     createUser: PropTypes.func.isRequired,
-    isAuthenticated: PropTypes.bool
   };
 
   onSubmit = e => {
@@ -61,9 +60,5 @@ export class CreateUser extends Component {
 
 
 
-const mapStateToProps = (state) => {
-  console.log(state)
-    return {isAuthenticated: state.auth.isAuthenticated};
-};
 
-export default connect(mapStateToProps, { createCourse, createMessage })(CreateUser);
+export default connect(null, { createCourse, createMessage })(CreateUser);

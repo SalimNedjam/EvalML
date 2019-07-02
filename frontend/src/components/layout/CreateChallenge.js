@@ -3,79 +3,79 @@ import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import {createChallenge} from "../../actions/application";
 import {createMessage} from "../../actions/messages";
+import Textarea from 'react-textarea-autosize';
 
 export class CreateChallenge extends Component {
     state = {
         description: "",
         title: "",
-        categories: [{name: ""}],
-        input_types: [],
-        course_id: "0",
+        inputs: [""],
+        course: -1,
 
     };
 
     static propTypes = {
         createChallenge: PropTypes.func.isRequired,
         listCourse: PropTypes.array.isRequired,
-        isAuthenticated: PropTypes.bool
     };
 
 
-    handleCategorieNameChange = idx => evt => {
-        const newCategorie = this.state.categories.map((categorie, sidx) => {
-            if (idx !== sidx) return categorie;
-            return {...categorie, name: evt.target.value};
+    handleInputNameChange = idx => evt => {
+        const newInput = this.state.inputs.map((input, sidx) => {
+            if (idx !== sidx)
+                return input;
+            return evt.target.value;
         });
 
-        this.setState({categories: newCategorie});
+        this.setState({inputs: newInput});
     };
 
 
-    handleAddCategorie = () => {
-        if(this.state.categories[this.state.categories.length-1].name!=="")
+    handleAddInput = () => {
+        if(this.state.inputs[this.state.inputs.length-1]!=="")
         this.setState({
-            categories: this.state.categories.concat([{name: ""}])
+            inputs: [...this.state.inputs,""]
         });
 
     };
 
-    handleRemoveCategorie = idx => () => {
+    handleRemoveInput = idx => () => {
         this.setState({
-            categories: this.state.categories.filter((s, sidx) => idx !== sidx)
+            inputs: this.state.inputs.filter((s, sidx) => idx !== sidx)
         });
     };
 
 
-    renderCategories() {
+    renderInputs() {
         return (
             <div>
                 <div>
-                    <label>Categories</label>
+                    <label>Inputs</label>
 
                 </div>
                 <div>
                     {
-                        this.state.categories.map((shareholder, idx) => (
+                        this.state.inputs.map((input, idx) => (
                             <div className="form-row align-items-center">
                                 <div className="col-sm-4 my-1">
                                     <input
                                         type="text"
                                         className="form-control"
-                                        placeholder="Catégorie name"
-                                        value={shareholder.name}
-                                        onChange={this.handleCategorieNameChange(idx)}
+                                        placeholder="File input name"
+                                        value={input}
+                                        onChange={this.handleInputNameChange(idx)}
                                     />
                                 </div>
                                 <div className="col-auto my-1">
-                                    <button type="button" className="close" onClick={this.handleRemoveCategorie(idx)}
+                                    <button type="button" className="close" onClick={this.handleRemoveInput(idx)}
                                             aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                             </div>))}
 
-                    <button type="button"  className="btn btn-secondary btn-sm" onClick={this.handleAddCategorie} >
-                        Add new categorie
+                    <button type="button"  className="btn btn-secondary btn-sm" onClick={this.handleAddInput} >
+                        Add new input
                     </button>
                 </div>
             </div>
@@ -84,35 +84,55 @@ export class CreateChallenge extends Component {
 
 
     onSubmit = e => {
-        console.log(this.state)
         e.preventDefault();
-        const {description, title, categories, input_types, course_id} = this.state;
-        const newChallenge = {description, title, categories, input_types, course_id}
+        const {description, title, course} = this.state;
+        const input_types = this.state.inputs.filter(Boolean);
 
-        this.props.createChallenge(newChallenge);
+        console.log(input_types)
+        if (course === -1)
+            this.props.createMessage({selectItem: "Veuiller séléctioner un cours"});
+        else if(title==="")
+            this.props.createMessage({isEmptyDescription: "La description ne peut pas etre vide"});
+        else if(description==="")
+            this.props.createMessage({isEmptyTitle: "La nom du challenge ne peut pas etre vide"});
+        else{
+            const newChallenge = {description, title, input_types, course}
+            this.props.createChallenge(newChallenge)
+        }
+
+
     };
 
-    onChange = e => this.setState({[e.target.name]: e.target.value});
+    onChange = e => {
+        this.setState({[e.target.name]: e.target.value})
+    };
 
     renderList() {
         return this.props.listCourse.map((course) => {
-            return <option value={course.course.course_id}>{course.course.description}</option>
+            return <option value={course.course_id}>{course.description}</option>
         })
     }
 
     render() {
 
-        const {description, title, categories, input_types, course_id} = this.state;
+        const {description, title, course} = this.state;
         return (
             <div className="col-md-6 m-auto">
                 <div className="card card-body mt-5">
                     <h2 className="text-center">Ajouter un challenge</h2>
+
                     <form onSubmit={this.onSubmit}>
                         <div className="form-group">
                             <div className="form-group">
-                                <label htmlFor="exampleFormControlSelect1">Selectioner le cours</label>
-                                <select value={course_id} onChange={this.onChange} className="form-control"
-                                        id="exampleFormControlSelect1">
+                                <label>Selectioner le cours</label>
+                                <select
+                                    className="form-control"
+                                    name="course"
+                                    value={course}
+                                    onChange={this.onChange}
+                                    >
+
+                                    <option value={-1}/>
                                     {this.renderList()}
                                 </select>
                             </div>
@@ -129,8 +149,7 @@ export class CreateChallenge extends Component {
                         </div>
                         <div className="form-group">
                             <label>Description du challenge</label>
-                            <textarea
-                                rows="3"
+                            <Textarea
                                 className="form-control"
                                 name="description"
                                 onChange={this.onChange}
@@ -140,7 +159,7 @@ export class CreateChallenge extends Component {
 
                         <div className="form-group">
                             {
-                                this.renderCategories()
+                                this.renderInputs()
                             }
                         </div>
                         <div className="form-group">
@@ -160,7 +179,6 @@ export class CreateChallenge extends Component {
 const mapStateToProps = (state) => {
     console.log(state)
     return {
-        isAuthenticated: state.auth.isAuthenticated,
         listCourse: state.application.listCourse
     };
 };

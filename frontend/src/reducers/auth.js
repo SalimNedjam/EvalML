@@ -1,5 +1,5 @@
 import {
-    AUTH_ERROR,
+    AUTH_ERROR, INFORMATIONS_UPDATED,
     LOGIN_FAIL,
     LOGIN_SUCCESS,
     LOGOUT_SUCCESS,
@@ -44,6 +44,11 @@ export default function (state = initialState, action) {
                 ...state,
                 ...action.payload,
                 isLoading: false
+            };
+        case INFORMATIONS_UPDATED:
+            return {
+                ...state,
+                ...action.payload,
             };
         case AUTH_ERROR:
         case LOGIN_FAIL:

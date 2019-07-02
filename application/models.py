@@ -51,8 +51,10 @@ class Groups(models.Model):
 
 class Enrollment(models.Model):
     class Meta:
-        unique_together = (('user', 'course'),)
         db_table = "enrollment"
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'course'], name='UNIQUE_GROUP_ENTRY')
+        ]
 
     REQUIRED_FIELDS = ['user', 'course']
 

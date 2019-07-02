@@ -14,11 +14,18 @@ import CreateUser from "./layout/CreateUser";
 import UpdateUser from "./layout/UpdateUser";
 import CreateCourse from "./layout/CreateCourse";
 import CreateChallenge from "./layout/CreateChallenge";
+import StaffRoute from "./common/StaffRoute";
+import CourseList from "./layout/CourseList";
+import {fetchChallenges, fetchCourses} from "../actions/application";
+import EnrollUser from "./layout/EnrollUser";
 
 
 export default class App extends Component {
     componentDidMount() {
         store.dispatch(loadUser());
+        store.dispatch(fetchChallenges())
+        store.dispatch(fetchCourses())
+
     }
 
     render() {
@@ -28,13 +35,19 @@ export default class App extends Component {
                 <Alerts/>
                 <div className="container">
                     <Switch>
-                        <PrivateRoute exact path="/" component={ChallengeList}/>
                         <Route exact path="/login" component={Login}/>
-                        <PrivateRoute exact path="/register" component={CreateUser}/>
+
+
+                        <PrivateRoute exact path="/" component={ChallengeList}/>
                         <PrivateRoute exact path="/challenges" component={ChallengeList}/>
-                        <PrivateRoute exact path="/updateprofile" component={UpdateUser}/>
-                        <PrivateRoute exact path="/createCourse" component={CreateCourse}/>
-                        <PrivateRoute exact path="/createChallenge" component={CreateChallenge}/>
+                        <PrivateRoute exact path="/updateUser" component={UpdateUser}/>
+
+
+                        <StaffRoute exact path="/createCourse" component={CreateCourse}/>
+                        <StaffRoute exact path="/createChallenge" component={CreateChallenge}/>
+                        <StaffRoute exact path="/register" component={CreateUser}/>
+                        <StaffRoute exact path="/courses" component={CourseList}/>
+                        <StaffRoute exact path="/enrollment" component={EnrollUser}/>
 
 
                     </Switch>

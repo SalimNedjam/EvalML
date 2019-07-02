@@ -23,17 +23,22 @@ export class Alerts extends Component {
             if (error.msg.non_field_errors)
                 alert.error(error.msg.non_field_errors.join());
             if (error.msg.matricule) alert.error(`Matricule: ${error.msg.matricule.join()}`);
-            if (error.msg.detail) alert.error(error.msg.detail);
             if (error.msg.description) alert.error(`Description: ${error.msg.description.join()}`);
+            if (error.msg.Password) alert.error(`Password: ${error.msg.Password.join()}`);
+            if (error.msg.new_password) alert.error(`Nouveau mot de passe: ${error.msg.new_password.join()}`);
+
 
 
         }
 
         if (message !== prevProps.message) {
-            if (message.deleteLead) alert.success(message.deleteLead);
             if (message.addUser) alert.success(message.addUser);
             if (message.addCourse) alert.success(message.addCourse);
             if (message.passwordNotMatch) alert.error(message.passwordNotMatch);
+            if (message.selectItem) alert.error(message.selectItem);
+            if (message.isEmptyTitle) alert.error(message.isEmptyTitle);
+            if (message.isEmptyDescription) alert.error(message.isEmptyDescription);
+
         }
     }
 

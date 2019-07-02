@@ -7,6 +7,7 @@ from rest_framework import serializers
 
 # User Serializer
 from application.models import Users
+from django.contrib.auth.password_validation import validate_password
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -33,7 +34,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-# Login Serializer
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
@@ -43,3 +43,17 @@ class LoginSerializer(serializers.Serializer):
         if user and user.is_active:
             return user
         raise serializers.ValidationError("Incorrect Credentials")
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+    def validate_new_password(self, value):
+        validate_password(value)
+        return value
+
+
+class ChangeInformationsSerializer(serializers.Serializer):
+    last_name = serializers.CharField(required=True)
+    first_name = serializers.CharField(required=True)

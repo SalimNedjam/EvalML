@@ -8,17 +8,12 @@ import PropTypes from "prop-types";
 class ChallengeList extends Component {
     static propTypes = {
         listChallenge: PropTypes.array.isRequired,
-        fetchChallenges: PropTypes.func.isRequired,
     };
 
-    componentDidMount() {
-        this.props.fetchChallenges();
-    }
+
 
     render() {
-        if (this.props.isAuthenticated===false) {
-            return <Redirect to="/login"/>;
-        }
+
         return (<div>
             {<ChallengeSelected/>}
             {this.renderList()}
@@ -29,14 +24,13 @@ class ChallengeList extends Component {
 
     renderList() {
         return this.props.listChallenge.map((challenge) => {
-            return <ChallengeCard key={challenge.title} challenge={challenge}/>
+            return <ChallengeCard key={challenge.challenge_id} challenge={challenge}/>
         })
     }
 }
 
 const mapStateToProps = (state) => {
-    console.log(state)
     return {listChallenge: state.application.listChallenge};
 };
 
-export default connect(mapStateToProps, {fetchChallenges})(ChallengeList);
+export default connect(mapStateToProps)(ChallengeList);

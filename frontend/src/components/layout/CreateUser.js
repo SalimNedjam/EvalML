@@ -72,9 +72,5 @@ export class CreateUser extends Component {
 
 
 
-const mapStateToProps = (state) => {
-  console.log(state)
-    return {isAuthenticated: state.auth.isAuthenticated};
-};
 
-export default connect(mapStateToProps, { createUser, createMessage })(CreateUser);
+export default connect(null, { createUser, createMessage })(CreateUser);

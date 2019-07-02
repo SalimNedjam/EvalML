@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {selectChallenge} from "../../actions/application";
+import PropTypes from "prop-types";
 
 class ChallengeCard extends Component {
-
+    static propTypes = {
+        selectChallenge: PropTypes.func.isRequired,
+    };
     constructor() {
         super();
         this.state = {

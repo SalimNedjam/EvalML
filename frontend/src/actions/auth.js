@@ -3,7 +3,7 @@ import {createMessage, returnErrors} from "./messages";
 
 import {
     ADD_COURSE, ADD_COURSE_FAIL,
-    AUTH_ERROR, CREATE_MESSAGE,
+    AUTH_ERROR, CREATE_MESSAGE, INFORMATIONS_UPDATED,
     LOGIN_FAIL,
     LOGIN_SUCCESS,
     LOGOUT_SUCCESS,
@@ -12,6 +12,8 @@ import {
     USER_LOADED,
     USER_LOADING
 } from "./types";
+import store from "../store";
+import {fetchChallenges, fetchCourses} from "./application";
 
 // CHECK TOKEN & LOAD USER
 export const loadUser = () => (dispatch, getState) => {
@@ -53,6 +55,8 @@ export const login = (username, password) => dispatch => {
                 type: LOGIN_SUCCESS,
                 payload: res.data
             });
+            dispatch(fetchChallenges())
+            dispatch(fetchCourses())
         })
         .catch(err => {
             console.log(err);
@@ -74,11 +78,9 @@ export const createUser = ({matricule, username}) => (dispatch, getState) => {
     axios
         .post("/api/auth/createUser", body, tokenConfig(getState))
         .then(res => {
+            console.log(res.data)
             dispatch(createMessage({ addUser: "Le compte à été crée."}));
-            dispatch({
-                type: REGISTER_SUCCESS,
-                payload: res.data
-            });
+
         })
         .catch(err => {
             console.log(err)
@@ -90,6 +92,48 @@ export const createUser = ({matricule, username}) => (dispatch, getState) => {
 };
 
 
+// REGISTER USER
+export const updatePassword = ({old_password, new_password}) => (dispatch, getState) => {
+
+
+
+    const body = JSON.stringify({old_password, new_password});
+
+    axios
+        .put("/api/auth/change_password", body, tokenConfig(getState))
+        .then(res => {
+            dispatch(createMessage({ addUser: "Le mot de passe à été changé."}));
+
+        })
+        .catch(err => {
+            console.log(err)
+            dispatch(returnErrors(err.response.data, err.response.status));
+
+        });
+};
+
+// REGISTER USER
+export const updateInformations = ({first_name, last_name}) => (dispatch, getState) => {
+
+
+
+    const body = JSON.stringify({first_name, last_name});
+
+    axios
+        .put("/api/auth/change_informations", body, tokenConfig(getState))
+        .then(res => {
+            dispatch(createMessage({ addUser: "Vos informations ont été changées."}));
+            dispatch({
+                type: INFORMATIONS_UPDATED,
+                payload: res.data
+            });
+        })
+        .catch(err => {
+            console.log(err)
+            dispatch(returnErrors(err.response.data, err.response.status));
+
+        });
+};
 
 
 // LOGOUT USER
