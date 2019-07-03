@@ -1,10 +1,14 @@
 import {
-    ADD_CHALLENGE, ADD_CHALLENGE_FAIL,
+    ADD_CHALLENGE,
+    ADD_CHALLENGE_FAIL,
     ADD_COURSE,
     ADD_COURSE_FAIL,
-    CHALLENGE_SELECTED, ENROLL_USER,
+    CHALLENGE_SELECTED,
+    ENROLL_USER,
     FETCH_CHALLENGES,
-    FETCH_COURSES, FETCH_NON_ENROLLED, FETCH_NON_ENROLLED_FAIL
+    FETCH_COURSES,
+    FETCH_NON_ENROLLED,
+    FETCH_NON_ENROLLED_FAIL
 } from "../actions/types";
 
 const initialState = {
@@ -51,7 +55,7 @@ export default function (state = initialState, action) {
                 listNonEnrolled: []
             }
         case ENROLL_USER:
-            
+
             return {
                 ...state,
                 listNonEnrolled: state.listNonEnrolled.filter(user => user.user_id != action.payload)

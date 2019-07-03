@@ -1,5 +1,6 @@
 import {
-    AUTH_ERROR, INFORMATIONS_UPDATED,
+    AUTH_ERROR,
+    INFORMATIONS_UPDATED,
     LOGIN_FAIL,
     LOGIN_SUCCESS,
     LOGOUT_SUCCESS,
@@ -13,7 +14,8 @@ const initialState = {
     token: localStorage.getItem("token"),
     isAuthenticated: null,
     isLoading: false,
-    user: null
+    user: null,
+    updatedPassword: false
 };
 
 export default function (state = initialState, action) {
@@ -39,11 +41,16 @@ export default function (state = initialState, action) {
                 isLoading: false
             };
         case REGISTER_FAIL:
+            return {
+                ...state,
+                isLoading: false,
+                updatedPassword: false
+            };
         case REGISTER_SUCCESS:
             return {
                 ...state,
-                ...action.payload,
-                isLoading: false
+                isLoading: false,
+                updatedPassword: true
             };
         case INFORMATIONS_UPDATED:
             return {

@@ -18,6 +18,7 @@ import StaffRoute from "./common/StaffRoute";
 import CourseList from "./layout/CourseList";
 import {fetchChallenges, fetchCourses} from "../actions/application";
 import EnrollUser from "./layout/EnrollUser";
+import ResetPassword from "./layout/ResetPassword";
 
 
 export default class App extends Component {
@@ -36,6 +37,7 @@ export default class App extends Component {
                 <div className="container">
                     <Switch>
                         <Route exact path="/login" component={Login}/>
+                        <Route path="/password-reset/:token" component={ResetPassword}/>
 
 
                         <PrivateRoute exact path="/" component={ChallengeList}/>

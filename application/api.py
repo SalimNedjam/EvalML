@@ -72,7 +72,7 @@ class CourseFetch(generics.ListAPIView):
     serializer_class = CourseSerializer
 
     def get_queryset(self):
-        if self.request.user.has_perm(self):
+        if self.request.user.is_admin or self.request.user.is_staff:
             return Course.objects.filter(owner_id=self.request.user)
         else:
             return Course.objects.filter(enrollment__user_id=self.request.user)
@@ -84,7 +84,7 @@ class ChallengeFetch(generics.ListAPIView):
     serializer_class = ChallengeSerializer
 
     def get_queryset(self):
-        if self.request.user.has_perm(self):
+        if self.request.user.is_admin or self.request.user.is_staff:
             return Challenges.objects.filter(course__owner_id=self.request.user)
         else:
             criterion1 = Q(course__enrollment__user_id=self.request.user)
@@ -120,7 +120,7 @@ class FetchUsersNonEnrolled(generics.ListAPIView):
     def get_queryset(self):
         course_id = self.request.GET.get('course_id')
 
-        if self.request.user.has_perm(self):
+        if self.request.user.is_admin or self.request.user.is_staff:
             criterion1 = Q(enrollment__course__course_id=course_id)
 
             list1 = list(Users.objects.all().values_list('user_id', flat=True))

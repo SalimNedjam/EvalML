@@ -1,9 +1,8 @@
 import React, {Component} from "react";
-import {Link} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import {logout} from "../../actions/auth";
-import { NavLink } from 'react-router-dom'
 
 
 class Header extends Component {
@@ -15,7 +14,7 @@ class Header extends Component {
     render() {
         const {isAuthenticated, user} = this.props.auth;
         const authLinks = (
-            <div className="float-right">
+            <div>
                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                    aria-expanded="false"> <span className="caret">Profile</span></a>
 
@@ -85,8 +84,8 @@ class Header extends Component {
                         <NavLink to="/enrollment" className="nav-link">Enroll User</NavLink>
 
                     </ul>
+                    {isAuthenticated ? authLinks : guestLinks}
                 </div>
-                {isAuthenticated ? authLinks : guestLinks}
 
             </nav>
         );

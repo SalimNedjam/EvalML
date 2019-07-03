@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
     'application',
     'authentification',
     'rest_framework',
@@ -44,7 +46,9 @@ INSTALLED_APPS = [
     'frontend',
     'rest_framework.authtoken',
     'rest_framework_mongoengine',
-
+    'django_rest_passwordreset',
+    'allauth',
+    'allauth.account',
 ]
 
 MIDDLEWARE = [
