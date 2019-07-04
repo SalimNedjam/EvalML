@@ -77,11 +77,15 @@ class Header extends Component {
                     <ul className="navbar-nav mr-auto">
                         <NavLink exact to="/" className="nav-link">Home</NavLink>
                         <NavLink to="/challenges" className="nav-link">Challenges</NavLink>
+                        <NavLink to="/createChallenge" className="nav-link">Create Challenge</NavLink>
+
                         <NavLink to="/courses" className="nav-link">Courses</NavLink>
                         <NavLink to="/createCourse" className="nav-link">Create Course</NavLink>
-                        <NavLink to="/createChallenge" className="nav-link">Create Challenge</NavLink>
+                        <NavLink to="/management" className="nav-link">Add Course Manager</NavLink>
+
                         <NavLink to="/register" className="nav-link">Add User</NavLink>
                         <NavLink to="/enrollment" className="nav-link">Enroll User</NavLink>
+
 
                     </ul>
                     {isAuthenticated ? authLinks : guestLinks}

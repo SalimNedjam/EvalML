@@ -150,6 +150,30 @@ export const resetPassword = (password, token) => (dispatch) => {
         });
 };
 
+
+export const requestReset = ({email}) => (dispatch) => {
+
+    const body = JSON.stringify({email});
+    const config = {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    };
+
+    axios
+        .post("/api/auth/reset-password", body, config)
+        .then(res => {
+            dispatch(createMessage({addUser: "Email envoyé."}));
+
+
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+
+
+        });
+};
+
 // REGISTER USER
 export const updateInformations = ({first_name, last_name}) => (dispatch, getState) => {
 

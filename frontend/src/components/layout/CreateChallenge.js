@@ -56,7 +56,7 @@ export class CreateChallenge extends Component {
                 <div>
                     {
                         this.state.inputs.map((input, idx) => (
-                            <div className="form-row align-items-center">
+                            <div className="form-row align-items-center" key={idx}>
                                 <div className="col-sm-4 my-1">
                                     <input
                                         type="text"
@@ -109,7 +109,7 @@ export class CreateChallenge extends Component {
 
     renderList() {
         return this.props.listCourse.map((course) => {
-            return <option value={course.course_id}>{course.description}</option>
+            return <option value={course.course_id} key={course.course_id}>{course.description}</option>
         })
     }
 

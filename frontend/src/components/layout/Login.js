@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Redirect} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import {login} from "../../actions/auth";
@@ -52,8 +52,9 @@ class Login extends Component {
                                 onChange={this.onChange}
                                 value={password}
                             />
-                        </div>
+                            <Link to="/password-reset">Forgot password ?</Link>
 
+                        </div>
                         <div className="form-group">
                             <button type="submit" className="btn btn-primary">
                                 Login

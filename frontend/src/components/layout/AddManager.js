@@ -1,37 +1,38 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
-import {clearNonEnrolled, enrollUser, fetchNonEnrolled} from "../../actions/application";
+import {addManager, clearNonManager, fetchNonManager} from "../../actions/application";
 import {createMessage} from "../../actions/messages";
 
 export class CreateChallenge extends Component {
     state = {
-        user:-1,
+        user: -1,
         course: -1,
+        is_admin: false
 
     };
 
     static propTypes = {
         listCourse: PropTypes.array.isRequired,
-        listNonEnrolled:PropTypes.array.isRequired,
-        fetchNonEnrolled:PropTypes.func.isRequired,
-        clearNonEnrolled:PropTypes.func.isRequired,
-        enrollUser:PropTypes.func.isRequired,
+        listNonManager: PropTypes.array.isRequired,
+        fetchNonManager: PropTypes.func.isRequired,
+        clearNonManager: PropTypes.func.isRequired,
+        addManager: PropTypes.func.isRequired,
 
     };
 
 
     onSubmit = e => {
         e.preventDefault();
-        const {user, course} = this.state;
+        const {user, course, is_admin} = this.state;
 
-        if (course === "-1" ||course===-1)
+        if (course === "-1" || course === -1)
             this.props.createMessage({selectItem: "Veuiller séléctioner un cours"});
-        else if(user === "-1" || user===-1)
-            this.props.createMessage({selectItem: "Veuiller séléctioner un étudient"});
-        else{
-            const newEnrollment = {user, course}
-            this.props.enrollUser(newEnrollment)
+        else if (user === "-1" || user === -1)
+            this.props.createMessage({selectItem: "Veuiller séléctioner un membre du staff"});
+        else {
+            const newManager = {user, course, is_admin}
+            this.props.addManager(newManager)
         }
 
 
@@ -46,8 +47,9 @@ export class CreateChallenge extends Component {
             return <option value={course.course_id} key={course.course_id}>{course.description}</option>
         })
     }
-    renderListStudent() {
-        return this.props.listNonEnrolled.map((user) => {
+
+    renderListManager() {
+        return this.props.listNonManager.map((user) => {
             return <option value={user.user_id} key={user.user_id}>{user.username}</option>
         })
     }
@@ -55,22 +57,21 @@ export class CreateChallenge extends Component {
     onChangeCourse = e => {
         console.log((e.target.value))
         this.setState({
-                            [e.target.name]: e.target.value,
-                            user:-1
+            [e.target.name]: e.target.value,
+            user: -1
         })
 
-        if (e.target.value===-1 || e.target.value!=="-1"){
-            this.props.fetchNonEnrolled(e.target.value)
-        }
-        else{
-            this.props.clearNonEnrolled()
+        if (e.target.value === -1 || e.target.value !== "-1") {
+            this.props.fetchNonManager(e.target.value)
+        } else {
+            this.props.clearNonManager()
         }
 
     }
 
     render() {
 
-        const {user, course} = this.state;
+        const {user, course, is_admin} = this.state;
         return (
             <div className="col-md-6 m-auto">
                 <div className="card card-body mt-5">
@@ -85,7 +86,7 @@ export class CreateChallenge extends Component {
                                     name="course"
                                     value={course}
                                     onChange={this.onChangeCourse}
-                                    >
+                                >
                                     <option value={-1}/>
                                     {this.renderListCourse()}
                                 </select>
@@ -93,18 +94,33 @@ export class CreateChallenge extends Component {
                         </div>
                         <div className="form-group">
                             <div className="form-group">
-                                <label>Selectioner l'étudient</label>
+                                <label>Selectioner un membre du staff</label>
                                 <select
                                     className="form-control"
                                     name="user"
                                     value={user}
                                     onChange={this.onChange}
-                                    >
+                                >
                                     <option value={-1}/>
-                                    {this.renderListStudent()}
+                                    {this.renderListManager()}
                                 </select>
                             </div>
                         </div>
+                        <div className="form-group">
+
+                            <div className="form-group">
+                                <label>Autorisations</label>
+                                <select
+                                    className="form-control"
+                                    name="is_admin"
+                                    value={is_admin}
+                                    onChange={this.onChange}>
+                                    <option value={false}>Accès restreint</option>
+                                    <option value={true}>Accès total</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div className="form-group">
                             <button type="submit" className="btn btn-primary">
                                 Ajouter
@@ -120,10 +136,11 @@ export class CreateChallenge extends Component {
 
 
 const mapStateToProps = (state) => {
+    console.log(state)
     return {
         listCourse: state.application.listCourse,
-        listNonEnrolled:state.application.listNonEnrolled,
+        listNonManager: state.application.listNonManager,
     };
 };
 
-export default connect(mapStateToProps, {enrollUser, createMessage, clearNonEnrolled,fetchNonEnrolled})(CreateChallenge);
+export default connect(mapStateToProps, {addManager, createMessage, clearNonManager, fetchNonManager})(CreateChallenge);

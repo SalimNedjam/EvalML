@@ -1,9 +1,8 @@
-import React, { Component } from "react";
-import { Link, Redirect } from "react-router-dom";
-import { connect } from "react-redux";
+import React, {Component} from "react";
+import {connect} from "react-redux";
 import PropTypes from "prop-types";
-import { createCourse } from "../../actions/application";
-import { createMessage } from "../../actions/messages";
+import {createCourse} from "../../actions/application";
+import {createMessage} from "../../actions/messages";
 
 export class CreateUser extends Component {
   state = {
@@ -12,7 +11,7 @@ export class CreateUser extends Component {
   };
 
   static propTypes = {
-    createUser: PropTypes.func.isRequired,
+    createCourse: PropTypes.func.isRequired,
   };
 
   onSubmit = e => {

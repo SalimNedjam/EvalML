@@ -19,6 +19,8 @@ import CourseList from "./layout/CourseList";
 import {fetchChallenges, fetchCourses} from "../actions/application";
 import EnrollUser from "./layout/EnrollUser";
 import ResetPassword from "./layout/ResetPassword";
+import PasswordForgot from "./layout/PasswordForgot";
+import AddManager from "./layout/AddManager";
 
 
 export default class App extends Component {
@@ -38,6 +40,7 @@ export default class App extends Component {
                     <Switch>
                         <Route exact path="/login" component={Login}/>
                         <Route path="/password-reset/:token" component={ResetPassword}/>
+                        <Route exact path="/password-reset" component={PasswordForgot}/>
 
 
                         <PrivateRoute exact path="/" component={ChallengeList}/>
@@ -50,6 +53,8 @@ export default class App extends Component {
                         <StaffRoute exact path="/register" component={CreateUser}/>
                         <StaffRoute exact path="/courses" component={CourseList}/>
                         <StaffRoute exact path="/enrollment" component={EnrollUser}/>
+                        <StaffRoute exact path="/management" component={AddManager}/>
+
 
 
                     </Switch>

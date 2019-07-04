@@ -1,13 +1,17 @@
 import {
-    ADD_CHALLENGE, ADD_CHALLENGE_FAIL,
-    ADD_COURSE, ADD_COURSE_FAIL,
-    AUTH_ERROR,
-    CHALLENGE_SELECTED, ENROLL_USER,
-    FETCH_CHALLENGES, FETCH_COURSES, FETCH_NON_ENROLLED, FETCH_NON_ENROLLED_FAIL,
-    REGISTER_FAIL,
-    REGISTER_SUCCESS,
-    USER_LOADED,
-    USER_LOADING
+    ADD_CHALLENGE,
+    ADD_CHALLENGE_FAIL,
+    ADD_COURSE,
+    ADD_COURSE_FAIL,
+    ADD_MANAGER,
+    CHALLENGE_SELECTED,
+    ENROLL_USER,
+    FETCH_CHALLENGES,
+    FETCH_COURSES,
+    FETCH_NON_ENROLLED,
+    FETCH_NON_ENROLLED_FAIL,
+    FETCH_NON_MANAGER,
+    FETCH_NON_MANAGER_FAIL
 } from "./types";
 import axios from 'axios';
 import {createMessage, returnErrors} from "./messages";
@@ -138,6 +142,51 @@ export const enrollUser = ({course,user}) => (dispatch,getState) => {
             dispatch(createMessage({ addUser: "L'étudient à été inscrit au cours."}));
             dispatch({
                 type: ENROLL_USER,
+                payload: user
+            });
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+
+        });
+};
+
+
+export const fetchNonManager = course => (dispatch, getState) => {
+
+    axios.get('/api/auth/fetch_non_manager?course_id=' + course, tokenConfig(getState))
+        .then(res => {
+            console.log(res.data)
+            dispatch({
+                type: FETCH_NON_MANAGER,
+                payload: res.data
+            })
+        }).catch(err => {
+        dispatch(returnErrors(err.response.data, err.response.status));
+        dispatch({
+            type: FETCH_NON_MANAGER_FAIL,
+        })
+    });
+};
+
+
+export const clearNonManager = () => (dispatch) => {
+
+    dispatch({
+        type: FETCH_NON_MANAGER_FAIL,
+    })
+};
+
+
+export const addManager = ({course, user, is_admin}) => (dispatch, getState) => {
+
+    const body = JSON.stringify({course, user, is_admin});
+    axios
+        .post("/api/auth/add_manager", body, tokenConfig(getState))
+        .then(res => {
+            dispatch(createMessage({addUser: "Le membre du staff à été ajouté au cours."}));
+            dispatch({
+                type: ADD_MANAGER,
                 payload: user
             });
         })

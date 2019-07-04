@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 # User Serializer
-from application.models import Challenges, Course, Groups, Enrollment
+from application.models import Challenges, Course, Groups, Enrollment, Managment
 
 
 class ChallengeSerializer(serializers.ModelSerializer):
@@ -29,4 +29,10 @@ class GroupSerializer(serializers.ModelSerializer):
 class EnrollmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enrollment
+        fields = '__all__'
+
+
+class ManagmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Managment
         fields = '__all__'

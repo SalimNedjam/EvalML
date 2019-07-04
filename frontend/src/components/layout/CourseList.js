@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from "prop-types";
 import ChallengeCard from "./ChallengeCard";
-import {CreateChallenge} from "./CreateChallenge";
 
 class CourseList extends Component {
     static propTypes = {
@@ -24,7 +23,7 @@ class CourseList extends Component {
     renderList() {
         return this.props.listCourse.map((course) => {
             return (
-                <div id="accordion">
+                <div id="accordion" key={course.course_id}>
                     <h3> {course.description}</h3>
                     {
                         this.props.listChallenge.filter(function (challenge) {
@@ -45,7 +44,7 @@ class CourseList extends Component {
 
 
 const renderCard= (challenge)=>{
-    return <div className="card">
+    return <div className="card" key={challenge.challenge_id}>
                                 <div className="card-header" id="headingOne">
                                     <h5 className="mb-0">
                                         <button className="btn btn-link" data-toggle="collapse"

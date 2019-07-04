@@ -7,7 +7,8 @@ from rest_framework.response import Response
 from application.models import Challenges, Course
 from authentification.models import Users
 from authentification.serializers import UserSerializer
-from .serializers import ChallengeSerializer, CourseSerializer, GroupSerializer, EnrollmentSerializer
+from .serializers import ChallengeSerializer, CourseSerializer, GroupSerializer, EnrollmentSerializer, \
+    ManagmentSerializer
 
 
 class CreateChallenge(generics.GenericAPIView):
@@ -123,13 +124,12 @@ class FetchUsersNonEnrolled(generics.ListAPIView):
         if self.request.user.is_admin or self.request.user.is_staff:
             criterion1 = Q(enrollment__course__course_id=course_id)
 
-            list1 = list(Users.objects.all().values_list('user_id', flat=True))
+            list1 = list(Users.objects.exclude(is_staff=True).values_list('user_id', flat=True))
             list2 = list(Users.objects.filter(criterion1).values_list('user_id', flat=True))
 
             list3 = list(filter(lambda x: x not in list2, list1))
 
             return Users.objects.filter(user_id__in=list3)
-
 
 
 class EnrollCourse(generics.GenericAPIView):
@@ -149,3 +149,43 @@ class EnrollCourse(generics.GenericAPIView):
             }
         )
 
+
+class FetchNonManager(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        course_id = self.request.GET.get('course_id')
+
+        if self.request.user.is_admin or self.request.user.is_staff:
+            criterion1 = Q(managment__course__course_id=course_id)
+
+            list1 = list(
+                Users.objects.filter(is_staff=True).exclude(user_id=self.request.user.user_id).values_list('user_id',
+                                                                                                           flat=True))
+            list2 = list(Users.objects.filter(criterion1).values_list('user_id', flat=True))
+
+            list3 = list(filter(lambda x: x not in list2, list1))
+
+            return Users.objects.filter(user_id__in=list3)
+
+
+class AddManagerCourse(generics.GenericAPIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = ManagmentSerializer
+
+    def post(self, request, *args, **kwargs):
+        user_id = self.request.data.get('user')
+        user = Users.objects.get(user_id=user_id)
+
+        if self.request.user.is_admin and user.is_staff:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            manager = serializer.save()
+            return Response(
+                {
+                    "manager": ManagmentSerializer(manager, context=self.get_serializer_context()).data
+                }
+            )
