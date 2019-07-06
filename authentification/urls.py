@@ -17,4 +17,4 @@ urlpatterns = [
     path('api/auth/reset-password', reset_password_request_token),
     path('api/auth/reset-password/confirm', reset_password_confirm),
 
-    ]
+]

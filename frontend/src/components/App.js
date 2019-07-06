@@ -16,7 +16,6 @@ import CreateCourse from "./layout/CreateCourse";
 import CreateChallenge from "./layout/CreateChallenge";
 import StaffRoute from "./common/StaffRoute";
 import CourseList from "./layout/CourseList";
-import {fetchChallenges, fetchCourses} from "../actions/application";
 import EnrollUser from "./layout/EnrollUser";
 import ResetPassword from "./layout/ResetPassword";
 import PasswordForgot from "./layout/PasswordForgot";
@@ -26,8 +25,7 @@ import AddManager from "./layout/AddManager";
 export default class App extends Component {
     componentDidMount() {
         store.dispatch(loadUser());
-        store.dispatch(fetchChallenges())
-        store.dispatch(fetchCourses())
+
 
     }
 
@@ -54,7 +52,6 @@ export default class App extends Component {
                         <StaffRoute exact path="/courses" component={CourseList}/>
                         <StaffRoute exact path="/enrollment" component={EnrollUser}/>
                         <StaffRoute exact path="/management" component={AddManager}/>
-
 
 
                     </Switch>

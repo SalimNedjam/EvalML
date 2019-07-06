@@ -7,6 +7,7 @@ class ChallengeCard extends Component {
     static propTypes = {
         selectChallenge: PropTypes.func.isRequired,
     };
+
     constructor() {
         super();
         this.state = {

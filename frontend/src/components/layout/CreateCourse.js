@@ -5,59 +5,95 @@ import {createCourse} from "../../actions/application";
 import {createMessage} from "../../actions/messages";
 
 export class CreateUser extends Component {
-  state = {
-    description: "",
+    state = {
+        description: "",
+        nbStudent: "",
+        nbSubmit: "",
+        freqSubmit: ""
 
-  };
+    };
 
-  static propTypes = {
-    createCourse: PropTypes.func.isRequired,
-  };
+    static propTypes = {
+        createCourse: PropTypes.func.isRequired,
+    };
 
-  onSubmit = e => {
-    e.preventDefault();
-    const { description } = this.state;
-    const newCourse = {
-        description,
+    onSubmit = e => {
+        e.preventDefault();
+        const {description, nbStudent, nbSubmit, freqSubmit} = this.state;
+        const newCourse = {
+            description,
+            nbStudent,
+            nbSubmit,
+            freqSubmit
+        }
+
+        this.props.createCourse(newCourse);
+    };
+
+    onChange = e => this.setState({[e.target.name]: e.target.value});
+
+    render() {
+
+        const {description, nbStudent, nbSubmit, freqSubmit} = this.state;
+        return (
+            <div className="col-md-6 m-auto">
+                <div className="card card-body mt-5">
+                    <h2 className="text-center">Ajouter un cours</h2>
+                    <form onSubmit={this.onSubmit}>
+                        <div className="form-group">
+                            <label>Nom du cours</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                name="description"
+                                onChange={this.onChange}
+                                value={description}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label>Nombre d'étudiants par groupe (Pas de limite = -1)</label>
+                            <input
+                                type="number"
+                                className="form-control"
+                                name="nbStudent"
+                                onChange={this.onChange}
+                                value={nbStudent}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Nombre de soumissions (Pas de limite = -1)</label>
+                            <input
+                                type="number"
+                                className="form-control"
+                                name="nbSubmit"
+                                onChange={this.onChange}
+                                value={nbSubmit}
+
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Délais entre deux soumission (En minutes)</label>
+                            <input
+                                type="number"
+                                className="form-control"
+                                name="freqSubmit"
+                                onChange={this.onChange}
+                                value={freqSubmit}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <button type="submit" className="btn btn-primary">
+                                Ajouter
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        );
     }
-
-      this.props.createCourse(newCourse);
-  };
-
-  onChange = e => this.setState({ [e.target.name]: e.target.value });
-
-  render() {
-
-    const { description } = this.state;
-    return (
-      <div className="col-md-6 m-auto">
-        <div className="card card-body mt-5">
-          <h2 className="text-center">Ajouter un cours</h2>
-          <form onSubmit={this.onSubmit}>
-            <div className="form-group">
-              <label>Nom du cours</label>
-              <input
-                type="text"
-                className="form-control"
-                name="description"
-                onChange={this.onChange}
-                value={description}
-              />
-            </div>
-            <div className="form-group">
-              <button type="submit" className="btn btn-primary">
-                Ajouter
-              </button>
-            </div>
-
-          </form>
-        </div>
-      </div>
-    );
-  }
 }
 
 
-
-
-export default connect(null, { createCourse, createMessage })(CreateUser);
+export default connect(null, {createCourse, createMessage})(CreateUser);

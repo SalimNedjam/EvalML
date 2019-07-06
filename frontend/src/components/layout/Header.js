@@ -35,10 +35,10 @@ class Header extends Component {
 
 
             <nav className="navbar navbar-expand-sm bg-dark navbar-dark justify-content-end">
-                <Link className="navbar-brand" to="/" >Home</Link>
+                <Link className="navbar-brand" to="/">Home</Link>
                 {isAuthenticated ? authLinks : guestLinks}
             </nav>
-            );
+        );
 
 
         const userNav = (
@@ -61,7 +61,7 @@ class Header extends Component {
                 {isAuthenticated ? authLinks : guestLinks}
 
             </nav>
-            );
+        );
 
 
         const adminNav = (
@@ -96,8 +96,8 @@ class Header extends Component {
 
 
         return (
-            isAuthenticated!==null ?
-                (isAuthenticated===true ?
+            isAuthenticated !== null ?
+                (isAuthenticated === true ?
                     (user.is_staff === true ?
                         adminNav
                         :

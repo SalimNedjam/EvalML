@@ -5,7 +5,6 @@ from application.models import Challenges, Course, Groups, Enrollment, Managment
 
 
 class ChallengeSerializer(serializers.ModelSerializer):
-    categories = serializers.ListField(default=[])
     input_types = serializers.ListField(default=[])
 
     class Meta:

@@ -78,8 +78,6 @@ class ChangePasswordView(generics.UpdateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
 class ChangeInformationsView(generics.UpdateAPIView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (TokenAuthentication,)
@@ -97,8 +95,8 @@ class ChangeInformationsView(generics.UpdateAPIView):
             last_name = serializer.data.get("last_name")
             first_name = serializer.data.get("first_name")
 
-            self.object.last_name=last_name
-            self.object.first_name=first_name
+            self.object.last_name = last_name
+            self.object.first_name = first_name
             self.object.save()
             return Response({
                 "user": UserSerializer(self.object, context=self.get_serializer_context()).data,

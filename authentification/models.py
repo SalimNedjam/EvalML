@@ -64,6 +64,7 @@ class Users(AbstractBaseUser):
 
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ["matricule"]
+
     # REQUIRED_FIELDS must contain all required fields on your User model,
     # but should not contain the USERNAME_FIELD or password as these fields will always be prompted for.
 

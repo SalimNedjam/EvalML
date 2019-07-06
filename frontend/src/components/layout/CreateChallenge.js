@@ -11,12 +11,19 @@ export class CreateChallenge extends Component {
         title: "",
         inputs: [""],
         course: -1,
+        nbStudent: "",
+        nbSubmit: "",
+        freqSubmit: "",
+        challenge: -1,
+
 
     };
 
     static propTypes = {
         createChallenge: PropTypes.func.isRequired,
         listCourse: PropTypes.array.isRequired,
+        listChallenge: PropTypes.array.isRequired,
+
     };
 
 
@@ -32,10 +39,10 @@ export class CreateChallenge extends Component {
 
 
     handleAddInput = () => {
-        if(this.state.inputs[this.state.inputs.length-1]!=="")
-        this.setState({
-            inputs: [...this.state.inputs,""]
-        });
+        if (this.state.inputs[this.state.inputs.length - 1] !== "")
+            this.setState({
+                inputs: [...this.state.inputs, ""]
+            });
 
     };
 
@@ -74,7 +81,7 @@ export class CreateChallenge extends Component {
                                 </div>
                             </div>))}
 
-                    <button type="button"  className="btn btn-secondary btn-sm" onClick={this.handleAddInput} >
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={this.handleAddInput}>
                         Add new input
                     </button>
                 </div>
@@ -85,24 +92,64 @@ export class CreateChallenge extends Component {
 
     onSubmit = e => {
         e.preventDefault();
-        const {description, title, course} = this.state;
+        const {description, title, course, nbStudent, nbSubmit, freqSubmit} = this.state;
         const input_types = this.state.inputs.filter(Boolean);
 
         console.log(input_types)
         if (course === -1)
             this.props.createMessage({selectItem: "Veuiller séléctioner un cours"});
-        else if(title==="")
+        else if (title === "")
             this.props.createMessage({isEmptyDescription: "La description ne peut pas etre vide"});
-        else if(description==="")
+        else if (description === "")
             this.props.createMessage({isEmptyTitle: "La nom du challenge ne peut pas etre vide"});
-        else{
-            const newChallenge = {description, title, input_types, course}
+        else if (nbStudent === "")
+            this.props.createMessage({isEmptyTitle: "Le nombre maximum d'étudiants par groupe ne peut pas etre vide"});
+        else if (nbSubmit === "")
+            this.props.createMessage({isEmptyTitle: "Le nombre maximum de soumissions ne peut pas etre vide"});
+        else if (freqSubmit === "")
+            this.props.createMessage({isEmptyTitle: "Le delais entre deux soumission ne peut pas etre vide"});
+        else {
+            const newChallenge = {description, title, input_types, course, nbStudent, nbSubmit, freqSubmit}
             this.props.createChallenge(newChallenge)
         }
 
 
     };
+    onChangeCourse = e => {
 
+        var course = this.props.listCourse.find(item => item.course_id == e.target.value);
+
+        this.setState({
+            [e.target.name]: e.target.value,
+            nbStudent: course.nbStudent,
+            nbSubmit: course.nbSubmit,
+            freqSubmit: course.freqSubmit,
+        })
+
+
+    }
+
+    onChangeChallenge = e => {
+
+        if (e.target.value != -1) {
+            var challenge = this.props.listChallenge.find(item => item.challenge_id == e.target.value);
+            this.setState({
+                [e.target.name]: e.target.value,
+                nbStudent: challenge.nbStudent,
+                nbSubmit: challenge.nbSubmit,
+                freqSubmit: challenge.freqSubmit,
+                description: challenge.description,
+                title: challenge.title,
+                input_types: challenge.input_types
+            })
+        } else {
+            this.setState({
+                [e.target.name]: e.target.value,
+            })
+        }
+
+
+    }
     onChange = e => {
         this.setState({[e.target.name]: e.target.value})
     };
@@ -113,9 +160,15 @@ export class CreateChallenge extends Component {
         })
     }
 
+    renderListChallenge() {
+        return this.props.listChallenge.map((challenge) => {
+            return <option value={challenge.challenge_id} key={challenge.challenge_id}>{challenge.title}</option>
+        })
+    }
+
     render() {
 
-        const {description, title, course} = this.state;
+        const {description, title, course, nbStudent, nbSubmit, freqSubmit, challenge} = this.state;
         return (
             <div className="col-md-6 m-auto">
                 <div className="card card-body mt-5">
@@ -129,14 +182,31 @@ export class CreateChallenge extends Component {
                                     className="form-control"
                                     name="course"
                                     value={course}
-                                    onChange={this.onChange}
-                                    >
+                                    onChange={this.onChangeCourse}>
 
                                     <option value={-1}/>
                                     {this.renderList()}
                                 </select>
                             </div>
                         </div>
+
+                        <div className="form-group">
+                            <div className="form-group">
+                                <br/>
+                                <label>Pre-remplir en suivant un challenge existant</label>
+                                <label>(Si vous voulez créer un nouveau challenge ignorer ce champs)</label>
+
+                                <select
+                                    className="form-control"
+                                    name="challenge"
+                                    value={challenge}
+                                    onChange={this.onChangeChallenge}>
+                                    <option value={-1}/>
+                                    {this.renderListChallenge()}
+                                </select>
+                            </div>
+                        </div>
+                        <br/>
                         <div className="form-group">
                             <label>Nom du challenge</label>
                             <input
@@ -156,7 +226,37 @@ export class CreateChallenge extends Component {
                                 value={description}
                             />
                         </div>
+                        <div className="form-group">
+                            <label>Nombre d'étudiants par groupe (Pas de limite = -1)</label>
+                            <input
+                                type="number"
+                                className="form-control"
+                                name="nbStudent"
+                                onChange={this.onChange}
+                                value={nbStudent}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Nombre de soumissions (Pas de limite = -1)</label>
+                            <input
+                                type="number"
+                                className="form-control"
+                                name="nbSubmit"
+                                onChange={this.onChange}
+                                value={nbSubmit}
 
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Délais entre deux soumission (En minutes)</label>
+                            <input
+                                type="number"
+                                className="form-control"
+                                name="freqSubmit"
+                                onChange={this.onChange}
+                                value={freqSubmit}
+                            />
+                        </div>
                         <div className="form-group">
                             {
                                 this.renderInputs()
@@ -179,7 +279,8 @@ export class CreateChallenge extends Component {
 const mapStateToProps = (state) => {
     console.log(state)
     return {
-        listCourse: state.application.listCourse
+        listCourse: state.application.listCourse,
+        listChallenge: state.application.listChallenge
     };
 };
 

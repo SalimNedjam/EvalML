@@ -6,17 +6,17 @@ import {createMessage} from "../../actions/messages";
 
 export class CreateChallenge extends Component {
     state = {
-        user:-1,
+        user: -1,
         course: -1,
 
     };
 
     static propTypes = {
         listCourse: PropTypes.array.isRequired,
-        listNonEnrolled:PropTypes.array.isRequired,
-        fetchNonEnrolled:PropTypes.func.isRequired,
-        clearNonEnrolled:PropTypes.func.isRequired,
-        enrollUser:PropTypes.func.isRequired,
+        listNonEnrolled: PropTypes.array.isRequired,
+        fetchNonEnrolled: PropTypes.func.isRequired,
+        clearNonEnrolled: PropTypes.func.isRequired,
+        enrollUser: PropTypes.func.isRequired,
 
     };
 
@@ -25,11 +25,11 @@ export class CreateChallenge extends Component {
         e.preventDefault();
         const {user, course} = this.state;
 
-        if (course === "-1" ||course===-1)
+        if (course === "-1" || course === -1)
             this.props.createMessage({selectItem: "Veuiller séléctioner un cours"});
-        else if(user === "-1" || user===-1)
+        else if (user === "-1" || user === -1)
             this.props.createMessage({selectItem: "Veuiller séléctioner un étudient"});
-        else{
+        else {
             const newEnrollment = {user, course}
             this.props.enrollUser(newEnrollment)
         }
@@ -46,6 +46,7 @@ export class CreateChallenge extends Component {
             return <option value={course.course_id} key={course.course_id}>{course.description}</option>
         })
     }
+
     renderListStudent() {
         return this.props.listNonEnrolled.map((user) => {
             return <option value={user.user_id} key={user.user_id}>{user.username}</option>
@@ -55,14 +56,13 @@ export class CreateChallenge extends Component {
     onChangeCourse = e => {
         console.log((e.target.value))
         this.setState({
-                            [e.target.name]: e.target.value,
-                            user:-1
+            [e.target.name]: e.target.value,
+            user: -1
         })
 
-        if (e.target.value===-1 || e.target.value!=="-1"){
+        if (e.target.value === -1 || e.target.value !== "-1") {
             this.props.fetchNonEnrolled(e.target.value)
-        }
-        else{
+        } else {
             this.props.clearNonEnrolled()
         }
 
@@ -85,7 +85,7 @@ export class CreateChallenge extends Component {
                                     name="course"
                                     value={course}
                                     onChange={this.onChangeCourse}
-                                    >
+                                >
                                     <option value={-1}/>
                                     {this.renderListCourse()}
                                 </select>
@@ -99,7 +99,7 @@ export class CreateChallenge extends Component {
                                     name="user"
                                     value={user}
                                     onChange={this.onChange}
-                                    >
+                                >
                                     <option value={-1}/>
                                     {this.renderListStudent()}
                                 </select>
@@ -122,8 +122,13 @@ export class CreateChallenge extends Component {
 const mapStateToProps = (state) => {
     return {
         listCourse: state.application.listCourse,
-        listNonEnrolled:state.application.listNonEnrolled,
+        listNonEnrolled: state.application.listNonEnrolled,
     };
 };
 
-export default connect(mapStateToProps, {enrollUser, createMessage, clearNonEnrolled,fetchNonEnrolled})(CreateChallenge);
+export default connect(mapStateToProps, {
+    enrollUser,
+    createMessage,
+    clearNonEnrolled,
+    fetchNonEnrolled
+})(CreateChallenge);

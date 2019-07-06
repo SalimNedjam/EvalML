@@ -14,6 +14,9 @@ class Course(models.Model):
     course_id = models.AutoField(primary_key=True)
     owner = models.ForeignKey(Users, on_delete=models.CASCADE, null=True, error_messages={'invalide': 'n\'éxiste pas'})
     description = models.TextField()
+    freqSubmit = models.IntegerField(default=0)
+    nbSubmit = models.IntegerField(default=-1)
+    nbStudent = models.IntegerField(default=-1)
 
 
 class Challenges(models.Model):
@@ -28,7 +31,9 @@ class Challenges(models.Model):
     is_visible = models.BooleanField(default=False)
     title = models.TextField()
     description = models.TextField()
-    categories = ListField(default=[])
+    freqSubmit = models.IntegerField(default=0)
+    nbSubmit = models.IntegerField(default=-1)
+    nbStudent = models.IntegerField(default=-1)
     input_types = ListField(default=[])
 
 

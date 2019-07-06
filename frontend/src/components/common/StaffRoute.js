@@ -1,5 +1,5 @@
 import React from "react";
-import {Route,Redirect} from "react-router-dom";
+import {Redirect, Route} from "react-router-dom";
 import {connect} from "react-redux";
 
 
@@ -8,20 +8,19 @@ const StaffRoute = ({component: Component, auth, ...rest}) => (
         {...rest}
         render={props => {
 
-            if (auth.isLoading===true) {
+            if (auth.isLoading === true) {
                 return (<div className="d-flex justify-content-center">
                     <div className="spinner-grow" role="status">
                         <span className="sr-only">Loading...</span>
                     </div>
                 </div>)
-            } else if (auth.isAuthenticated!==null && auth.isAuthenticated===false) {
-                return <Redirect to="/login" />;
+            } else if (auth.isAuthenticated !== null && auth.isAuthenticated === false) {
+                return <Redirect to="/login"/>;
             } else if (auth.isAuthenticated) {
-                if (auth.user.is_staff!==null && auth.user.is_staff===true){
+                if (auth.user.is_staff !== null && auth.user.is_staff === true) {
                     return <Component {...props} />;
-                }
-                else {
-                    return <Redirect to="/" />;
+                } else {
+                    return <Redirect to="/"/>;
                 }
             }
         }}
