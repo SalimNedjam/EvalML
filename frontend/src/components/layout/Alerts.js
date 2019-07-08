@@ -27,6 +27,7 @@ export class Alerts extends Component {
             if (error.msg.password) alert.error(`Password: ${error.msg.password.join()}`);
             if (error.msg.new_password) alert.error(`Nouveau mot de passe: ${error.msg.new_password.join()}`);
             if (error.msg.detail && error.msg.detail !== "Token non valide.") alert.error(`Attention: ${error.msg.detail}`);
+            if (error.msg.groupe) alert.error(` ${error.msg.groupe.join()}`);
 
 
         }

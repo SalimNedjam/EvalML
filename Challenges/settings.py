@@ -149,7 +149,7 @@ AUTH_USER_MODEL = 'authentification.Users'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
-    ),
+    )
 }
 
 EMAIL_HOST = 'smtp.mailtrap.io'

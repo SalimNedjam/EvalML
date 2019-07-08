@@ -12,7 +12,7 @@ class Course(models.Model):
     REQUIRED_FIELDS = ['course_id']
 
     course_id = models.AutoField(primary_key=True)
-    owner = models.ForeignKey(Users, on_delete=models.CASCADE, null=True, error_messages={'invalide': 'n\'éxiste pas'})
+    owner = models.ForeignKey(Users, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
     description = models.TextField()
     freqSubmit = models.IntegerField(default=0)
     nbSubmit = models.IntegerField(default=-1)
@@ -44,21 +44,22 @@ class Groups(models.Model):
             models.UniqueConstraint(fields=['user', 'challenge'], name='UNIQUE_GROUP_ENTRY')
         ]
 
-    REQUIRED_FIELDS = ['group_id', 'user', 'challenge']
+    REQUIRED_FIELDS = ['user', 'challenge']
 
     group_id = models.IntegerField()
-    user = models.ForeignKey(Users, on_delete=models.CASCADE, null=True, error_messages={'invalide': 'n\'éxiste pas'})
+    user = models.ForeignKey(Users, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
     challenge = models.ForeignKey(Challenges, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
+    owner = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.titre
+        return str(self.group_id)
 
 
 class Enrollment(models.Model):
     class Meta:
         db_table = "enrollment"
         constraints = [
-            models.UniqueConstraint(fields=['user', 'course'], name='UNIQUE_GROUP_ENTRY')
+            models.UniqueConstraint(fields=['user', 'course'], name='UNIQUE_ENROLLMENT_ENTRY')
         ]
 
     REQUIRED_FIELDS = ['user', 'course']
@@ -74,7 +75,7 @@ class Managment(models.Model):
     class Meta:
         db_table = "managment"
         constraints = [
-            models.UniqueConstraint(fields=['user', 'course'], name='UNIQUE_GROUP_ENTRY')
+            models.UniqueConstraint(fields=['user', 'course'], name='UNIQUE_MANAGEMENT_ENTRY')
         ]
 
     REQUIRED_FIELDS = ['user', 'course']

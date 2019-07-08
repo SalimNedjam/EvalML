@@ -4,12 +4,15 @@ import {
     ADD_COURSE,
     ADD_COURSE_FAIL,
     ADD_MANAGER,
+    ADD_TO_GROUP,
     CHALLENGE_SELECTED,
     ENROLL_USER,
     FETCH_CHALLENGES,
     FETCH_COURSES,
     FETCH_NON_ENROLLED,
     FETCH_NON_ENROLLED_FAIL,
+    FETCH_NON_GROUPED,
+    FETCH_NON_GROUPED_FAIL,
     FETCH_NON_MANAGER,
     FETCH_NON_MANAGER_FAIL
 } from "./types";
@@ -167,6 +170,31 @@ export const fetchNonManager = course => (dispatch, getState) => {
     });
 };
 
+export const fetchNotInGroup = challenge => (dispatch, getState) => {
+    console.log(challenge)
+    axios.get('/api/group/fetch_non_grouped?challenge=' + challenge, tokenConfig(getState))
+        .then(res => {
+            console.log(res.data)
+            dispatch({
+                type: FETCH_NON_GROUPED,
+                payload: res.data
+            })
+        }).catch(err => {
+        dispatch(returnErrors(err.response.data, err.response.status));
+        dispatch({
+            type: FETCH_NON_GROUPED_FAIL,
+        })
+    });
+};
+
+
+export const clearNonGrouped = () => (dispatch) => {
+
+    dispatch({
+        type: FETCH_NON_GROUPED_FAIL,
+    })
+};
+
 
 export const clearNonManager = () => (dispatch) => {
 
@@ -185,6 +213,25 @@ export const addManager = ({course, user, is_admin}) => (dispatch, getState) => 
             dispatch(createMessage({addUser: "Le membre du staff à été ajouté au cours."}));
             dispatch({
                 type: ADD_MANAGER,
+                payload: user
+            });
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+
+        });
+};
+
+
+export const addToGroup = ({challenge, user}) => (dispatch, getState) => {
+
+    const body = JSON.stringify({challenge, user});
+    axios
+        .post("/api/group/add_to_group", body, tokenConfig(getState))
+        .then(res => {
+            dispatch(createMessage({addUser: "Le membre à été ajouté au groupe."}));
+            dispatch({
+                type: ADD_TO_GROUP,
                 payload: user
             });
         })

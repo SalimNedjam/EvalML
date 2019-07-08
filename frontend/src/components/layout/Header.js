@@ -54,6 +54,7 @@ class Header extends Component {
                     <ul className="navbar-nav mr-auto">
                         <NavLink exact to="/" className="nav-link">Home</NavLink>
                         <NavLink to="/challenges" className="nav-link">Challenges</NavLink>
+                        <NavLink to="/add_to_group" className="nav-link">Add User to group</NavLink>
 
                     </ul>
 

@@ -4,12 +4,15 @@ import {
     ADD_COURSE,
     ADD_COURSE_FAIL,
     ADD_MANAGER,
+    ADD_TO_GROUP,
     CHALLENGE_SELECTED,
     ENROLL_USER,
     FETCH_CHALLENGES,
     FETCH_COURSES,
     FETCH_NON_ENROLLED,
     FETCH_NON_ENROLLED_FAIL,
+    FETCH_NON_GROUPED,
+    FETCH_NON_GROUPED_FAIL,
     FETCH_NON_MANAGER,
     FETCH_NON_MANAGER_FAIL
 } from "../actions/types";
@@ -20,6 +23,7 @@ const initialState = {
     listCourse: [],
     listNonEnrolled: [],
     listNonManager: [],
+    listNonGrouped: [],
 
 };
 
@@ -74,6 +78,21 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 listNonManager: []
+            }
+        case ADD_TO_GROUP:
+            return {
+                ...state,
+                listNonGrouped: state.listNonGrouped.filter(user => user.user_id != action.payload)
+            }
+        case FETCH_NON_GROUPED:
+            return {
+                ...state,
+                listNonGrouped: action.payload
+            }
+        case FETCH_NON_GROUPED_FAIL:
+            return {
+                ...state,
+                listNonGrouped: []
             }
         case ADD_MANAGER:
 

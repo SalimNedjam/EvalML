@@ -20,6 +20,7 @@ import EnrollUser from "./layout/EnrollUser";
 import ResetPassword from "./layout/ResetPassword";
 import PasswordForgot from "./layout/PasswordForgot";
 import AddManager from "./layout/AddManager";
+import AddUserGroup from "./layout/AddUserGroup";
 
 
 export default class App extends Component {
@@ -39,6 +40,8 @@ export default class App extends Component {
                         <Route exact path="/login" component={Login}/>
                         <Route path="/password-reset/:token" component={ResetPassword}/>
                         <Route exact path="/password-reset" component={PasswordForgot}/>
+
+                        <PrivateRoute exact path="/add_to_group" component={AddUserGroup}/>
 
 
                         <PrivateRoute exact path="/" component={ChallengeList}/>

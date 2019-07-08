@@ -1,3 +1,4 @@
+from django.utils import timezone
 from knox.auth import TokenAuthentication
 from knox.models import AuthToken
 from rest_framework import generics, status
@@ -36,6 +37,8 @@ class LoginAPI(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
 
         user = serializer.validated_data
+        user.last_login = timezone.now()
+        user.save(update_fields=['last_login'])
 
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
