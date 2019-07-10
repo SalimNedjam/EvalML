@@ -4,7 +4,8 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from application.serializers import EnrollmentSerializer
+from application.models import Enrollment
+from application.serializers import EnrollmentSerializer, EnrollmentListSerializer
 from authentification.models import Users
 from authentification.permissions import IsStaff
 from authentification.serializers import UserSerializer
@@ -41,3 +42,14 @@ class EnrollCourse(generics.GenericAPIView):
             {
             }
         )
+
+
+class FetchEnrolled(generics.ListAPIView):
+    permission_classes = [IsAuthenticated, IsStaff]
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = EnrollmentListSerializer
+
+    def get_queryset(self):
+        course_id = self.request.GET.get('course_id')
+
+        return Enrollment.objects.filter(course_id=course_id)

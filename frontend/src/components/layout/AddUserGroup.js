@@ -127,8 +127,8 @@ export class AddUserGroup extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        listChallenge: state.application.listChallenge,
-        listNonGrouped: state.application.listNonGrouped,
+        listChallenge: state.challenge.listChallenge,
+        listNonGrouped: state.group.listNonGrouped,
 
     };
 };

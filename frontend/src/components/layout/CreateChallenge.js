@@ -227,7 +227,7 @@ export class CreateChallenge extends Component {
                             />
                         </div>
                         <div className="form-group">
-                            <label>Nombre d'étudiants par groupe (Pas de limite = -1)</label>
+                            <label>Nombre d'étudiants par groupe (Pas de limite = 0)</label>
                             <input
                                 type="number"
                                 className="form-control"
@@ -237,7 +237,7 @@ export class CreateChallenge extends Component {
                             />
                         </div>
                         <div className="form-group">
-                            <label>Nombre de soumissions (Pas de limite = -1)</label>
+                            <label>Nombre de soumissions (Pas de limite = 0)</label>
                             <input
                                 type="number"
                                 className="form-control"
@@ -279,8 +279,8 @@ export class CreateChallenge extends Component {
 const mapStateToProps = (state) => {
     console.log(state)
     return {
-        listCourse: state.application.listCourse,
-        listChallenge: state.application.listChallenge
+        listCourse: state.course.listCourse,
+        listChallenge: state.challenge.listChallenge
     };
 };
 

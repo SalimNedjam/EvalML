@@ -3,7 +3,7 @@ import random
 from django.db.models import Q
 from knox.auth import TokenAuthentication
 from rest_framework import generics
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -72,7 +72,7 @@ class AddUserToGroup(generics.GenericAPIView):
                 Q(challenge_id=challenge_id) &
                 Q(group_id=my_group.group_id)).count()
 
-            if challenge.nbStudent == -1 or challenge.nbStudent - nb_student_in > 0:
+            if challenge.nbStudent == 0 or challenge.nbStudent - nb_student_in > 0:
                 group = serializer.save(group_id=my_group.group_id, user_id=user_adding)
             else:
                 raise ValidationError(
@@ -88,7 +88,7 @@ class AddUserToGroup(generics.GenericAPIView):
             nb_student_in = Groups.objects.filter(
                 Q(challenge_id=challenge_id) &
                 Q(group_id=group_id)).count()
-            if challenge.nbStudent == -1 or challenge.nbStudent - nb_student_in > 0:
+            if challenge.nbStudent == 0 or challenge.nbStudent - nb_student_in > 0:
                 group = serializer.save(group_id=group_id, user_id=user_adding)
             else:
                 raise ValidationError(
@@ -177,10 +177,12 @@ class ListGroupsChallenge(generics.ListAPIView):
 
     # RETREIVE THE GROUP INSTANCE
     def get_queryset(self):
+        challenge_id = self.request.GET['challenge']
+
         criterion1 = Q(course__owner_id=self.request.user)
-        criterion2 = Q(course__managment__user_id=self.request.user)
-        queryset_challenges = Challenges.objects.filter(criterion1 | criterion2)
-        return Groups.objects.filter(challenge_id__in=queryset_challenges).order_by('group_id')
+        criterion2 = Q(course__management__user_id=self.request.user)
+        queryset_challenges = Challenges.objects.filter(criterion1 | criterion2, challenge_id=challenge_id)
+        return Groups.objects.filter(challenge_id__in=queryset_challenges)
 
 
 class RemoveUserGroup(generics.DestroyAPIView):
@@ -192,7 +194,7 @@ class RemoveUserGroup(generics.DestroyAPIView):
     # RETREIVE THE GROUP INSTANCE
     def get_queryset(self):
         criterion1 = Q(course__owner_id=self.request.user)
-        criterion2 = Q(course__managment__user_id=self.request.user)
+        criterion2 = Q(course__management__user_id=self.request.user, course__management__is_group_admin=True)
         queryset_challenges = Challenges.objects.filter(criterion1 | criterion2)
         return Groups.objects.filter(challenge_id__in=queryset_challenges, id=self.kwargs['id'])
 
@@ -227,24 +229,35 @@ class AddUserGroupForStaff(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
 
         # CHECK IF USER ENROLLED IN COURSE
-        course_id = Challenges.objects.get(challenge_id=challenge_id).course_id
+        criterion1 = Q(course__owner_id=self.request.user,
+                       challenge_id=challenge_id)
 
-        criterion1 = Q(enrollment__course__course_id=course_id)
-        list1 = list(Users.objects.filter(criterion1).values_list('user_id', flat=True))
-        if eval(user_adding) not in list1:
-            raise ValidationError({"groupe": "Cet étudiant ne suit pas le cours du challenge."})
+        criterion2 = Q(course__management__user_id=self.request.user,
+                       course__management__is_group_admin=True,
+                       challenge_id=challenge_id)
+        try:
+            challenge = Challenges.objects.get(criterion1 | criterion2)
 
-        # CHECK IF USER IS ALREADY IN A GROUP FOR THE CHALLENGE
-        criterion2 = Q(groups__challenge__challenge_id=challenge_id)
-        list2 = list(Users.objects.filter(criterion2).values_list('user_id', flat=True))
+            course_id = challenge.course_id
 
-        if eval(user_adding) in list2:
-            raise ValidationError({"groupe": "Cet étudiant est déjà dans un groupe pour ce challenge."})
+            criterion1 = Q(enrollment__course__course_id=course_id)
+            list1 = list(Users.objects.filter(criterion1).values_list('user_id', flat=True))
+            if eval(user_adding) not in list1:
+                raise ValidationError({"groupe": "Cet étudiant ne suit pas le cours du challenge."})
 
-        group = serializer.save(group_id=group_id, user_id=user_adding)
+            # CHECK IF USER IS ALREADY IN A GROUP FOR THE CHALLENGE
+            criterion2 = Q(groups__challenge__challenge_id=challenge_id)
+            list2 = list(Users.objects.filter(criterion2).values_list('user_id', flat=True))
 
-        return Response(
-            {
-                "groupe": GroupSerializer(group, context=self.get_serializer_context()).data
-            }
-        )
+            if eval(user_adding) in list2:
+                raise ValidationError({"groupe": "Cet étudiant est déjà dans un groupe pour ce challenge."})
+
+            group = serializer.save(group_id=group_id, user_id=user_adding)
+
+            return Response(
+                {
+                    "groupe": GroupSerializer(group, context=self.get_serializer_context()).data
+                }
+            )
+        except Challenges.DoesNotExist:
+            raise PermissionDenied()

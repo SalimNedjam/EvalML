@@ -34,7 +34,7 @@ class CourseFetch(generics.ListAPIView):
     def get_queryset(self):
         if self.request.user.is_staff:
             criterion1 = Q(owner_id=self.request.user.user_id)
-            criterion2 = Q(managment__user_id=self.request.user)
+            criterion2 = Q(management__user_id=self.request.user)
             return Course.objects.filter(criterion1 | criterion2)
 
         else:

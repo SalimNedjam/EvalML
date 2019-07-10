@@ -121,8 +121,8 @@ export class CreateChallenge extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        listCourse: state.application.listCourse,
-        listNonEnrolled: state.application.listNonEnrolled,
+        listCourse: state.course.listCourse,
+        listNonEnrolled: state.enrollment.listNonEnrolled,
     };
 };
 

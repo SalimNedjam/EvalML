@@ -71,9 +71,9 @@ class Enrollment(models.Model):
         return self.titre
 
 
-class Managment(models.Model):
+class Management(models.Model):
     class Meta:
-        db_table = "managment"
+        db_table = "management"
         constraints = [
             models.UniqueConstraint(fields=['user', 'course'], name='UNIQUE_MANAGEMENT_ENTRY')
         ]
@@ -82,7 +82,8 @@ class Managment(models.Model):
 
     course = models.ForeignKey(Course, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
     user = models.ForeignKey(Users, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
-    is_admin = models.BooleanField(default=False)
+    is_course_admin = models.BooleanField(default=False)
+    is_group_admin = models.BooleanField(default=False)
 
     def __str__(self):
         return self.titre

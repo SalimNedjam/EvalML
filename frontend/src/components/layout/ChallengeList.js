@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import ChallengeCard from "./ChallengeCard";
-import ChallengeSelected from "./ChallengeSelected";
 import PropTypes from "prop-types";
 
 class ChallengeList extends Component {
@@ -13,7 +12,6 @@ class ChallengeList extends Component {
     render() {
 
         return (<div>
-            {<ChallengeSelected/>}
             {this.renderList()}
 
         </div>)
@@ -28,7 +26,7 @@ class ChallengeList extends Component {
 }
 
 const mapStateToProps = (state) => {
-    return {listChallenge: state.application.listChallenge};
+    return {listChallenge: state.challenge.listChallenge};
 };
 
 export default connect(mapStateToProps)(ChallengeList);

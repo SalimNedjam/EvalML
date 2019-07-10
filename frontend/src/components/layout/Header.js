@@ -3,6 +3,7 @@ import {Link, NavLink} from "react-router-dom";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import {logout} from "../../actions/auth";
+import {Navbar, NavbarBrand} from 'shards-react';
 
 
 class Header extends Component {
@@ -66,8 +67,8 @@ class Header extends Component {
 
 
         const adminNav = (
-            <nav className="navbar navbar-expand-sm bg-dark navbar-dark">
-                <a className="navbar-brand" href="#">Admin Navbar</a>
+            <Navbar type="dark" theme="secondary" expand="md">
+                <NavbarBrand href="#">Shards React</NavbarBrand>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03"
                         aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
@@ -77,22 +78,18 @@ class Header extends Component {
                 <div className="collapse navbar-collapse" id="navbarColor03">
                     <ul className="navbar-nav mr-auto">
                         <NavLink exact to="/" className="nav-link">Home</NavLink>
-                        <NavLink to="/challenges" className="nav-link">Challenges</NavLink>
-                        <NavLink to="/createChallenge" className="nav-link">Create Challenge</NavLink>
-
                         <NavLink to="/courses" className="nav-link">Courses</NavLink>
-                        <NavLink to="/createCourse" className="nav-link">Create Course</NavLink>
-                        <NavLink to="/management" className="nav-link">Add Course Manager</NavLink>
+                        <NavLink to="/challenges" className="nav-link">Challenges</NavLink>
+
 
                         <NavLink to="/register" className="nav-link">Add User</NavLink>
-                        <NavLink to="/enrollment" className="nav-link">Enroll User</NavLink>
 
 
                     </ul>
                     {isAuthenticated ? authLinks : guestLinks}
                 </div>
 
-            </nav>
+            </Navbar>
         );
 
 

@@ -8,7 +8,8 @@ export class CreateChallenge extends Component {
     state = {
         user: -1,
         course: -1,
-        is_admin: false
+        is_group_admin: false,
+        is_course_admin: false
 
     };
 
@@ -24,14 +25,14 @@ export class CreateChallenge extends Component {
 
     onSubmit = e => {
         e.preventDefault();
-        const {user, course, is_admin} = this.state;
+        const {user, course, is_group_admin, is_course_admin} = this.state;
 
         if (course === "-1" || course === -1)
             this.props.createMessage({selectItem: "Veuiller séléctioner un cours"});
         else if (user === "-1" || user === -1)
             this.props.createMessage({selectItem: "Veuiller séléctioner un membre du staff"});
         else {
-            const newManager = {user, course, is_admin}
+            const newManager = {user, course, is_course_admin, is_group_admin}
             this.props.addManager(newManager)
         }
 
@@ -71,11 +72,11 @@ export class CreateChallenge extends Component {
 
     render() {
 
-        const {user, course, is_admin} = this.state;
+        const {user, course, is_course_admin, is_group_admin} = this.state;
         return (
             <div className="col-md-6 m-auto">
                 <div className="card card-body mt-5">
-                    <h2 className="text-center">Ajouter un étudient au cours</h2>
+                    <h3 className="text-center">Ajouter un membre du staff au cours</h3>
 
                     <form onSubmit={this.onSubmit}>
                         <div className="form-group">
@@ -109,11 +110,11 @@ export class CreateChallenge extends Component {
                         <div className="form-group">
 
                             <div className="form-group">
-                                <label>Autorisations</label>
+                                <label>Autorisations de gestion du cours</label>
                                 <select
                                     className="form-control"
-                                    name="is_admin"
-                                    value={is_admin}
+                                    name="is_course_admin"
+                                    value={is_course_admin}
                                     onChange={this.onChange}>
                                     <option value={false}>Accès restreint</option>
                                     <option value={true}>Accès total</option>
@@ -121,6 +122,20 @@ export class CreateChallenge extends Component {
                             </div>
                         </div>
 
+                        <div className="form-group">
+
+                            <div className="form-group">
+                                <label>Autorisations de gestion des groupes d'etudiants du cours </label>
+                                <select
+                                    className="form-control"
+                                    name="is_group_admin"
+                                    value={is_group_admin}
+                                    onChange={this.onChange}>
+                                    <option value={false}>Accès restreint</option>
+                                    <option value={true}>Accès total</option>
+                                </select>
+                            </div>
+                        </div>
                         <div className="form-group">
                             <button type="submit" className="btn btn-primary">
                                 Ajouter
@@ -138,8 +153,8 @@ export class CreateChallenge extends Component {
 const mapStateToProps = (state) => {
     console.log(state)
     return {
-        listCourse: state.application.listCourse,
-        listNonManager: state.application.listNonManager,
+        listCourse: state.course.listCourse,
+        listNonManager: state.management.listNonManager,
     };
 };
 

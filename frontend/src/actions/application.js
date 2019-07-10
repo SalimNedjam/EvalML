@@ -9,6 +9,10 @@ import {
     ENROLL_USER,
     FETCH_CHALLENGES,
     FETCH_COURSES,
+    FETCH_ENROLLED,
+    FETCH_ENROLLED_FAIL,
+    FETCH_MANAGER,
+    FETCH_MANAGER_FAIL,
     FETCH_NON_ENROLLED,
     FETCH_NON_ENROLLED_FAIL,
     FETCH_NON_GROUPED,
@@ -125,6 +129,27 @@ export const fetchNonEnrolled = course => (dispatch, getState) => {
     });
 };
 
+export const fetchEnrolled = (course) => (dispatch, getState) => {
+
+    axios.get('/api/course/fetch_enrolled?course_id=' + course, tokenConfig(getState))
+        .then(res => {
+            let array = []
+            res.data.map((manager, index) => {
+                let obj = reduceObjValues(manager)
+                obj.key = index
+                array.push(obj)
+            })
+            dispatch({
+                type: FETCH_ENROLLED,
+                payload: array
+            })
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+            dispatch({type: FETCH_ENROLLED_FAIL})
+        });
+}
+
 
 export const clearNonEnrolled = () => (dispatch) => {
 
@@ -170,6 +195,29 @@ export const fetchNonManager = course => (dispatch, getState) => {
     });
 };
 
+
+export const fetchManager = (course) => (dispatch, getState) => {
+
+    axios.get('/api/management/fetch_manager?course_id=' + course, tokenConfig(getState))
+        .then(res => {
+            let array = []
+            res.data.map((manager, index) => {
+                let obj = reduceObjValues(manager)
+                obj.key = index
+                array.push(obj)
+            })
+            dispatch({
+                type: FETCH_MANAGER,
+                payload: array
+            })
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+            dispatch({type: FETCH_MANAGER_FAIL})
+        });
+}
+
+
 export const fetchNotInGroup = challenge => (dispatch, getState) => {
     console.log(challenge)
     axios.get('/api/group/fetch_non_grouped?challenge=' + challenge, tokenConfig(getState))
@@ -204,9 +252,9 @@ export const clearNonManager = () => (dispatch) => {
 };
 
 
-export const addManager = ({course, user, is_admin}) => (dispatch, getState) => {
+export const addManager = ({course, user, is_course_admin, is_group_admin}) => (dispatch, getState) => {
 
-    const body = JSON.stringify({course, user, is_admin});
+    const body = JSON.stringify({course, user, is_course_admin, is_group_admin});
     axios
         .post("/api/auth/add_manager", body, tokenConfig(getState))
         .then(res => {
@@ -240,3 +288,20 @@ export const addToGroup = ({challenge, user}) => (dispatch, getState) => {
 
         });
 };
+
+
+const reduceObjValues = (obj, cache = {}) => {
+    const objectValues = Object.keys(obj).reduce((acc, cur) => {
+        if (!Array.isArray(obj[cur]) && typeof obj[cur] === 'object') {
+            return reduceObjValues({...acc, ...obj[cur]}, cache);
+        }
+        acc[cur] = obj[cur].toString();
+
+        return acc;
+    }, {});
+
+    return {
+        ...objectValues,
+        ...cache,
+    };
+}

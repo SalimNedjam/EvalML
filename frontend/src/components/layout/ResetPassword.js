@@ -1,9 +1,11 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
+import {Link} from "react-router-dom";
+
 import PropTypes from "prop-types";
-import {Redirect} from "react-router-dom";
 import {resetPassword} from "../../actions/auth";
 import {createMessage} from "../../actions/messages";
+import {Button, Result} from 'antd'
 
 export class ResetPassword extends Component {
     state = {
@@ -38,7 +40,17 @@ export class ResetPassword extends Component {
     render() {
         const {new_password, new_password2} = this.state;
         if (this.props.updatedPassword === true) {
-            return <Redirect to='/login'/>
+            return <Result
+                status="success"
+                title="Your password has been sucessfully reset !"
+                extra={[
+                    <Link to='/login'>
+                        <Button type="primary" key="console">
+                            Login
+                        </Button>
+                    </Link>,
+                ]}
+            />
         }
         return (
             <div className="col-md-6 m-auto">
