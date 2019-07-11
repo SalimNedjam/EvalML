@@ -88,3 +88,30 @@ class FetchManager(generics.ListAPIView):
     def get_queryset(self):
         course_id = self.request.GET.get('course_id')
         return Management.objects.filter(course_id=course_id, course__owner_id=self.request.user.user_id)
+
+
+class RemoveManager(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated, IsStaff]
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = ManagementSerializer
+    lookup_field = 'id'
+
+    # RETREIVE THE GROUP INSTANCE
+    def get_queryset(self):
+        criterion1 = Q(owner_id=self.request.user)
+        queryset_course = Course.objects.filter(criterion1)
+        queryset_management = Management.objects.filter(id=self.kwargs['id'])
+        list_course = list(queryset_course.values_list('course_id', flat=True))
+        management = queryset_management.first()
+        if management and (management.course_id not in list_course):
+            raise PermissionDenied()
+
+        return queryset_management
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(
+            {
+                "detail": "ok"
+            })

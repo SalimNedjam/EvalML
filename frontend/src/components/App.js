@@ -1,23 +1,23 @@
 import React, {Component, Fragment} from "react";
 import {Route, Switch,} from "react-router-dom";
 import Alerts from "./layout/Alerts";
-import Login from "./layout/Login";
+import Login from "./layout/Forms/Login";
 import PrivateRoute from "./common/PrivateRoute";
 import store from "../store";
 import {loadUser} from "../actions/auth";
 import ChallengeList from "./layout/ChallengeList";
 import Headers from "./layout/Header";
-import CreateUser from "./layout/CreateUser";
-import UpdateUser from "./layout/UpdateUser";
-import CreateCourse from "./layout/CreateCourse";
-import CreateChallenge from "./layout/CreateChallenge";
+import CreateUser from "./layout/Forms/CreateUser";
+import UpdateUser from "./layout/Forms/UpdateUser";
+import CreateCourse from "./layout/Forms/CreateCourse";
+import CreateChallenge from "./layout/Forms/CreateChallenge";
 import StaffRoute from "./common/StaffRoute";
 import CourseList from "./layout/CourseList";
-import EnrollUser from "./layout/EnrollUser";
-import ResetPassword from "./layout/ResetPassword";
-import PasswordForgot from "./layout/PasswordForgot";
-import AddManager from "./layout/AddManager";
-import AddUserGroup from "./layout/AddUserGroup";
+import EnrollUser from "./layout/Forms/EnrollUser";
+import ResetPassword from "./layout/Forms/ResetPassword";
+import PasswordForgot from "./layout/Forms/PasswordForgot";
+import AddManager from "./layout/Forms/AddManager";
+import AddUserGroup from "./layout/Forms/AddUserGroup";
 import ListGroup from "./layout/ListGroup";
 import Course from "./layout/Course";
 import NotFound from "./layout/NotFound";
@@ -62,7 +62,6 @@ export default class App extends Component {
                         <StaffRoute path="/courses/:course" component={Course}/>
                         <StaffRoute exact path="/enrollment/enrollUser" component={EnrollUser}/>
                         <StaffRoute exact path="/management/addManager" component={AddManager}/>
-
 
                         <StaffRoute path="/challengeGroups/:challenge" component={ListGroup}/>
                         <Route path="*" component={NotFound}/>

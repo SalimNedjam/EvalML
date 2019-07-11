@@ -1,8 +1,10 @@
 import React, {Component} from "react";
 import {connect} from 'react-redux'
-import {Card, CardBody, Col, Row} from "shards-react";
+import {Col, Row} from "shards-react";
+import {Empty, Icon, Table} from 'antd'
 import {createMessage} from "../../actions/messages";
 import axios from 'axios'
+import {reduceObjValues} from "../../actions/application";
 
 export class ListGroup extends Component {
 
@@ -19,7 +21,7 @@ export class ListGroup extends Component {
         const {match = {}} = this.props;
         const challenge = match.params.challenge;
         const token = this.props.auth.token
-
+        console.log(token)
         const config = {
             headers: {
                 "Content-Type": "application/json"
@@ -69,30 +71,29 @@ export class ListGroup extends Component {
     }
 
     iterateGroup() {
-        return this.state.listGroups.map(group => {
+        console.log("HERE")
+        return this.state.listGroups.length > 0 ?
+            this.state.listGroups.map(group => {
+                let array = []
+                group.map((manager, index) => {
+                    let obj = reduceObjValues(manager)
+                    obj.key = index
+                    array.push(obj)
+                });
             return (
                 <Row>
                     <Col>
-                        <Card small className="mb-4">
-                            <CardBody className="p-0 pb-3">
-                                <table className="table mb-0">
-                                    <thead className="bg-light">
-                                    {header_table}
-                                    </thead>
-                                    <tbody>
-                                    {group.map(user => {
-                                        console.log(user)
-                                        return this.renderUser(user)
-                                    })}
-                                    </tbody>
-                                </table>
-                            </CardBody>
-                        </Card>
+
+                        <Table columns={column} dataSource={array} size="small"/>
+
                     </Col>
                 </Row>
 
             )
-        })
+            }) :
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
+
+
     }
 
 }
@@ -114,6 +115,44 @@ export const header_table = (<tr>
         Last Name
     </th>
 </tr>)
+
+
+const column = [
+    {
+        title: 'Id',
+        dataIndex: 'user_id',
+        key: 'Id',
+    },
+    {
+        title: 'Email',
+        dataIndex: 'username',
+        key: 'Username',
+    },
+    {
+        title: 'Matricule',
+        dataIndex: 'matricule',
+        key: 'Matricule',
+    },
+    {
+        title: 'Last Name',
+        dataIndex: 'last_name',
+        key: 'last_name',
+    },
+    {
+        title: 'First Name',
+        dataIndex: 'first_name',
+        key: 'first_name',
+    },
+    {
+        title: 'Action',
+        key: 'action',
+        render: (text, record) => (
+            <a onClick={() => this.doDelete(record.id)}><Icon type="user-delete"/></a>
+
+        ),
+    },
+]
+
 
 const mapStateToProps = (state) => {
     return {

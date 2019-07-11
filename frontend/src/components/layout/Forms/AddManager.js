@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
-import {addManager, clearNonManager, fetchNonManager} from "../../actions/application";
-import {createMessage} from "../../actions/messages";
+import {addManager, clearNonManager, fetchNonManager} from "../../../actions/application";
+import {createMessage} from "../../../actions/messages";
 
 export class CreateChallenge extends Component {
     state = {

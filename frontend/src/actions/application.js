@@ -18,7 +18,9 @@ import {
     FETCH_NON_GROUPED,
     FETCH_NON_GROUPED_FAIL,
     FETCH_NON_MANAGER,
-    FETCH_NON_MANAGER_FAIL
+    FETCH_NON_MANAGER_FAIL,
+    REMOVE_ENROLLMENT,
+    REMOVE_MANAGER
 } from "./types";
 import axios from 'axios';
 import {createMessage, returnErrors} from "./messages";
@@ -290,7 +292,43 @@ export const addToGroup = ({challenge, user}) => (dispatch, getState) => {
 };
 
 
-const reduceObjValues = (obj, cache = {}) => {
+export const removeEnrollment = (id) => (dispatch, getState) => {
+
+    axios
+        .delete("/api/enrollment/remove_enrollment/" + id + "/", tokenConfig(getState))
+        .then(res => {
+            dispatch(createMessage({addUser: "L'étudient à été désinscrit au cours."}));
+            dispatch({
+                type: REMOVE_ENROLLMENT,
+                payload: id
+            });
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+
+        });
+};
+
+
+export const removeManager = (id) => (dispatch, getState) => {
+
+    axios
+        .delete("/api/management/remove_manager/" + id + "/", tokenConfig(getState))
+        .then(res => {
+            dispatch(createMessage({addUser: "Le membre du staff à été retiré."}));
+            dispatch({
+                type: REMOVE_MANAGER,
+                payload: id
+            });
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+
+        });
+};
+
+
+export const reduceObjValues = (obj, cache = {}) => {
     const objectValues = Object.keys(obj).reduce((acc, cur) => {
         if (!Array.isArray(obj[cur]) && typeof obj[cur] === 'object') {
             return reduceObjValues({...acc, ...obj[cur]}, cache);

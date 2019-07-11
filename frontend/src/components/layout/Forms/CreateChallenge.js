@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
-import {createChallenge} from "../../actions/application";
-import {createMessage} from "../../actions/messages";
+import {createChallenge} from "../../../actions/application";
+import {createMessage} from "../../../actions/messages";
 import Textarea from 'react-textarea-autosize';
 
 export class CreateChallenge extends Component {

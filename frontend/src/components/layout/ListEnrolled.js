@@ -1,8 +1,10 @@
 import React, {Component} from "react";
-import {Empty, Icon, Table} from 'antd'
+import {Empty, Icon, Modal, Table} from 'antd'
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
-import {fetchEnrolled} from "../../actions/application";
+import {fetchEnrolled, removeEnrollment} from "../../actions/application";
+
+const {confirm} = Modal;
 
 export class ListEnrolled extends Component {
 
@@ -12,12 +14,11 @@ export class ListEnrolled extends Component {
 
     static propTypes = {
         fetchEnrolled: PropTypes.func.isRequired,
+        removeEnrollment: PropTypes.func.isRequired,
 
     };
 
-    doDelete(enrollementId) {
-        console.log(enrollementId + "deleted")
-    }
+
 
     componentDidMount() {
         this.props.fetchEnrolled(this.props.course)
@@ -26,16 +27,12 @@ export class ListEnrolled extends Component {
 
     render() {
         return this.props.listEnrolled && this.props.listEnrolled.length > 0 ?
-            <Table columns={column} dataSource={this.props.listEnrolled} size="small"/>
+            <Table columns={this.column} dataSource={this.props.listEnrolled} size="small"/>
             :
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
     }
 
-
-}
-
-
-const column = [
+    column = [
     {
         title: 'Id',
         dataIndex: 'user_id',
@@ -65,11 +62,32 @@ const column = [
         title: 'Action',
         key: 'action',
         render: (text, record) => (
-            <a onClick={() => this.doDelete(record.id)}><Icon type="user-delete"/></a>
+            <a onClick={() => this.doDelete(record)}><Icon type="user-delete"/></a>
 
         ),
     },
 ]
+
+    doDelete(record) {
+        const _this = this;
+        confirm({
+            title: 'Voulez vous vraiment désinscrire cet étudiant?',
+            content: record.username + ' ne pourra plus voir les challenge du cours !',
+            okText: 'Yes',
+            okType: 'danger',
+            cancelText: 'No',
+            onOk() {
+                _this.props.removeEnrollment(record.id)
+
+            },
+            onCancel() {
+            },
+        });
+    }
+
+}
+
+
 
 
 const mapStateToProps = (state) => {
@@ -83,5 +101,5 @@ const mapStateToProps = (state) => {
 
 export default connect(
     mapStateToProps,
-    {fetchEnrolled}
+    {fetchEnrolled, removeEnrollment}
 )(ListEnrolled);

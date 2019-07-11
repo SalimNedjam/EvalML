@@ -3,7 +3,8 @@ import {
     FETCH_MANAGER,
     FETCH_MANAGER_FAIL,
     FETCH_NON_MANAGER,
-    FETCH_NON_MANAGER_FAIL
+    FETCH_NON_MANAGER_FAIL,
+    REMOVE_MANAGER
 } from "../actions/types";
 
 const initialState = {
@@ -45,6 +46,14 @@ export default function (state = initialState, action) {
                 ...state,
                 listNonManager: state.listNonManager.filter(user => user.user_id != action.payload)
             }
+
+        case REMOVE_MANAGER:
+
+            return {
+                ...state,
+                listManager: state.listManager.filter(manager => manager.id != action.payload)
+            }
+
 
         default:
             return state;

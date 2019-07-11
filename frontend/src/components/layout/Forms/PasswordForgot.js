@@ -1,64 +1,52 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
-import {createUser} from "../../actions/auth";
-import {createMessage} from "../../actions/messages";
+import {requestReset} from "../../../actions/auth";
+import {createMessage} from "../../../actions/messages";
 
-export class CreateUser extends Component {
+export class PasswordForgot extends Component {
     state = {
-        matricule: "",
-        username: "",
+        email: "",
 
     };
 
     static propTypes = {
-        createUser: PropTypes.func.isRequired,
+        requestReset: PropTypes.func.isRequired,
         isAuthenticated: PropTypes.bool
     };
 
     onSubmit = e => {
         e.preventDefault();
-        const {matricule, username} = this.state;
-        const newUser = {
-            matricule,
-            username
+        const {email} = this.state;
+        const requestReset = {
+            email
         }
-        this.props.createUser(newUser);
+        this.props.requestReset(requestReset);
     };
 
     onChange = e => this.setState({[e.target.name]: e.target.value});
 
     render() {
 
-        const {matricule, username} = this.state;
+        const {username} = this.state;
         return (
             <div className="col-md-6 m-auto">
                 <div className="card card-body mt-5">
-                    <h2 className="text-center">Ajouter un étudient</h2>
+                    <h2 className="text-center">Reset password</h2>
                     <form onSubmit={this.onSubmit}>
-                        <div className="form-group">
-                            <label>Matricule</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="matricule"
-                                onChange={this.onChange}
-                                value={matricule}
-                            />
-                        </div>
                         <div className="form-group">
                             <label>Email</label>
                             <input
-                                type="username"
+                                type="email"
                                 className="form-control"
-                                name="username"
+                                name="email"
                                 onChange={this.onChange}
                                 value={username}
                             />
                         </div>
                         <div className="form-group">
                             <button type="submit" className="btn btn-primary">
-                                Ajouter
+                                Reset password
                             </button>
                         </div>
 
@@ -70,4 +58,4 @@ export class CreateUser extends Component {
 }
 
 
-export default connect(null, {createUser, createMessage})(CreateUser);
+export default connect(null, {requestReset, createMessage})(PasswordForgot);

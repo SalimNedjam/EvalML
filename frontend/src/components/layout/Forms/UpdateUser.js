@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
-import {updateInformations, updatePassword} from "../../actions/auth";
-import {createMessage} from "../../actions/messages";
+import {updateInformations, updatePassword} from "../../../actions/auth";
+import {createMessage} from "../../../actions/messages";
 
 export class UpdateUser extends Component {
     state = {

@@ -21,31 +21,32 @@ export class Course extends Component {
         })[0];
         return (
 
-            <div className="container">
+            <Row type="flex" justify="center" gutter={10}>
 
-                <Row gutter={16}>
-
-                    <Col span={12}>
+                <Col xs={24} sm={26} md={20} lg={14} xl={12}>
                         {this.renderList()}
                     </Col>
 
+                <Col xs={30} sm={26} md={20} lg={14} xl={12}>
                     {courseObject && courseObject.owner === this.props.auth.user.user_id &&
-                    <Col span={12}>
+
+                    <Col>
                         <h4 className="text-center"> Managers List<Link to={"/management/addManager"}>
                             <Icon type="plus"/>
                         </Link></h4>
                         <ListManagers course={course}/>
                     </Col>
                     }
-                    <Col span={12}>
+                    <Col>
                         <h4 className="text-center"> Enrolled Students<Link to={"/enrollment/enrollUser"}>
                             <Icon type="plus"/>
                         </Link></h4>
                         <ListEnrolled course={course}/>
                     </Col>
+                </Col>
+
 
                 </Row>
-            </div>
 
 
         );

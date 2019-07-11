@@ -1,37 +1,38 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
-import {clearNonEnrolled, enrollUser, fetchNonEnrolled} from "../../actions/application";
-import {createMessage} from "../../actions/messages";
+import {addToGroup, clearNonGrouped, fetchNotInGroup} from "../../../actions/application";
+import {createMessage} from "../../../actions/messages";
 
-export class CreateChallenge extends Component {
+
+export class AddUserGroup extends Component {
     state = {
         user: -1,
-        course: -1,
+        challenge: -1,
 
     };
 
     static propTypes = {
-        listCourse: PropTypes.array.isRequired,
-        listNonEnrolled: PropTypes.array.isRequired,
-        fetchNonEnrolled: PropTypes.func.isRequired,
-        clearNonEnrolled: PropTypes.func.isRequired,
-        enrollUser: PropTypes.func.isRequired,
+        listChallenge: PropTypes.array.isRequired,
+        listNonGrouped: PropTypes.array.isRequired,
+        fetchNotInGroup: PropTypes.func.isRequired,
+        clearNonGrouped: PropTypes.func.isRequired
+
 
     };
 
 
     onSubmit = e => {
         e.preventDefault();
-        const {user, course} = this.state;
+        const {user, challenge} = this.state;
 
-        if (course === "-1" || course === -1)
-            this.props.createMessage({selectItem: "Veuiller séléctioner un cours"});
+        if (challenge === "-1" || challenge === -1)
+            this.props.createMessage({selectItem: "Veuiller séléctioner un challenge"});
         else if (user === "-1" || user === -1)
             this.props.createMessage({selectItem: "Veuiller séléctioner un étudient"});
         else {
-            const newEnrollment = {user, course}
-            this.props.enrollUser(newEnrollment)
+            const newMemberGroup = {challenge, user}
+            this.props.addToGroup(newMemberGroup)
         }
 
 
@@ -41,36 +42,38 @@ export class CreateChallenge extends Component {
         this.setState({[e.target.name]: e.target.value})
     };
 
-    renderListCourse() {
-        return this.props.listCourse.map((course) => {
-            return <option value={course.course_id} key={course.course_id}>{course.description}</option>
+    renderListChallenge() {
+        return this.props.listChallenge.map((challenge) => {
+            return <option value={challenge.challenge_id} key={challenge.challenge_id}>{challenge.title}</option>
         })
     }
 
+
     renderListStudent() {
-        return this.props.listNonEnrolled.map((user) => {
+        return this.props.listNonGrouped.map((user) => {
             return <option value={user.user_id} key={user.user_id}>{user.username}</option>
         })
     }
 
-    onChangeCourse = e => {
-        console.log((e.target.value))
+    onChangeChallenge = e => {
         this.setState({
             [e.target.name]: e.target.value,
             user: -1
         })
 
-        if (e.target.value === -1 || e.target.value !== "-1") {
-            this.props.fetchNonEnrolled(e.target.value)
+        if (e.target.value === -1 || e.target.value == "-1") {
+            this.props.clearNonGrouped()
         } else {
-            this.props.clearNonEnrolled()
+            this.props.fetchNotInGroup(e.target.value)
+
         }
 
     }
 
+
     render() {
 
-        const {user, course} = this.state;
+        const {user, challenge} = this.state;
         return (
             <div className="col-md-6 m-auto">
                 <div className="card card-body mt-5">
@@ -79,15 +82,14 @@ export class CreateChallenge extends Component {
                     <form onSubmit={this.onSubmit}>
                         <div className="form-group">
                             <div className="form-group">
-                                <label>Selectioner le cours</label>
+                                <label>Selectioner un challenge</label>
                                 <select
                                     className="form-control"
-                                    name="course"
-                                    value={course}
-                                    onChange={this.onChangeCourse}
-                                >
+                                    name="challenge"
+                                    value={challenge}
+                                    onChange={this.onChangeChallenge}>
                                     <option value={-1}/>
-                                    {this.renderListCourse()}
+                                    {this.renderListChallenge()}
                                 </select>
                             </div>
                         </div>
@@ -116,19 +118,24 @@ export class CreateChallenge extends Component {
             </div>
         );
     }
+
+    clearNotInGroup() {
+        this.setState({listNotInGroup: []})
+    }
 }
 
 
 const mapStateToProps = (state) => {
     return {
-        listCourse: state.course.listCourse,
-        listNonEnrolled: state.enrollment.listNonEnrolled,
+        listChallenge: state.challenge.listChallenge,
+        listNonGrouped: state.group.listNonGrouped,
+
     };
 };
 
 export default connect(mapStateToProps, {
-    enrollUser,
+    addToGroup,
+    fetchNotInGroup,
+    clearNonGrouped,
     createMessage,
-    clearNonEnrolled,
-    fetchNonEnrolled
-})(CreateChallenge);
+})(AddUserGroup);

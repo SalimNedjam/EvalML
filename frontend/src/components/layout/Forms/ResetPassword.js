@@ -3,8 +3,8 @@ import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 
 import PropTypes from "prop-types";
-import {resetPassword} from "../../actions/auth";
-import {createMessage} from "../../actions/messages";
+import {resetPassword} from "../../../actions/auth";
+import {createMessage} from "../../../actions/messages";
 import {Button, Result} from 'antd'
 
 export class ResetPassword extends Component {
