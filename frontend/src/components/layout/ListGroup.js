@@ -80,16 +80,16 @@ export class ListGroup extends Component {
                     obj.key = index
                     array.push(obj)
                 });
-            return (
-                <Row>
-                    <Col>
+                return (
+                    <Row>
+                        <Col>
 
-                        <Table columns={column} dataSource={array} size="small"/>
+                            <Table columns={column} dataSource={array} size="small"/>
 
-                    </Col>
-                </Row>
+                        </Col>
+                    </Row>
 
-            )
+                )
             }) :
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
 

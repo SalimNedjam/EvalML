@@ -76,7 +76,7 @@ class AddUserToGroup(generics.GenericAPIView):
                 group = serializer.save(group_id=my_group.group_id, user_id=user_adding)
             else:
                 raise ValidationError(
-                    {"groupe": "Le nombre maximum d'étudiants d'un un groupe est de " + challenge.nbStudent})
+                    {"groupe": "Le nombre maximum d'étudiants d'un un groupe est de " + str(challenge.nbStudent)})
 
         except Groups.DoesNotExist:
             # THE USER IS NOT IN A GROUP SO WE CREATE ONE AND ADD THE OTHER USER
@@ -113,7 +113,10 @@ class FetchUsersNotInGroup(generics.ListAPIView):
         criterion1 = Q(enrollment__course__course_id=course_id)
         criterion2 = Q(groups__challenge__challenge_id=challenge_id)
 
-        list1 = list(Users.objects.filter(criterion1).values_list('user_id', flat=True))
+        list1 = list(Users.objects.filter(criterion1)
+                     .exclude(user_id=self.request.user.user_id).
+                     values_list('user_id', flat=True))
+
         list2 = list(Users.objects.filter(criterion2).values_list('user_id', flat=True))
 
         list3 = list(filter(lambda x: x not in list2, list1))

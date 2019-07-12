@@ -66,6 +66,27 @@ class Header extends Component {
         );
 
 
+        const staffNav = (
+            <Navbar type="dark" theme="secondary" expand="md">
+                <NavbarBrand href="#">Shards React</NavbarBrand>
+                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03"
+                        aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+
+
+                <div className="collapse navbar-collapse" id="navbarColor03">
+                    <ul className="navbar-nav mr-auto">
+                        <NavLink exact to="/" className="nav-link">Home</NavLink>
+                        <NavLink to="/courses" className="nav-link">Courses</NavLink>
+                    </ul>
+                    {isAuthenticated ? authLinks : guestLinks}
+                </div>
+
+            </Navbar>
+        );
+
+
         const adminNav = (
             <Navbar type="dark" theme="secondary" expand="md">
                 <NavbarBrand href="#">Shards React</NavbarBrand>
@@ -79,9 +100,6 @@ class Header extends Component {
                     <ul className="navbar-nav mr-auto">
                         <NavLink exact to="/" className="nav-link">Home</NavLink>
                         <NavLink to="/courses" className="nav-link">Courses</NavLink>
-                        <NavLink to="/challenges" className="nav-link">Challenges</NavLink>
-
-
                         <NavLink to="/register" className="nav-link">Add User</NavLink>
 
 
@@ -97,7 +115,10 @@ class Header extends Component {
             isAuthenticated !== null ?
                 (isAuthenticated === true ?
                     (user.is_staff === true ?
-                        adminNav
+                        (user.is_admin === true ?
+                            adminNav
+                            :
+                            staffNav)
                         :
                         userNav)
                     :

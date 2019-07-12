@@ -6,12 +6,6 @@ import {createMessage} from "../../../actions/messages";
 
 
 export class AddUserGroup extends Component {
-    state = {
-        user: -1,
-        challenge: -1,
-
-    };
-
     static propTypes = {
         listChallenge: PropTypes.array.isRequired,
         listNonGrouped: PropTypes.array.isRequired,
@@ -20,7 +14,11 @@ export class AddUserGroup extends Component {
 
 
     };
+    state = {
+        user: -1,
+        challenge: -1,
 
+    };
 
     onSubmit = e => {
         e.preventDefault();
@@ -29,7 +27,7 @@ export class AddUserGroup extends Component {
         if (challenge === "-1" || challenge === -1)
             this.props.createMessage({selectItem: "Veuiller séléctioner un challenge"});
         else if (user === "-1" || user === -1)
-            this.props.createMessage({selectItem: "Veuiller séléctioner un étudient"});
+            this.props.createMessage({selectItem: "Veuiller séléctioner un étudiant"});
         else {
             const newMemberGroup = {challenge, user}
             this.props.addToGroup(newMemberGroup)
@@ -77,7 +75,7 @@ export class AddUserGroup extends Component {
         return (
             <div className="col-md-6 m-auto">
                 <div className="card card-body mt-5">
-                    <h2 className="text-center">Ajouter un étudient au cours</h2>
+                    <h2 className="text-center">Ajouter un étudiant au cours</h2>
 
                     <form onSubmit={this.onSubmit}>
                         <div className="form-group">
@@ -95,7 +93,7 @@ export class AddUserGroup extends Component {
                         </div>
                         <div className="form-group">
                             <div className="form-group">
-                                <label>Selectioner l'étudient</label>
+                                <label>Selectioner l'étudiant</label>
                                 <select
                                     className="form-control"
                                     name="user"

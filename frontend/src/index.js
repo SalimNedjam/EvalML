@@ -2,7 +2,6 @@ import App from './components/App';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from "react-redux";
-import {Modal} from 'antd'
 import store from "./store";
 import {HashRouter as Router,} from "react-router-dom";
 
@@ -14,42 +13,21 @@ const alertOptions = {
     position: "top center"
 };
 
-const AlertTemplate = ({options, message}) => (
+const AlertTemplate = ({style, options, message, close}) => (
 
-    options.type === 'info' && info(message)
-
+    options.type === 'info' && <div style={style} className="alert alert-info" role="alert">
+        {message}
+    </div>
     ||
-    options.type === 'success' && success(message)
+    options.type === 'success' && <div style={style} className="alert alert-success" role="alert">
+        {message}
+    </div>
     ||
-    options.type === 'error' && error(message)
+    options.type === 'error' && <div style={style} className="alert alert-danger" role="alert">
+        {message}
+    </div>
 
 );
-
-
-function info(message) {
-    Modal.info({
-        title: 'Information',
-        content: message,
-    });
-}
-
-function success(message) {
-    Modal.success({
-        title: 'Success',
-        content: message,
-    });
-}
-
-function error(message) {
-    Modal.error({
-        title: 'Erreur',
-        content: message,
-    });
-}
-
-
-
-
 const myApp = (
     <Provider store={store}>
         <AlertProvider template={AlertTemplate} {...alertOptions}>

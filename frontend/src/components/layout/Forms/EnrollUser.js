@@ -5,12 +5,6 @@ import {clearNonEnrolled, enrollUser, fetchNonEnrolled} from "../../../actions/a
 import {createMessage} from "../../../actions/messages";
 
 export class CreateChallenge extends Component {
-    state = {
-        user: -1,
-        course: -1,
-
-    };
-
     static propTypes = {
         listCourse: PropTypes.array.isRequired,
         listNonEnrolled: PropTypes.array.isRequired,
@@ -19,7 +13,11 @@ export class CreateChallenge extends Component {
         enrollUser: PropTypes.func.isRequired,
 
     };
+    state = {
+        user: -1,
+        course: -1,
 
+    };
 
     onSubmit = e => {
         e.preventDefault();
@@ -28,7 +26,7 @@ export class CreateChallenge extends Component {
         if (course === "-1" || course === -1)
             this.props.createMessage({selectItem: "Veuiller séléctioner un cours"});
         else if (user === "-1" || user === -1)
-            this.props.createMessage({selectItem: "Veuiller séléctioner un étudient"});
+            this.props.createMessage({selectItem: "Veuiller séléctioner un étudiant"});
         else {
             const newEnrollment = {user, course}
             this.props.enrollUser(newEnrollment)
@@ -74,7 +72,7 @@ export class CreateChallenge extends Component {
         return (
             <div className="col-md-6 m-auto">
                 <div className="card card-body mt-5">
-                    <h2 className="text-center">Ajouter un étudient au cours</h2>
+                    <h2 className="text-center">Ajouter un étudiant au cours</h2>
 
                     <form onSubmit={this.onSubmit}>
                         <div className="form-group">
@@ -93,7 +91,7 @@ export class CreateChallenge extends Component {
                         </div>
                         <div className="form-group">
                             <div className="form-group">
-                                <label>Selectioner l'étudient</label>
+                                <label>Selectioner l'étudiant</label>
                                 <select
                                     className="form-control"
                                     name="user"

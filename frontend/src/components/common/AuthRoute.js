@@ -1,5 +1,5 @@
 import React from "react";
-import {Route} from "react-router-dom";
+import {Redirect, Route} from "react-router-dom";
 import {connect} from "react-redux";
 
 const PrivateRoute = ({component: Component, auth, ...rest}) => (
@@ -7,17 +7,20 @@ const PrivateRoute = ({component: Component, auth, ...rest}) => (
         {...rest}
         render={props => {
 
-            if (auth.isLoading) {
+            if (auth.isLoading)
                 return (<div className="d-flex justify-content-center">
                     <div className="spinner-grow" role="status">
                         <span className="sr-only">Loading...</span>
                     </div>
                 </div>)
-            } else if (!auth.isAuthenticated) {
-                //return <Redirect to="/login" />;
-            } else if (auth.isAuthenticated) {
+
+            else if (auth.isAuthenticated !== null && !auth.isAuthenticated)
+                return <Redirect to="/login"/>;
+
+            else if (auth.isAuthenticated !== null && auth.isAuthenticated)
                 return <Component {...props} />;
-            }
+
+
         }}
     />
 );

@@ -12,7 +12,7 @@ import {
     USER_LOADED,
     USER_LOADING
 } from "./types";
-import {fetchChallenges, fetchCourses} from "./application";
+import {enrollUser, fetchChallenges, fetchCourses} from "./application";
 
 // CHECK TOKEN & LOAD USER
 export const loadUser = () => (dispatch, getState) => {
@@ -70,37 +70,23 @@ export const login = (username, password) => dispatch => {
 };
 
 // REGISTER USER
-export const createUser = ({matricule, username}) => (dispatch, getState) => {
+export const createUser = ({matricule, username, listCourseId}) => (dispatch, getState) => {
 
 
     const password = 'rand'
+    console.log(listCourseId)
     const body = JSON.stringify({matricule, username, password});
 
     axios
         .post("/api/auth/createUser", body, tokenConfig(getState))
         .then(res => {
-
-            const body = JSON.stringify({email: username});
-            const config = {
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            };
-            axios
-                .post("/api/auth/reset-password", body, config)
-                .then(res => {
-                    dispatch(createMessage({addUser: "Le compte à été crée."}));
-
-
-                })
-                .catch(err => {
-                    dispatch(returnErrors(err.response.data, err.response.status));
-
-                });
-
+            dispatch(createMessage({addUser: "Le compte à été crée."}));
+            listCourseId.map((course) => {
+                console.log({course, user: res.data.user.user_id})
+                dispatch(enrollUser({course, user: res.data.user.user_id}))
+            });
         })
         .catch(err => {
-            console.log(err)
             dispatch(returnErrors(err.response.data, err.response.status));
 
         });

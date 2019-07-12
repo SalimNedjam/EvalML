@@ -24,8 +24,8 @@ export class Course extends Component {
             <Row type="flex" justify="center" gutter={10}>
 
                 <Col xs={24} sm={26} md={20} lg={14} xl={12}>
-                        {this.renderList()}
-                    </Col>
+                    {this.renderList()}
+                </Col>
 
                 <Col xs={30} sm={26} md={20} lg={14} xl={12}>
                     {courseObject && courseObject.owner === this.props.auth.user.user_id &&
@@ -46,7 +46,7 @@ export class Course extends Component {
                 </Col>
 
 
-                </Row>
+            </Row>
 
 
         );

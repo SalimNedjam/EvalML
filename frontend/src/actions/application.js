@@ -79,7 +79,6 @@ export const createChallenge = ({description, title, input_types, course, nbStud
             });
         })
         .catch(err => {
-            console.log(err)
             dispatch(returnErrors(err.response.data, err.response.status));
             dispatch({
                 type: ADD_CHALLENGE_FAIL
@@ -167,7 +166,7 @@ export const enrollUser = ({course, user}) => (dispatch, getState) => {
     axios
         .post("/api/auth/enroll_course", body, tokenConfig(getState))
         .then(res => {
-            dispatch(createMessage({addUser: "L'étudient à été inscrit au cours."}));
+            dispatch(createMessage({addUser: "L'étudiant à été inscrit au cours."}));
             dispatch({
                 type: ENROLL_USER,
                 payload: user
@@ -297,7 +296,7 @@ export const removeEnrollment = (id) => (dispatch, getState) => {
     axios
         .delete("/api/enrollment/remove_enrollment/" + id + "/", tokenConfig(getState))
         .then(res => {
-            dispatch(createMessage({addUser: "L'étudient à été désinscrit au cours."}));
+            dispatch(createMessage({addUser: "L'étudiant à été désinscrit au cours."}));
             dispatch({
                 type: REMOVE_ENROLLMENT,
                 payload: id

@@ -53,8 +53,7 @@ class CourseList extends Component {
                 style={{width: 300}}
                 actions={[
                     <Link to={"/courses/" + course.course_id + "/"}><Icon type="arrow-right"/></Link>,
-                    <Link to={"/enrollment"}><Icon type="user-add"/></Link>,
-                    <Link to={"/management/addManager"}><Icon type="usergroup-add"/></Link>]}>
+                ]}>
                 <Card.Meta
                     title={course.description}
                 />
