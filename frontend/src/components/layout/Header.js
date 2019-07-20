@@ -3,7 +3,6 @@ import {Link, NavLink} from "react-router-dom";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import {logout} from "../../actions/auth";
-import {Navbar, NavbarBrand} from 'shards-react';
 
 
 class Header extends Component {
@@ -54,8 +53,6 @@ class Header extends Component {
                 <div className="collapse navbar-collapse" id="navbarColor03">
                     <ul className="navbar-nav mr-auto">
                         <NavLink exact to="/" className="nav-link">Home</NavLink>
-                        <NavLink to="/challenges" className="nav-link">Challenges</NavLink>
-                        <NavLink to="/add_to_group" className="nav-link">Add User to group</NavLink>
 
                     </ul>
 
@@ -64,11 +61,11 @@ class Header extends Component {
 
             </nav>
         );
-
+        
 
         const staffNav = (
-            <Navbar type="dark" theme="secondary" expand="md">
-                <NavbarBrand href="#">Shards React</NavbarBrand>
+            <nav className="navbar navbar-expand-sm bg-dark navbar-dark">
+                <a className="navbar-brand" href="#">Staff Navbar</a>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03"
                         aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
@@ -80,16 +77,17 @@ class Header extends Component {
                         <NavLink exact to="/" className="nav-link">Home</NavLink>
                         <NavLink to="/courses" className="nav-link">Courses</NavLink>
                     </ul>
-                    {isAuthenticated ? authLinks : guestLinks}
-                </div>
 
-            </Navbar>
+                </div>
+                {isAuthenticated ? authLinks : guestLinks}
+
+            </nav>
         );
 
 
         const adminNav = (
-            <Navbar type="dark" theme="secondary" expand="md">
-                <NavbarBrand href="#">Shards React</NavbarBrand>
+            <nav className="navbar navbar-expand-sm bg-dark navbar-dark">
+                <a className="navbar-brand" href="#">Admin Navbar</a>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03"
                         aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
@@ -104,11 +102,15 @@ class Header extends Component {
 
 
                     </ul>
-                    {isAuthenticated ? authLinks : guestLinks}
-                </div>
 
-            </Navbar>
+                </div>
+                {isAuthenticated ? authLinks : guestLinks}
+
+            </nav>
         );
+       
+
+
 
 
         return (

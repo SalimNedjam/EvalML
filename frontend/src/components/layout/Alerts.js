@@ -18,17 +18,15 @@ export class Alerts extends Component {
         if (error !== prevProps.error) {
             if (error.msg.name) alert.error(`Name: ${error.msg.name.join()}`);
             if (error.msg.username) alert.error(`Email: ${error.msg.username.join()}`);
-            if (error.msg.message)
-                alert.error(`Message: ${error.msg.message.join()}`);
-            if (error.msg.non_field_errors)
-                alert.error(error.msg.non_field_errors.join());
+            if (error.msg.message) alert.error(`Message: ${error.msg.message.join()}`);
+            if (error.msg.non_field_errors) alert.error(error.msg.non_field_errors.join());
             if (error.msg.matricule) alert.error(`Matricule: ${error.msg.matricule.join()}`);
             if (error.msg.description) alert.error(`Description: ${error.msg.description.join()}`);
             if (error.msg.password) alert.error(`Password: ${error.msg.password.join()}`);
             if (error.msg.new_password) alert.error(`Nouveau mot de passe: ${error.msg.new_password.join()}`);
             if (error.msg.detail && error.msg.detail !== "Token non valide.") alert.error(`Attention: ${error.msg.detail}`);
             if (error.msg.groupe) alert.error(error.msg.groupe);
-
+            if (error.msg.submission) alert.error(error.msg.submission);
 
         }
 

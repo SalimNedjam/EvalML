@@ -2,7 +2,7 @@ from rest_framework import serializers
 # User Serializer
 from rest_framework.fields import SerializerMethodField
 
-from application.models import Challenges, Course, Groups, Enrollment, Management
+from application.models import Submission, Challenges, Course, Groups, Enrollment, Management
 from authentification.models import Users
 from authentification.serializers import UserSerializer
 
@@ -42,12 +42,25 @@ class ManagementSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class SubmissionSerializer(serializers.ModelSerializer):
+    tags = serializers.ListField(default=[])
+
+    class Meta:
+        model = Submission
+        fields = '__all__'
+        read_only_fields = ['user', 'challenge']
+
+    def create(self, validated_data):
+        return Submission.objects.create(**validated_data)
+
+
 class GroupListSerializer(serializers.ModelSerializer):
     user = SerializerMethodField()
 
     class Meta:
         model = Groups
         fields = '__all__'
+        read_only_fields = ('group_id',)
 
     def get_user(self, obj):
         return SimpleUserSerializer(Users.objects.get(user_id=obj.user.user_id)).data

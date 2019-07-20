@@ -5,26 +5,23 @@ import {createCourse} from "../../../actions/application";
 import {createMessage} from "../../../actions/messages";
 
 export class CreateUser extends Component {
+    static propTypes = {
+        createCourse: PropTypes.func.isRequired,
+    };
     state = {
         description: "",
         nbStudent: "",
         nbSubmit: "",
-        freqSubmit: ""
 
-    };
-
-    static propTypes = {
-        createCourse: PropTypes.func.isRequired,
     };
 
     onSubmit = e => {
         e.preventDefault();
-        const {description, nbStudent, nbSubmit, freqSubmit} = this.state;
+        const {description, nbStudent, nbSubmit} = this.state;
         const newCourse = {
             description,
             nbStudent,
             nbSubmit,
-            freqSubmit
         }
 
         this.props.createCourse(newCourse);
@@ -34,7 +31,7 @@ export class CreateUser extends Component {
 
     render() {
 
-        const {description, nbStudent, nbSubmit, freqSubmit} = this.state;
+        const {description, nbStudent, nbSubmit} = this.state;
         return (
             <div className="col-md-6 m-auto">
                 <div className="card card-body mt-5">
@@ -52,7 +49,7 @@ export class CreateUser extends Component {
                         </div>
 
                         <div className="form-group">
-                            <label>Nombre d'étudiants par groupe (Pas de limite = -1)</label>
+                            <label>Nombre d'étudiants par groupe (Pas de limite = 0)</label>
                             <input
                                 type="number"
                                 className="form-control"
@@ -62,7 +59,7 @@ export class CreateUser extends Component {
                             />
                         </div>
                         <div className="form-group">
-                            <label>Nombre de soumissions (Pas de limite = -1)</label>
+                            <label>Nombre de soumissions (Pas de limite = 0)</label>
                             <input
                                 type="number"
                                 className="form-control"
@@ -70,16 +67,6 @@ export class CreateUser extends Component {
                                 onChange={this.onChange}
                                 value={nbSubmit}
 
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Délais entre deux soumission (En minutes)</label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                name="freqSubmit"
-                                onChange={this.onChange}
-                                value={freqSubmit}
                             />
                         </div>
                         <div className="form-group">

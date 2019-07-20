@@ -60,3 +60,26 @@ class RemoveChallenge(generics.DestroyAPIView):
             {
                 "detail": "ok"
             })
+
+
+class SwitchVisibility(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated, IsStaff]
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = ChallengeSerializer
+    lookup_field = 'challenge_id'
+
+    def get_queryset(self):
+        challenge_id = self.kwargs['challenge_id']
+        queryset_challenges = Challenges.objects.filter(course__owner_id=self.request.user, challenge_id=challenge_id)
+        return queryset_challenges
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.is_visible = not instance.is_visible
+        instance.save()
+        self.perform_update(instance)
+
+        return Response({
+            "challenge": ChallengeSerializer(instance, context=self.get_serializer_context()).data
+
+        })

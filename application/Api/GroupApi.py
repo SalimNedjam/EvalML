@@ -101,6 +101,39 @@ class AddUserToGroup(generics.GenericAPIView):
         )
 
 
+class CreateGroup(generics.GenericAPIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = GroupListSerializer
+
+    def post(self, request, *args, **kwargs):
+        challenge_id = request.data.get('challenge')
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # CHECK IF THE USER IS IN A GROUP
+        try:
+            # RETREIVE THE GROUP
+
+            my_group = Groups.objects.get(
+                Q(user_id=self.request.user) &
+                Q(challenge_id=challenge_id))
+            Groups.objects.filter(group_id=my_group.group_id)
+
+            raise ValidationError(
+                {"groupe": "Vous faites déja partis d'un groupe."})
+
+        except Groups.DoesNotExist:
+            # THE USER IS NOT IN A GROUP SO WE CREATE ONE AND ADD THE OTHER USER
+            group_id = unique_group_id_generator(self)
+            group = Groups.objects.create(user=request.user, group_id=group_id, challenge_id=challenge_id, owner=True)
+        return Response(
+            {
+                "groupe": GroupListSerializer(group, context=self.get_serializer_context()).data
+            }
+        )
+
+
 class FetchUsersNotInGroup(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (TokenAuthentication,)
@@ -124,27 +157,35 @@ class FetchUsersNotInGroup(generics.ListAPIView):
         return Users.objects.filter(user_id__in=list3)
 
 
-class LeaveGroup(generics.DestroyAPIView):
-    permission_classes = (IsAuthenticated,)
+class RemoveUser(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
     authentication_classes = (TokenAuthentication,)
     serializer_class = UserSerializer
-    lookup_field = 'challenge'
+    lookup_field = 'id'
 
     # RETREIVE THE GROUP INSTANCE
     def get_queryset(self):
-        queryset = Groups.objects.filter(user_id=self.request.user.user_id, challenge_id=self.kwargs['challenge'])
+        queryset = Groups.objects.filter(id=self.kwargs['id'])
         return queryset
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        self.perform_destroy(instance)
-        print(instance.group_id)
-
-        # GIVE THE LEAD OF THE GROUP TO ANOTHER USER IF EXISTS
         try:
-            nextOwner = Groups.objects.filter(group_id=instance.group_id).first()
-            nextOwner.owner = True
-            nextOwner.save()
+            if instance.user_id == self.request.user.user_id:
+                self.perform_destroy(instance)
+            else:
+                leader = Groups.objects.get(group_id=instance.group_id, user_id=self.request.user.user_id, owner=True)
+                self.perform_destroy(instance)
+        except Groups.DoesNotExist:
+            raise ValidationError(
+                {"groupe": "Seul le chef du groupe peut supprimer des membres"})
+
+        # GIVE THE LEAD OF THE GROUP TO ANOTHER USER IF WE HAVE REMOVED TO GROUP OWNER
+        try:
+            if instance.owner:
+                nextOwner = Groups.objects.filter(group_id=instance.group_id).first()
+                nextOwner.owner = True
+                nextOwner.save()
         finally:
             return Response(
                 {
@@ -160,7 +201,7 @@ class RetrieveGroupList(generics.ListAPIView):
 
     # RETREIVE THE GROUP INSTANCE
     def get_queryset(self):
-        challenge_id = self.request.data.get('challenge')
+        challenge_id = self.request.GET['challenge']
         try:
             my_group = Groups.objects.get(
                 Q(user_id=self.request.user) &
@@ -184,8 +225,11 @@ class ListGroupsChallenge(generics.ListAPIView):
 
         criterion1 = Q(course__owner_id=self.request.user)
         criterion2 = Q(course__management__user_id=self.request.user)
-        queryset_challenges = Challenges.objects.filter(criterion1 | criterion2, challenge_id=challenge_id)
-        return Groups.objects.filter(challenge_id__in=queryset_challenges)
+        list1 = list(
+            Challenges.objects.filter(criterion1 | criterion2, challenge_id=challenge_id).values_list('challenge_id',
+                                                                                                      flat=True))
+
+        return Groups.objects.filter(challenge_id__in=list1)
 
 
 class RemoveUserGroup(generics.DestroyAPIView):

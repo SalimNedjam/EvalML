@@ -7,6 +7,7 @@ import group from "./group";
 import enrollment from "./enrollment";
 import course from "./course";
 import challenge from "./challenge";
+import submission from "./submission";
 
 
 export default combineReducers({
@@ -17,5 +18,6 @@ export default combineReducers({
     management,
     err,
     messages,
+    submission,
     auth
 });

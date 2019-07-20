@@ -4,8 +4,15 @@ import PropTypes from "prop-types";
 import {createChallenge} from "../../../actions/application";
 import {createMessage} from "../../../actions/messages";
 import Textarea from 'react-textarea-autosize';
+import {DatePicker} from 'antd';
 
 export class CreateChallenge extends Component {
+    static propTypes = {
+        createChallenge: PropTypes.func.isRequired,
+        listCourse: PropTypes.array.isRequired,
+        listChallenge: PropTypes.array.isRequired,
+
+    };
     state = {
         description: "",
         title: "",
@@ -13,19 +20,11 @@ export class CreateChallenge extends Component {
         course: -1,
         nbStudent: "",
         nbSubmit: "",
-        freqSubmit: "",
         challenge: -1,
+        limitDate: ""
 
 
     };
-
-    static propTypes = {
-        createChallenge: PropTypes.func.isRequired,
-        listCourse: PropTypes.array.isRequired,
-        listChallenge: PropTypes.array.isRequired,
-
-    };
-
 
     handleInputNameChange = idx => evt => {
         const newInput = this.state.inputs.map((input, sidx) => {
@@ -73,6 +72,15 @@ export class CreateChallenge extends Component {
                                         onChange={this.handleInputNameChange(idx)}
                                     />
                                 </div>
+                                <div className="col-sm-4 my-1">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="File input name"
+                                        value={input}
+                                        onChange={this.handleInputNameChange(idx)}
+                                    />
+                                </div>
                                 <div className="col-auto my-1">
                                     <button type="button" className="close" onClick={this.handleRemoveInput(idx)}
                                             aria-label="Close">
@@ -92,7 +100,7 @@ export class CreateChallenge extends Component {
 
     onSubmit = e => {
         e.preventDefault();
-        const {description, title, course, nbStudent, nbSubmit, freqSubmit} = this.state;
+        const {description, title, course, nbStudent, nbSubmit, limitDate} = this.state;
         const input_types = this.state.inputs.filter(Boolean);
 
         console.log(input_types)
@@ -106,10 +114,10 @@ export class CreateChallenge extends Component {
             this.props.createMessage({isEmptyTitle: "Le nombre maximum d'étudiants par groupe ne peut pas etre vide"});
         else if (nbSubmit === "")
             this.props.createMessage({isEmptyTitle: "Le nombre maximum de soumissions ne peut pas etre vide"});
-        else if (freqSubmit === "")
-            this.props.createMessage({isEmptyTitle: "Le delais entre deux soumission ne peut pas etre vide"});
+        else if (this.state.limitDate === "")
+            this.props.createMessage({isEmptyTitle: "La date limite de soumission ne peut pas etre vide"});
         else {
-            const newChallenge = {description, title, input_types, course, nbStudent, nbSubmit, freqSubmit}
+            const newChallenge = {description, title, input_types, course, nbStudent, nbSubmit, limitDate}
             this.props.createChallenge(newChallenge)
         }
 
@@ -123,7 +131,6 @@ export class CreateChallenge extends Component {
             [e.target.name]: e.target.value,
             nbStudent: course.nbStudent,
             nbSubmit: course.nbSubmit,
-            freqSubmit: course.freqSubmit,
         })
 
 
@@ -137,7 +144,6 @@ export class CreateChallenge extends Component {
                 [e.target.name]: e.target.value,
                 nbStudent: challenge.nbStudent,
                 nbSubmit: challenge.nbSubmit,
-                freqSubmit: challenge.freqSubmit,
                 description: challenge.description,
                 title: challenge.title,
                 input_types: challenge.input_types
@@ -154,6 +160,14 @@ export class CreateChallenge extends Component {
         this.setState({[e.target.name]: e.target.value})
     };
 
+    onTimeChange = (value, dateString) => {
+        this.setState({
+            limitDate: dateString
+        })
+
+    }
+
+
     renderList() {
         return this.props.listCourse.map((course) => {
             return <option value={course.course_id} key={course.course_id}>{course.description}</option>
@@ -168,7 +182,7 @@ export class CreateChallenge extends Component {
 
     render() {
 
-        const {description, title, course, nbStudent, nbSubmit, freqSubmit, challenge} = this.state;
+        const {description, title, course, nbStudent, nbSubmit, challenge} = this.state;
         return (
             <div className="col-md-6 m-auto">
                 <div className="card card-body mt-5">
@@ -227,6 +241,12 @@ export class CreateChallenge extends Component {
                             />
                         </div>
                         <div className="form-group">
+                            <label>Date limite de soumission</label>
+                            <div>
+                                <DatePicker showTime placeholder="Date limite" onChange={this.onTimeChange}/>
+                            </div>
+                        </div>
+                        <div className="form-group">
                             <label>Nombre d'étudiants par groupe (Pas de limite = 0)</label>
                             <input
                                 type="number"
@@ -247,16 +267,7 @@ export class CreateChallenge extends Component {
 
                             />
                         </div>
-                        <div className="form-group">
-                            <label>Délais entre deux soumission (En minutes)</label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                name="freqSubmit"
-                                onChange={this.onChange}
-                                value={freqSubmit}
-                            />
-                        </div>
+
                         <div className="form-group">
                             {
                                 this.renderInputs()

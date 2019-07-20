@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {selectChallenge} from "../../actions/application";
 import PropTypes from "prop-types";
+import {Link} from "react-router-dom";
+import {Button} from 'antd'
 
 class ChallengeCard extends Component {
     static propTypes = {
@@ -105,8 +107,9 @@ const ChallengeTab = props => {
         <div className="card-body">
             <h5 className="card-title">{props.challenge.title}</h5>
             <p className="card-text">{props.challenge.description}</p>
-            <a href="#" className="btn btn-primary" onClick={() => props.selectChallenge(props.challenge)}>Open the
-                challenge</a>
+            
+            <Link to={"/submission/"+props.challenge.challenge_id+"/"}><Button type="primary">Soumettre une réponse</Button></Link>
+
         </div>
     </div>
 };

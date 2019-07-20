@@ -7,10 +7,10 @@ import {
     LOGIN_FAIL,
     LOGIN_SUCCESS,
     LOGOUT_SUCCESS,
-    REGISTER_FAIL,
-    REGISTER_SUCCESS,
     USER_LOADED,
-    USER_LOADING
+    USER_LOADING,
+    WAIT_ASK,
+    WAIT_FINISH
 } from "./types";
 import {enrollUser, fetchChallenges, fetchCourses} from "./application";
 
@@ -61,7 +61,6 @@ export const login = (username, password) => dispatch => {
             dispatch(fetchCourses())
         })
         .catch(err => {
-            console.log(err);
             dispatch(returnErrors(err.response.data, err.response.status));
             dispatch({
                 type: LOGIN_FAIL
@@ -106,7 +105,6 @@ export const updatePassword = ({old_password, new_password}) => (dispatch, getSt
 
         })
         .catch(err => {
-            console.log(err)
             dispatch(returnErrors(err.response.data, err.response.status));
 
         });
@@ -126,14 +124,14 @@ export const resetPassword = (password, token) => (dispatch) => {
         .then(res => {
             dispatch(createMessage({addUser: "Mot de passe changé."}));
             dispatch({
-                type: REGISTER_SUCCESS
+                type: WAIT_FINISH
             });
 
         })
         .catch(err => {
             dispatch(returnErrors(err.response.data, err.response.status));
             dispatch({
-                type: REGISTER_FAIL
+                type: WAIT_ASK
             });
 
         });

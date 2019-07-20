@@ -1,12 +1,14 @@
 import React, {Component} from "react";
-import {Empty, Icon, Modal, Table} from 'antd'
+import {Modal, Table} from 'antd'
+import {Link} from "react-router-dom";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
-import {fetchEnrolled, removeEnrollment} from "../../actions/application";
+import {fetchEnrolled, removeEnrollment} from "../../../actions/application";
+import {FiUserMinus} from "react-icons/fi";
 
 const {confirm} = Modal;
 
-export class ListEnrolled extends Component {
+export class TableEnrolled extends Component {
 
     static propTypes = {
         fetchEnrolled: PropTypes.func.isRequired,
@@ -43,7 +45,7 @@ export class ListEnrolled extends Component {
             title: 'Action',
             key: 'action',
             render: (text, record) => (
-                <a onClick={() => this.doDelete(record)}><Icon type="user-delete"/></a>
+                <a onClick={() => this.doDelete(record)}><FiUserMinus style={IconStyle}/></a>
 
             ),
         },
@@ -58,10 +60,19 @@ export class ListEnrolled extends Component {
     }
 
     render() {
-        return this.props.listEnrolled && this.props.listEnrolled.length > 0 ?
-            <Table columns={this.column} dataSource={this.props.listEnrolled} size="small"/>
-            :
-            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
+        return (
+            <div>
+                <h4 className="text-center"> Enrolled Students</h4>
+                <Table
+                    columns={this.column}
+                    dataSource={this.props.listEnrolled}
+                    size="small"
+                    footer={() => <Link to={"/enrollment/enrollUser"}>Add new student </Link>}
+
+                />
+            </div>)
+
+
     }
 
     doDelete(record) {
@@ -83,6 +94,9 @@ export class ListEnrolled extends Component {
 
 }
 
+const IconStyle = {
+    fontSize: '18px',
+}
 
 const mapStateToProps = (state) => {
 
@@ -95,5 +109,4 @@ const mapStateToProps = (state) => {
 
 export default connect(
     mapStateToProps,
-    {fetchEnrolled, removeEnrollment}
-)(ListEnrolled);
+    {fetchEnrolled, removeEnrollment})(TableEnrolled);

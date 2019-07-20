@@ -1,12 +1,12 @@
 import React, {Component} from "react";
 import {connect} from 'react-redux'
-import {Col, Row} from "shards-react";
-import {Empty, Icon, Table} from 'antd'
-import {createMessage} from "../../actions/messages";
+import {Col, Empty, Row, Table} from 'antd'
+import {createMessage} from "../../../actions/messages";
 import axios from 'axios'
-import {reduceObjValues} from "../../actions/application";
+import {reduceObjValues} from "../../../actions/application";
+import {FiUserMinus} from "react-icons/fi";
 
-export class ListGroup extends Component {
+export class TableGroup extends Component {
 
     constructor(props) {
         super(props)
@@ -147,7 +147,7 @@ const column = [
         title: 'Action',
         key: 'action',
         render: (text, record) => (
-            <a onClick={() => this.doDelete(record.id)}><Icon type="user-delete"/></a>
+            <a onClick={() => this.doDelete(record.id)}><FiUserMinus/></a>
 
         ),
     },
@@ -163,4 +163,4 @@ const mapStateToProps = (state) => {
 export default connect(
     mapStateToProps,
     {createMessage}
-)(ListGroup);
+)(TableGroup);

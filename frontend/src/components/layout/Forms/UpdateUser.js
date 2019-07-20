@@ -5,6 +5,10 @@ import {updateInformations, updatePassword} from "../../../actions/auth";
 import {createMessage} from "../../../actions/messages";
 
 export class UpdateUser extends Component {
+    static propTypes = {
+        updatePassword: PropTypes.func.isRequired,
+        user: PropTypes.object,
+    };
     state = {
         email: this.props.user.username,
         matricule: this.props.user.matricule,
@@ -13,11 +17,6 @@ export class UpdateUser extends Component {
         old_password: "",
         last_name: this.props.user.last_name,
         first_name: this.props.user.first_name,
-    };
-
-    static propTypes = {
-        updatePassword: PropTypes.func.isRequired,
-        user: PropTypes.object,
     };
 
     onSubmitPassword = e => {

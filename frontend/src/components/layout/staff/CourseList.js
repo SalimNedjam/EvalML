@@ -2,7 +2,10 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
-import {Card, Col, Icon, Row} from 'antd';
+import Row from 'antd/lib/row';
+import Card from 'antd/lib/card';
+import Col from 'antd/lib/col';
+import {FiChevronRight} from "react-icons/fi";
 
 class CourseList extends Component {
     static propTypes = {
@@ -15,10 +18,7 @@ class CourseList extends Component {
     render() {
 
         return (<div>
-
             <div>
-
-
                 <Link
                     to={"/courses/createCourse"}>
                     <button
@@ -52,25 +52,20 @@ class CourseList extends Component {
             <Card
                 style={{width: 300}}
                 actions={[
-                    <Link to={"/courses/" + course.course_id + "/"}><Icon type="arrow-right"/></Link>,
+                    <Link to={"/courses/" + course.course_id + "/"}><FiChevronRight/></Link>,
                 ]}>
                 <Card.Meta
                     title={course.description}
                 />
                 <br/>
-                <strong>Fréquence de soumission:</strong>
-                <br/>
-                {course.freqSubmit === 0 ? "Pas de limite" : "Chaque " + course.freqSubmit + " minute(s)"}
-                <br/>
-                <br/>
                 <strong>Nombre de soumission au maximum:</strong>
                 <br/>
-                {course.freqSubmit === 0 ? "Pas de limite" : course.freqSubmit + " soumissions"}
+                {course.nbSubmit === 0 ? "Pas de limite" : course.nbSubmit + " soumissions"}
                 <br/>
                 <br/>
                 <strong>Nombre d'étudiants:</strong>
                 <br/>
-                {course.freqSubmit === 0 ? "Pas de limite" : course.freqSubmit + " étudiants"}
+                {course.nbStudent === 0 ? "Pas de limite" : course.nbStudent + " étudiants"}
 
             </Card>
         </Col>

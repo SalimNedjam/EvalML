@@ -1,8 +1,16 @@
-import {ADD_TO_GROUP, FETCH_NON_GROUPED, FETCH_NON_GROUPED_FAIL} from "../actions/types";
+import {
+    ADD_TO_GROUP,
+    CREATE_GROUP,
+    FETCH_GROUP,
+    FETCH_NON_GROUPED,
+    FETCH_NON_GROUPED_FAIL,
+    REMOVE_GROUP
+} from "../actions/types";
 
 const initialState = {
 
     listNonGrouped: [],
+    listGroup: []
 
 };
 
@@ -25,7 +33,22 @@ export default function (state = initialState, action) {
                 ...state,
                 listNonGrouped: []
             }
+        case FETCH_GROUP:
+            return {
+                ...state,
+                listGroup: action.payload
+            }
+        case CREATE_GROUP:
 
+            return {
+                ...state,
+                listGroup: action.payload
+            }
+        case REMOVE_GROUP:
+            return {
+                ...state,
+                listGroup: state.listGroup.filter(group => group.id != action.payload)
+            }
         default:
             return state;
     }

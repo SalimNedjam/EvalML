@@ -5,14 +5,6 @@ import {addManager, clearNonManager, fetchNonManager} from "../../../actions/app
 import {createMessage} from "../../../actions/messages";
 
 export class CreateChallenge extends Component {
-    state = {
-        user: -1,
-        course: -1,
-        is_group_admin: false,
-        is_course_admin: false
-
-    };
-
     static propTypes = {
         listCourse: PropTypes.array.isRequired,
         listNonManager: PropTypes.array.isRequired,
@@ -21,7 +13,13 @@ export class CreateChallenge extends Component {
         addManager: PropTypes.func.isRequired,
 
     };
+    state = {
+        user: -1,
+        course: -1,
+        is_group_admin: false,
+        is_course_admin: false
 
+    };
 
     onSubmit = e => {
         e.preventDefault();

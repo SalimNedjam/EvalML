@@ -8,15 +8,14 @@ import {createMessage} from "../../../actions/messages";
 import {Button, Result} from 'antd'
 
 export class ResetPassword extends Component {
+    static propTypes = {
+        resetPassword: PropTypes.func.isRequired,
+        done: PropTypes.bool.isRequired,
+
+    };
     state = {
         new_password: "",
         new_password2: "",
-    };
-
-    static propTypes = {
-        resetPassword: PropTypes.func.isRequired,
-        updatedPassword: PropTypes.bool.isRequired,
-
     };
 
     onSubmitPassword = e => {
@@ -39,7 +38,7 @@ export class ResetPassword extends Component {
 
     render() {
         const {new_password, new_password2} = this.state;
-        if (this.props.updatedPassword === true) {
+        if (this.props.done === true) {
             return <Result
                 status="success"
                 title="Your password has been sucessfully reset !"
@@ -92,7 +91,7 @@ export class ResetPassword extends Component {
 }
 
 const mapStateToProps = (state) => {
-    return {updatedPassword: state.auth.updatedPassword}
+    return {done: state.auth.done}
 
 };
 

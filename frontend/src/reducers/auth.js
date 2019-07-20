@@ -7,7 +7,9 @@ import {
     REGISTER_FAIL,
     REGISTER_SUCCESS,
     USER_LOADED,
-    USER_LOADING
+    USER_LOADING,
+    WAIT_ASK,
+    WAIT_FINISH
 } from "../actions/types";
 
 const initialState = {
@@ -15,7 +17,7 @@ const initialState = {
     isAuthenticated: null,
     isLoading: false,
     user: null,
-    updatedPassword: false
+    done: false
 };
 
 export default function (state = initialState, action) {
@@ -43,14 +45,22 @@ export default function (state = initialState, action) {
         case REGISTER_FAIL:
             return {
                 ...state,
-                isLoading: false,
-                updatedPassword: false
+                isLoading: false
             };
         case REGISTER_SUCCESS:
             return {
                 ...state,
-                isLoading: false,
-                updatedPassword: true
+                isLoading: false
+            };
+        case WAIT_ASK:
+            return {
+                ...state,
+                done: false
+            };
+        case WAIT_FINISH:
+            return {
+                ...state,
+                done: true
             };
         case INFORMATIONS_UPDATED:
             return {

@@ -149,7 +149,12 @@ AUTH_USER_MODEL = 'authentification.Users'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
-    )
+    ),
+
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '1/minute'
+    }
+
 }
 
 EMAIL_HOST = 'smtp.mailtrap.io'
