@@ -21,7 +21,11 @@ export class Course extends Component {
         })[0];
         return (
 
-            <Row type="flex" justify="center" gutter={10}>
+            <Row type="flex" justify="center" gutter={10} style={{
+                margin: '24px 16px',
+                padding: 24,
+                background: '#fff',
+            }}>
 
                 <Col xs={24} sm={26} md={20} lg={14} xl={12}>
                     <TableChallenge course={course} history={this.props.history}/>
@@ -47,6 +51,7 @@ export class Course extends Component {
 
 
 }
+
 
 const mapStateToProps = (state) => {
     console.log(state)

@@ -15,7 +15,11 @@ class ChallengesList extends Component {
     render() {
 
         return (
-            <Row gutter={16}>
+            <Row gutter={16} style={{
+                margin: '24px 16px',
+                padding: 24,
+                background: '#fff',
+            }}>
                 {this.renderList()}
             </Row>
         )

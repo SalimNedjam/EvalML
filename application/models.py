@@ -22,6 +22,10 @@ class Course(models.Model):
     nbStudent = models.IntegerField(default=-1)
 
 
+def script_path(instance, filename):
+    return 'Course_{0}/challenge_{1}/{2}'.format(instance.course.course_id, instance.title, filename)
+
+
 class Challenges(models.Model):
     class Meta:
         unique_together = (('challenge_id', 'course'),)
@@ -37,7 +41,27 @@ class Challenges(models.Model):
     description = models.TextField()
     nbSubmit = models.IntegerField(default=0)
     nbStudent = models.IntegerField(default=0)
-    input_types = ListField(default=[])
+    inputExt = models.TextField()
+    inputParam = models.TextField()
+    command = models.TextField()
+    scriptFile = models.FileField(upload_to=script_path)
+    args = ListField(default=[])
+    outputs = ListField(default=[])
+
+
+def truth_path(instance, filename):
+    return 'Course_{0}/challenge_{1}/{2}'.format(instance.course.course_id, instance.challenge.title, filename)
+
+
+class TruthFile(models.Model):
+    class Meta:
+        db_table = "truthFile"
+
+    file_id = models.AutoField(primary_key=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
+    challenge = models.ForeignKey(Challenges, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
+    file = models.FileField(upload_to=truth_path, default="")
+    param = models.TextField()
 
 
 class Groups(models.Model):
@@ -93,8 +117,11 @@ class Management(models.Model):
 
 
 def directory_path(instance, filename):
-    return 'Submissions/challenge_{0}/user_{1}/{2}_{3}'.format(instance.challenge.challenge_id, instance.user.user_id,
-                                                               timezone.now().timestamp(), random.randint(1, 101))
+    return 'Submissions/challenge_{0}/user_{1}/input_{2}_{3}.{4}'.format(instance.challenge.challenge_id,
+                                                                         instance.user.user_id,
+                                                                         timezone.now().timestamp(),
+                                                                         random.randint(1, 101),
+                                                                         instance.challenge.inputExt)
 
 
 class Submission(models.Model):
@@ -112,11 +139,29 @@ class Submission(models.Model):
 
     challenge = models.ForeignKey(Challenges, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
     user = models.ForeignKey(Users, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
+
     date_submit = models.DateTimeField(default=timezone.now)
     score = models.IntegerField(default=0)
     input_file = models.FileField(upload_to=directory_path)
     status = models.CharField(choices=STATUS_CHOICES, default=PENDING, max_length=10)
     tags = ListField(default=[])
 
-    def __str__(self):
-        return self.titre
+
+def outputs_path(instance, filename):
+    return 'Submissions/challenge_{0}/user_{1}/output_{2}{3}.{4}'.format(instance.submission.challenge.challenge_id,
+                                                                         instance.submission.user.user_id,
+                                                                         timezone.now().timestamp(),
+                                                                         random.randint(1, 101),
+                                                                         instance.ext)
+
+
+class Output(models.Model):
+    class Meta:
+        db_table = "output"
+
+    file_id = models.AutoField(primary_key=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
+    submission = models.ForeignKey(Submission, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
+    file = models.FileField(upload_to=outputs_path)
+    ext = models.TextField()
+    param = models.TextField()

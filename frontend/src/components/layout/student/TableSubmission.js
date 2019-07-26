@@ -2,8 +2,9 @@ import React, {Component} from "react";
 import {Modal, Table, Tag} from 'antd'
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
-import {fetchSubmission} from "../../../actions/application";
+import {fetchSubmission, removeSubmission} from "../../../actions/application";
 import {FiTrash} from "react-icons/fi";
+import axios from 'axios'
 
 const {confirm} = Modal;
 
@@ -41,14 +42,10 @@ export class TableSubmission extends Component {
             dataIndex: 'tags',
             render: tags => (
                 <span>
-                {tags.map(tag => {
-                    return (
-                        <Tag color={'geekblue'} key={tag}>
-                            {tag.toUpperCase()}
-                        </Tag>
-                    );
-                })}
-              </span>
+            {tags.map(tag => (
+                <Tag color="blue" key={tag}>{tag.toUpperCase()}</Tag>
+            ))}
+      </span>
             ),
         },
         {
@@ -79,6 +76,17 @@ export class TableSubmission extends Component {
                     dataSource={this.props.listSubmission}
                     footer={() => <Link to={"/submission/" + this.props.challenge + "/"}>New submission </Link>}
                     rowKey='id'
+                    expandedRowRender={record => (
+                        <div style={{margin: 0}}>
+                            {record.status !== "PENDING" && record.outputs.map(output => (
+                                <Tag
+                                    onClick={() => this.askFile(output.file_id)}>
+                                    {output.ext.charAt(0).toUpperCase() + output.ext.slice(1) + " file"}
+                                </Tag>
+
+                            ))}
+                        </div>
+                    )}
 
                 />
             </div>)
@@ -86,8 +94,33 @@ export class TableSubmission extends Component {
 
     }
 
+    askFile(file_id) {
+        const token = this.props.auth.token
+        const config = {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        };
+        config.headers["Authorization"] = `Token ${token}`;
+
+
+        axios.get('api/submission/get_file/?id=' + file_id, config)
+            .then(res => {
+                let fileName = res.headers["content-disposition"].split("filename=")[1];
+                const url = window.URL.createObjectURL(new Blob([res.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', fileName); //or any other extension
+                document.body.appendChild(link);
+                link.click();
+            }).catch(err => {
+            console.log(err.data)
+        })
+    }
+
     doDelete(record) {
         const _this = this;
+        console.log(record)
         confirm({
             title: 'Voulez vous vraiment supprimé cette soumission?',
             content: 'Cette action est définitive!',
@@ -95,6 +128,7 @@ export class TableSubmission extends Component {
             okType: 'danger',
             cancelText: 'No',
             onOk() {
+                _this.props.removeSubmission(record.id)
 
             },
             onCancel() {
@@ -110,9 +144,10 @@ const IconStyle = {
     marginRight: '5px'
 }
 const mapStateToProps = (state) => {
-
+    console.log(state.submission.listSubmission)
     return {
-        listSubmission: state.submission.listSubmission
+        listSubmission: state.submission.listSubmission,
+        auth: state.auth,
 
     };
 };
@@ -120,5 +155,5 @@ const mapStateToProps = (state) => {
 
 export default connect(
     mapStateToProps,
-    {fetchSubmission}
+    {fetchSubmission, removeSubmission}
 )(TableSubmission);

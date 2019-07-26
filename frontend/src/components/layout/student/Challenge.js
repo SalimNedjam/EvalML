@@ -6,6 +6,7 @@ import {Col, Row} from 'antd'
 import TableSubmission from "./TableSubmission";
 
 import TableGroup from "./TableGroup";
+import {LeaderBoardTable} from "./LeaderBoardTable";
 
 export class Challenge extends Component {
 
@@ -20,15 +21,21 @@ export class Challenge extends Component {
         })[0];
         return (
 
-            <Row type="flex" justify="center" gutter={10}>
+            <Row type="flex" justify="center" gutter={10} style={{
+                margin: '24px 16px',
+                padding: 24,
+                background: '#fff',
+            }}>
 
                 <Col xs={24} sm={26} md={20} lg={14} xl={12}>
-                    <TableSubmission challenge={challenge}/>
+                    <LeaderBoardTable challenge={challenge} token={this.props.auth.token}/>
                 </Col>
 
                 <Col xs={30} sm={26} md={20} lg={14} xl={12}>
                     <Col>
                         <TableGroup challenge={challenge}/>
+                        <TableSubmission challenge={challenge}/>
+
                     </Col>
                 </Col>
 

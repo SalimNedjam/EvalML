@@ -102,6 +102,14 @@ export class TableManagers extends Component {
 const IconStyle = {
     fontSize: '18px',
 }
+const cardStyle = {
+    WebkitBoxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+    MozBoxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+    BoxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+    marginBottom: 30
+
+}
+
 
 const mapStateToProps = (state) => {
 

@@ -2,9 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
-import Row from 'antd/lib/row';
-import Card from 'antd/lib/card';
-import Col from 'antd/lib/col';
+import {Button, Card, Col, Row} from 'antd'
 import {FiChevronRight} from "react-icons/fi";
 
 class CourseList extends Component {
@@ -17,17 +15,12 @@ class CourseList extends Component {
 
     render() {
 
-        return (<div>
-            <div>
-                <Link
-                    to={"/courses/createCourse"}>
-                    <button
-                        className="btn btn-outline-primary text-uppercase text-center"
-                        type="button">
-                        Create a course
-                    </button>
-                </Link>
-            </div>
+        return (<div style={{
+            margin: '24px 16px',
+            padding: 24,
+            background: '#fff',
+        }}>
+            {this.renderHeader()}
             <Row gutter={16}>
                 {this.renderList()}
             </Row>
@@ -50,7 +43,7 @@ class CourseList extends Component {
     renderOne = (course) => {
         return <Col xs={16} sm={16} md={12} lg={8} xl={8} style={{marginTop: 10}} key={course.course_id}>
             <Card
-                style={{width: 300}}
+                style={cardStyle}
                 actions={[
                     <Link to={"/courses/" + course.course_id + "/"}><FiChevronRight/></Link>,
                 ]}>
@@ -70,8 +63,33 @@ class CourseList extends Component {
             </Card>
         </Col>
     }
+    renderHeader = () => {
+        return (<div>
+                <span>
+            <span style={{fontSize: 20,}}><b>Cours</b></span>
+
+
+            <Link style={{float: 'right'}}
+                  to={"/courses/createCourse"}>
+                <Button type="danger">Ajouter un nouveau cours</Button>
+
+            </Link>
+        </span>
+                <br/> <br/>
+            </div>
+        )
+
+    }
 }
 
+
+const cardStyle = {
+    width: 300,
+    WebkitBoxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+    MozBoxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+    BoxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+
+}
 
 const mapStateToProps = (state) => {
     console.log(state)

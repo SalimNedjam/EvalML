@@ -4,9 +4,60 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from application.models import Challenges
-from application.serializers import ChallengeSerializer
+from application.models import Challenges, TruthFile
+from application.serializers import ChallengeSerializer, ChallengePrintSerializer
 from authentification.permissions import IsAdmin, IsStaff
+
+
+def combinateTruth(data):
+    array = []
+    i = 0
+    while True:
+        itemParam = data.get("truthFilesParam" + "[" + str(i) + "]")
+        itemFile = data.get("truthFiles" + "[" + str(i) + "]")
+
+        if None == itemFile or None == itemParam:
+            break
+        item = {}
+        item["param"] = itemParam
+        item["file"] = itemFile
+        array.append(item)
+        i += 1
+    return array
+
+
+def combinateArgs(data):
+    array = []
+    i = 0
+    while True:
+        itemValue = data.get("argsValue" + "[" + str(i) + "]")
+        itemParam = data.get("argsParam" + "[" + str(i) + "]")
+
+        if None == itemValue or None == itemParam:
+            break
+        item = {}
+        item["param"] = itemParam
+        item["value"] = itemValue
+        array.append(item)
+        i += 1
+    return array
+
+
+def combinateOutputs(data):
+    array = []
+    i = 0
+    while True:
+        itemParam = data.get("outputsParam" + "[" + str(i) + "]")
+        itemExt = data.get("outputsExt" + "[" + str(i) + "]")
+
+        if None == itemExt or None == itemParam:
+            break
+        item = {}
+        item["param"] = itemParam
+        item["ext"] = itemExt
+        array.append(item)
+        i += 1
+    return array
 
 
 class CreateChallenge(generics.GenericAPIView):
@@ -17,7 +68,12 @@ class CreateChallenge(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        challenge = serializer.save()
+        challenge = serializer.save(args=combinateArgs(self.request.data), outputs=combinateOutputs(self.request.data))
+        truths = combinateTruth(self.request.data)
+        for item in truths:
+            TruthFile.objects.create(param=item['param'], file=item['file'], course=challenge.course,
+                                     challenge=challenge)
+
         return Response(
             {
                 "challenge": ChallengeSerializer(challenge, context=self.get_serializer_context()).data
@@ -28,7 +84,7 @@ class CreateChallenge(generics.GenericAPIView):
 class ChallengeFetch(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (TokenAuthentication,)
-    serializer_class = ChallengeSerializer
+    serializer_class = ChallengePrintSerializer
 
     def get_queryset(self):
         if self.request.user.is_staff:

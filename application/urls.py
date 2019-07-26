@@ -1,7 +1,4 @@
-from django.conf.urls import url
 from django.urls import path, include
-
-from .views import file_maniputer  # added
 
 urlpatterns = [
 
@@ -11,5 +8,5 @@ urlpatterns = [
     path('', include('application.Urls.Enrollment_Urls')),
     path('', include('application.Urls.Group_Urls')),
     path('', include('application.Urls.Submission_Urls')),
-    url(r'^file_maniputer_api$', file_maniputer)
+
 ]

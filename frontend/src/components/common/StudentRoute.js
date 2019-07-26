@@ -19,7 +19,7 @@ const StudentRoute = ({component: Component, auth, ...rest}) => (
                 if (auth.user.is_staff !== null && auth.user.is_staff === false)
                     return <Component {...props} />;
                 else
-                    return <Redirect to="/"/>;
+                    return <Redirect to="/courses"/>;
 
 
         }}

@@ -2,17 +2,22 @@ from rest_framework import serializers
 # User Serializer
 from rest_framework.fields import SerializerMethodField
 
-from application.models import Submission, Challenges, Course, Groups, Enrollment, Management
+from application.models import Submission, Challenges, Course, Groups, Enrollment, Management, Output
 from authentification.models import Users
 from authentification.serializers import UserSerializer
 
 
 class ChallengeSerializer(serializers.ModelSerializer):
-    input_types = serializers.ListField(default=[])
-
     class Meta:
         model = Challenges
         fields = '__all__'
+
+
+class ChallengePrintSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Challenges
+        fields = ['challenge_id', 'course', 'description', 'inputExt', 'is_visible', 'limitDate', 'nbStudent',
+                  'nbSubmit', 'title']
 
 
 # CreateUser Serializer
@@ -42,16 +47,42 @@ class ManagementSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class OutputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Output
+        fields = '__all__'
+
+
 class SubmissionSerializer(serializers.ModelSerializer):
     tags = serializers.ListField(default=[])
+    outputs = SerializerMethodField()
 
     class Meta:
         model = Submission
         fields = '__all__'
-        read_only_fields = ['user', 'challenge']
+        read_only_fields = ['user', 'challenge', 'score', 'status']
 
     def create(self, validated_data):
-        return Submission.objects.create(**validated_data)
+        submit = Submission.objects.create(**validated_data)
+        return submit
+
+    def get_outputs(self, obj):
+        query_output = Output.objects.filter(submission_id=obj.id)
+        return OutputSerializer(query_output, many=True).data
+
+
+class LeaderBoardSerializer(serializers.ModelSerializer):
+    users = SerializerMethodField()
+
+    class Meta:
+        model = Submission
+        fields = ['score', 'challenge_id', 'date_submit', 'tags', 'users']
+
+    def get_users(self, obj):
+        id_list = list(Submission.objects.filter(input_file=obj.input_file).values_list('user_id', flat=True))
+
+        query_users = Users.objects.filter(user_id__in=id_list)
+        return UserSerializer(query_users, many=True).data
 
 
 class GroupListSerializer(serializers.ModelSerializer):

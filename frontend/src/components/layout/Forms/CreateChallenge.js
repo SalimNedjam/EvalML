@@ -1,10 +1,10 @@
 import React, {Component} from "react";
-import {connect} from "react-redux";
 import PropTypes from "prop-types";
+import Textarea from 'react-textarea-autosize';
+import {Button, DatePicker, Divider, Icon, Upload} from 'antd';
 import {createChallenge} from "../../../actions/application";
 import {createMessage} from "../../../actions/messages";
-import Textarea from 'react-textarea-autosize';
-import {DatePicker} from 'antd';
+import {connect} from "react-redux";
 
 export class CreateChallenge extends Component {
     static propTypes = {
@@ -16,81 +16,289 @@ export class CreateChallenge extends Component {
     state = {
         description: "",
         title: "",
-        inputs: [""],
+        inputParam: "",
+        inputExt: "",
+        outputs: [
+            {
+                param: "",
+                ext: ""
+            }],
+        args: [
+            {
+                param: "",
+                value: ""
+            }],
+        truthFiles: [
+            {
+                param: "",
+                scriptFile: []
+            }],
+
         course: -1,
+        scriptFile: [],
+        uploading: false,
         nbStudent: "",
         nbSubmit: "",
         challenge: -1,
-        limitDate: ""
+        limitDate: "",
+        command: "",
+        uploadScript: false,
 
 
     };
 
-    handleInputNameChange = idx => evt => {
-        const newInput = this.state.inputs.map((input, sidx) => {
-            if (idx !== sidx)
-                return input;
-            return evt.target.value;
+
+    handleArgsChangeParam = idx => evt => {
+        const newArgs = this.state.args.map((arg, sidx) => {
+            if (idx !== sidx) return arg;
+            return {...arg, param: evt.target.value};
         });
 
-        this.setState({inputs: newInput});
+        this.setState({args: newArgs});
+    };
+
+    handleArgsChangeValue = idx => evt => {
+        const newArgs = this.state.args.map((arg, sidx) => {
+            if (idx !== sidx) return arg;
+            return {...arg, value: evt.target.value};
+        });
+
+        this.setState({args: newArgs});
     };
 
 
-    handleAddInput = () => {
-        if (this.state.inputs[this.state.inputs.length - 1] !== "")
+    handleAddArgs = () => {
+        if (this.state.args.length === 0 || (this.state.args[this.state.args.length - 1].ext !== ""
+            && this.state.args[this.state.args.length - 1].value !== ""))
             this.setState({
-                inputs: [...this.state.inputs, ""]
+                args: this.state.args.concat([{value: "", param: ""}])
             });
 
     };
 
-    handleRemoveInput = idx => () => {
+
+    handleRemoveArgs = idx => () => {
         this.setState({
-            inputs: this.state.inputs.filter((s, sidx) => idx !== sidx)
+            args: this.state.args.filter((s, sidx) => idx !== sidx)
         });
     };
 
-
-    renderInputs() {
+    renderArgs() {
         return (
             <div>
                 <div>
-                    <label>Inputs</label>
+                    <label>Arguments</label>
 
                 </div>
                 <div>
                     {
-                        this.state.inputs.map((input, idx) => (
+                        this.state.args.map((arg, idx) => (
                             <div className="form-row align-items-center" key={idx}>
                                 <div className="col-sm-4 my-1">
                                     <input
                                         type="text"
                                         className="form-control"
-                                        placeholder="File input name"
-                                        value={input}
-                                        onChange={this.handleInputNameChange(idx)}
+                                        placeholder="Params"
+                                        value={arg.param}
+                                        onChange={this.handleArgsChangeParam(idx)}
                                     />
                                 </div>
                                 <div className="col-sm-4 my-1">
                                     <input
                                         type="text"
                                         className="form-control"
-                                        placeholder="File input name"
-                                        value={input}
-                                        onChange={this.handleInputNameChange(idx)}
+                                        placeholder="Valeur"
+                                        value={arg.value}
+                                        onChange={this.handleArgsChangeValue(idx)}
                                     />
                                 </div>
                                 <div className="col-auto my-1">
-                                    <button type="button" className="close" onClick={this.handleRemoveInput(idx)}
+                                    <button type="button" className="close" onClick={this.handleRemoveArgs(idx)}
                                             aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                             </div>))}
 
-                    <button type="button" className="btn btn-secondary btn-sm" onClick={this.handleAddInput}>
-                        Add new input
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={this.handleAddArgs}>
+                        Add new argument
+                    </button>
+                </div>
+            </div>
+        )
+    }
+
+
+    handleOutputChangeParam = idx => evt => {
+        const newOutput = this.state.outputs.map((output, sidx) => {
+            if (idx !== sidx) return output;
+            return {...output, param: evt.target.value};
+        });
+
+        this.setState({outputs: newOutput});
+    };
+
+    handleOutputChangeExt = idx => evt => {
+        const newOutput = this.state.outputs.map((output, sidx) => {
+            if (idx !== sidx) return output;
+            return {...output, ext: evt.target.value};
+        });
+
+        this.setState({outputs: newOutput});
+    };
+
+
+    handleAddOutput = () => {
+        if (this.state.outputs.length === 0 || (this.state.outputs[this.state.outputs.length - 1].ext !== ""
+            && this.state.outputs[this.state.outputs.length - 1].param !== ""))
+            this.setState({
+                outputs: this.state.outputs.concat([{ext: "", param: ""}])
+            });
+
+    };
+
+
+    handleRemoveOutput = idx => () => {
+        this.setState({
+            outputs: this.state.outputs.filter((s, sidx) => idx !== sidx)
+        });
+    };
+
+    renderOutputs() {
+        return (
+            <div>
+                <div>
+                    <label>Outputs</label>
+
+                </div>
+                <div>
+                    {
+                        this.state.outputs.map((output, idx) => (
+                            <div className="form-row align-items-center" key={idx}>
+                                <div className="col-sm-4 my-1">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Params"
+                                        value={output.param}
+                                        onChange={this.handleOutputChangeParam(idx)}
+                                    />
+                                </div>
+                                <div className="col-sm-4 my-1">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Extension"
+                                        value={output.ext}
+                                        onChange={this.handleOutputChangeExt(idx)}
+                                    />
+                                </div>
+                                <div className="col-auto my-1">
+                                    <button type="button" className="close" onClick={this.handleRemoveOutput(idx)}
+                                            aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>))}
+
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={this.handleAddOutput}>
+                        Add new output
+                    </button>
+                </div>
+            </div>
+        )
+    }
+
+
+    handleTruthChangeParam = idx => evt => {
+        const newOutput = this.state.truthFiles.map((truth, sidx) => {
+            if (idx !== sidx) return truth;
+            return {...truth, param: evt.target.value};
+        });
+
+        this.setState({truthFiles: newOutput});
+    };
+
+
+    handleAddTruth = () => {
+
+        if (this.state.truthFiles.length === 0 || this.state.truthFiles[this.state.truthFiles.length - 1].param !== "")
+            this.setState({
+                truthFiles: this.state.truthFiles.concat([{scriptFile: [], param: ""}])
+            });
+
+    };
+
+
+    handleRemoveTruth = idx => () => {
+        this.setState({
+            truthFiles: this.state.truthFiles.filter((s, sidx) => idx !== sidx)
+        });
+    };
+
+    renderTruths() {
+        const {truthFiles} = this.state;
+
+
+        return (
+            <div>
+                <div>
+                    <label>Truth files</label>
+
+                </div>
+                <div>
+                    {
+                        this.state.truthFiles.map((truth, idx) => (
+                            <span className=" form-row align-items-center" key={idx}>
+
+                                <div className="col-sm-4 my-1">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Params"
+                                        value={truth.param}
+                                        onChange={this.handleTruthChangeParam(idx)}
+                                    />
+                                </div>
+
+                                <Upload className="col-sm-4 my-1"
+                                        onRemove={file => {
+                                            this.setState(state => {
+                                                const index = state.truthFiles[idx].scriptFile.indexOf(file);
+                                                const newFileList = state.truthFiles[idx].scriptFile.slice();
+                                                newFileList.splice(index, 1);
+                                                let temp = this.state.truthFiles
+                                                temp[idx].scriptFile = newFileList;
+                                                return {
+                                                    truthFiles: temp
+                                                };
+                                            });
+                                        }}
+                                        beforeUpload={
+                                            file => {
+                                                let temp = this.state.truthFiles
+                                                temp[idx].scriptFile = [file];
+                                                this.setState({
+                                                    truthFiles: temp
+                                                });
+                                                return false;
+                                            }
+                                        }
+                                        fileList={truthFiles[idx].scriptFile}>
+                                    <Button className="col-auto my-1">
+                                        <Icon type="upload"/> Select Script
+                                    </Button>
+                                </Upload>
+                                <div className="col-auto my-1">
+                                    <button type="button" className="close" onClick={this.handleRemoveTruth(idx)}
+                                            aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </span>))}
+
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={this.handleAddTruth}>
+                        Add new truth
                     </button>
                 </div>
             </div>
@@ -100,10 +308,9 @@ export class CreateChallenge extends Component {
 
     onSubmit = e => {
         e.preventDefault();
-        const {description, title, course, nbStudent, nbSubmit, limitDate} = this.state;
-        const input_types = this.state.inputs.filter(Boolean);
+        const {description, title, course, nbStudent, nbSubmit, limitDate, scriptFile, inputExt, inputParam, outputs, truthFiles, command, args} = this.state;
+        console.log(this.state)
 
-        console.log(input_types)
         if (course === -1)
             this.props.createMessage({selectItem: "Veuiller séléctioner un cours"});
         else if (title === "")
@@ -114,10 +321,33 @@ export class CreateChallenge extends Component {
             this.props.createMessage({isEmptyTitle: "Le nombre maximum d'étudiants par groupe ne peut pas etre vide"});
         else if (nbSubmit === "")
             this.props.createMessage({isEmptyTitle: "Le nombre maximum de soumissions ne peut pas etre vide"});
-        else if (this.state.limitDate === "")
+        else if (limitDate === "")
             this.props.createMessage({isEmptyTitle: "La date limite de soumission ne peut pas etre vide"});
+        else if (command === "")
+            this.props.createMessage({isEmptyTitle: "La commande pour lancer le script ne peut pas etre vide"});
+        else if (scriptFile.length === 0)
+            this.props.createMessage({isEmptyTitle: "Le script d'évalution ne peut pas etre vide"});
+        else if (inputExt === "")
+            this.props.createMessage({isEmptyTitle: "L'extension du fichier de soumission ne peut pas etre vide"});
+        else if (inputParam === "")
+            this.props.createMessage({isEmptyTitle: "Le parametre du fichier de soumission  ne peut pas etre vide"});
         else {
-            const newChallenge = {description, title, input_types, course, nbStudent, nbSubmit, limitDate}
+
+            const newChallenge = {
+                description,
+                title,
+                course,
+                nbStudent,
+                nbSubmit,
+                limitDate,
+                scriptFile,
+                inputParam,
+                inputExt,
+                outputs,
+                truthFiles,
+                command,
+                args
+            };
             this.props.createChallenge(newChallenge)
         }
 
@@ -180,9 +410,76 @@ export class CreateChallenge extends Component {
         })
     }
 
+    printHeader() {
+        const {command, inputParam, inputExt, scriptFile} = this.state;
+        return command + " " + (scriptFile.length > 0 ? scriptFile[0].name : "") + (inputParam !== "" ? " -" + inputParam : "") + (inputExt !== "" ? " soumission" + "\." + inputExt : "") + " "
+    }
+
+    printTruth() {
+        let str = ""
+
+        this.state.truthFiles.forEach(function (item) {
+            if (item.scriptFile.length > 0 && item.param !== "")
+                str += "-" + item.param + " " + item.scriptFile[0].name + " "
+        });
+        return str
+    }
+
+    printArgs() {
+        let str = ""
+
+        this.state.args.forEach(function (item) {
+            if (item.value !== "" && item.param !== "")
+                str += "-" + item.param + " " + item.value + " "
+        });
+        return str
+    }
+
+    printOutputs() {
+        let str = ""
+        this.state.outputs.forEach(function (item, index) {
+            if (item.ext !== "" && item.param !== "")
+                str += "-" + item.param + " output" + index + "." + item.ext + " "
+
+        });
+        return str
+
+    }
+
+
     render() {
 
-        const {description, title, course, nbStudent, nbSubmit, challenge} = this.state;
+        const {description, title, course, nbStudent, nbSubmit, challenge, inputParam, inputExt, command, scriptFile} = this.state;
+
+        const props = {
+                onRemove: file => {
+                    this.setState(state => {
+                        const index = state.scriptFile.indexOf(file);
+                        const newFileList = state.scriptFile.slice();
+                        newFileList.splice(index, 1);
+                        return {
+                            scriptFile: newFileList,
+                        };
+                    });
+                },
+                beforeUpload: file => {
+                    this.setState({
+                        scriptFile: [file],
+                    });
+                    return false;
+                },
+                handleChange: info => {
+                    let scriptFile = [...info.scriptFile];
+
+                    if (scriptFile.length > 0)
+                        scriptFile = [scriptFile[0]];
+                    this.setState({scriptFile});
+                },
+                fileList: scriptFile,
+            }
+        ;
+
+
         return (
             <div className="col-md-6 m-auto">
                 <div className="card card-body mt-5">
@@ -267,11 +564,82 @@ export class CreateChallenge extends Component {
 
                             />
                         </div>
+                        <br/>
+                        <Divider>Section script d'évalutation</Divider>
+                        <div className="form-group">
+                            <label>Commande</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                name="command"
+                                placeholder="Exemple: Python3"
+                                onChange={this.onChange}
+                                value={command}
 
+                            />
+                        </div>
+                        <div className="form-group">
+                            <Upload {...props}>
+                                <Button>
+                                    <Icon type="upload"/> Select Script
+                                </Button>
+                            </Upload>
+
+                        </div>
+                        < div className="form-group">
+                            <label>Information sur le fichier de soumission</label>
+
+                            <div className=" form-row align-items-center">
+
+                                <div className="col-sm-4 my-1">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        name="inputParam"
+                                        placeholder="Parametre"
+                                        onChange={this.onChange}
+                                        value={inputParam}
+                                    />
+                                </div>
+                                <div className="col-sm-4 my-1">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        name="inputExt"
+                                        placeholder="Extension"
+                                        onChange={this.onChange}
+                                        value={inputExt}
+                                    />
+                                </div>
+                            </div>
+                        </div>
                         <div className="form-group">
                             {
-                                this.renderInputs()
+                                this.renderTruths()
                             }
+                        </div>
+                        <div className="form-group">
+                            {
+                                this.renderArgs()
+                            }
+                        </div>
+                        <div className="form-group">
+                            {
+                                this.renderOutputs()
+                            }
+                        </div>
+                        <div className="form-group">
+                            <label>
+                                {
+                                    this.printHeader()
+                                    +
+                                    this.printTruth()
+                                    +
+                                    this.printArgs()
+                                    +
+                                    this.printOutputs()
+                                }
+                            </label>
                         </div>
                         <div className="form-group">
                             <button type="submit" className="btn btn-primary">
@@ -283,6 +651,7 @@ export class CreateChallenge extends Component {
                 </div>
             </div>
         );
+
     }
 }
 

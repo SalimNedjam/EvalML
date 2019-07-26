@@ -1,5 +1,4 @@
 import {
-    ADD_CHALLENGE,
     ADD_CHALLENGE_FAIL,
     ADD_COURSE,
     ADD_COURSE_FAIL,
@@ -27,6 +26,7 @@ import {
     REMOVE_ENROLLMENT,
     REMOVE_GROUP,
     REMOVE_MANAGER,
+    REMOVE_SUBMISSION,
     SWITCH_VISIBILITY,
     WAIT_ASK
 } from "./types";
@@ -72,27 +72,59 @@ export const fetchCourses = () => (dispatch, getState) => {
 };
 
 
-export const createChallenge = ({description, title, input_types, course, nbStudent, nbSubmit, limitDate}) => (dispatch, getState) => {
+export const createChallenge = ({description, title, course, nbStudent, nbSubmit, limitDate, scriptFile, inputParam, inputExt, outputs, truthFiles, command, args}) => (dispatch, getState) => {
 
+        let data = new FormData();
+        data.append("description", description)
+        data.append("title", title)
+        data.append("course", course)
+        data.append("nbStudent", nbStudent)
+        data.append("nbSubmit", nbSubmit)
+        data.append("limitDate", limitDate)
+        for (let i = 0; i < scriptFile.length; i++) {
+            if (scriptFile[i] !== undefined)
+                data.append("scriptFile", scriptFile[i])
+        }
+        for (let i = 0; i < args.length; i++) {
+            if (args[i].ext !== '' && args[i].param !== '') {
+                data.append("argsValue[" + i + "]", args[i].value)
+                data.append("argsParam[" + i + "]", args[i].param)
+            }
+        }
+        for (let i = 0; i < truthFiles.length; i++) {
+            if (truthFiles[i].param !== '' && truthFiles[i].scriptFile[0] !== undefined) {
+                data.append("truthFiles[" + i + "]", truthFiles[i].scriptFile[0])
+                data.append("truthFilesParam[" + i + "]", truthFiles[i].param)
+            }
+        }
+        for (let i = 0; i < outputs.length; i++) {
+            if (outputs[i].ext !== '' && outputs[i].param !== '') {
+                data.append("outputsExt[" + i + "]", outputs[i].ext)
+                data.append("outputsParam[" + i + "]", outputs[i].param)
+            }
 
-    const body = JSON.stringify({description, title, input_types, course, nbStudent, nbSubmit, limitDate});
+        }
+        data.append("inputParam", inputParam)
+        data.append("inputExt", inputExt)
+        data.append("command", command)
 
-    axios
-        .post("/api/challenge/create_challenge", body, tokenConfig(getState))
-        .then(res => {
-            dispatch(createMessage({addUser: "Le challenge à été crée."}));
-            dispatch({
-                type: ADD_CHALLENGE,
-                payload: res.data.challenge
+        axios
+            .post("/api/challenge/create_challenge", data, tokenConfigMultiPart(getState))
+            .then(res => {
+                dispatch(createMessage({addUser: "Le challenge à été crée."}));
+                /*dispatch({
+                    type: ADD_CHALLENGE,
+                    payload: res.data.challenge
+                });*/
+            })
+            .catch(err => {
+                dispatch(returnErrors(err.response.data, err.response.status));
+                dispatch({
+                    type: ADD_CHALLENGE_FAIL
+                });
             });
-        })
-        .catch(err => {
-            dispatch(returnErrors(err.response.data, err.response.status));
-            dispatch({
-                type: ADD_CHALLENGE_FAIL
-            });
-        });
-};
+    }
+;
 
 
 // ADD COURSE
@@ -469,6 +501,25 @@ export const removeGroup = (id) => (dispatch, getState) => {
         });
 };
 
+
+export const removeSubmission = (id) => (dispatch, getState) => {
+
+    axios
+        .delete("/api/submission/remove_submission/" + id + "/", tokenConfig(getState))
+        .then(res => {
+            dispatch(createMessage({addUser: "Vous avez supprimé cette soumission."}));
+            dispatch({
+                type: REMOVE_SUBMISSION,
+                payload: id
+            });
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+
+        });
+};
+
+
 export const clearWait = () => (dispatch) => {
     dispatch({
         type: WAIT_ASK,
@@ -502,7 +553,8 @@ export const tokenConfigMultiPart = getState => {
     // Headers
     const config = {
         headers: {
-            "Content-Type": "multipart/form-data"
+            'Accept': 'application/json',
+            'Content-Type': 'multipart/form-data',
         }
     };
 

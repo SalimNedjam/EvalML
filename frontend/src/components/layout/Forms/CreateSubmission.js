@@ -41,7 +41,7 @@ export class CreateSubmission extends Component {
 
 
     handleAddInput = () => {
-        if (this.state.tags[this.state.tags.length - 1] !== "")
+        if (this.state.tags.length === 0 || this.state.tags[this.state.tags.length - 1] !== "")
             this.setState({
                 tags: [...this.state.tags, ""]
             });
@@ -70,7 +70,7 @@ export class CreateSubmission extends Component {
                                     <input
                                         type="text"
                                         className="form-control"
-                                        placeholder="File input name"
+                                        placeholder="Tag name"
                                         value={input}
                                         onChange={this.handleInputNameChange(idx)}
                                     />
@@ -84,7 +84,7 @@ export class CreateSubmission extends Component {
                             </div>))}
 
                     <button type="button" className="btn btn-secondary btn-sm" onClick={this.handleAddInput}>
-                        Add new input
+                        Add new tag
                     </button>
                 </div>
             </div>
@@ -170,7 +170,7 @@ export class CreateSubmission extends Component {
         if (this.state.uploaded) {
             return <Redirect to="/success_submission"/>
         }
-        const {challenge, uploading, fileList} = this.state;
+        const {uploading, fileList} = this.state;
         const props = {
             onRemove: file => {
                 this.setState(state => {
@@ -204,7 +204,7 @@ export class CreateSubmission extends Component {
                         </div>
                         <div className="form-group">
                             <div>
-                                <Upload {...props}>
+                                <Upload {...props} accept={".jpg"}>
                                     <Button>
                                         <Icon type="upload"/> Select File
                                     </Button>

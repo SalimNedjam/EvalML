@@ -68,6 +68,7 @@ export class TableChallenge extends Component {
 
                 <Table
                     columns={this.column}
+
                     onRow={(record, rowIndex) => {
                         return {
                             onDoubleClick: () => {
@@ -153,7 +154,12 @@ const mapStateToProps = (state) => {
 
     };
 };
+const cardStyle = {
+    WebkitBoxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+    MozBoxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+    BoxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
 
+}
 
 export default connect(
     mapStateToProps, {removeChallenge, switchVisibility}

@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import mongoengine as mongoengine
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -27,8 +26,6 @@ SECRET_KEY = 'nu^va-swk2@sqi72y=dao=trkjdi0s0()@3*!-e+l62u#ekff7'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
-
 
 # Application definition
 
@@ -51,6 +48,8 @@ INSTALLED_APPS = [
     'django_rest_passwordreset',
     'allauth',
     'allauth.account',
+    'django_cleanup.apps.CleanupConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -84,25 +83,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Challenges.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',  # Backends disponibles : 'postgresql', 'mysql', 'sqlite3' et 'oracle'.
-#         'NAME': 'Challenge',  # Nom de la base de données
-#         'USER': 'root',
-#         'PASSWORD': '',
-#         'HOST': '127.0.0.1',  # Utile si votre base de données est sur une autre machine
-#         'PORT': '3306',  # ... et si elle utilise un autre port que celui par défaut
-#     }
-# }
-
 DATABASES = {
     'default':
         {
             'ENGINE': 'djongo',
-            'NAME': 'Challenge'
+            'NAME': 'Challenge',
+            'ENFORCE_SCHEMA': False,
+
         }
 }
 
@@ -167,3 +154,5 @@ DJANGO_REST_MULTITOKENAUTH_RESET_TOKEN_EXPIRY_TIME = 999
 DJANGO_REST_LOOKUP_FIELD = 'username'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_ACCEPT_CONTENT = ['pickle']

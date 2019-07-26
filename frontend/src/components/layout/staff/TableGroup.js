@@ -65,13 +65,16 @@ export class TableGroup extends Component {
     }
 
     render() {
-        return <div>
+        return <div style={{
+            margin: '24px 16px',
+            padding: 24,
+            background: '#fff',
+        }}>
             {this.iterateGroup()}
         </div>
     }
 
     iterateGroup() {
-        console.log("HERE")
         return this.state.listGroups.length > 0 ?
             this.state.listGroups.map(group => {
                 let array = []
@@ -152,6 +155,12 @@ const column = [
         ),
     },
 ]
+const cardStyle = {
+    WebkitBoxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+    MozBoxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+    BoxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+
+}
 
 
 const mapStateToProps = (state) => {
