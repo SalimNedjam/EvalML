@@ -1,0 +1,459 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+0001_initial.py	../application/migrations/0001_initial.py	1;"	kind:file	line:1
+0001_initial.py	../authentification/migrations/0001_initial.py	1;"	kind:file	line:1
+ALLOWED_HOSTS	../Challenges/settings.py	/^ALLOWED_HOSTS = ['*']$/;"	kind:variable	line:29
+AUTH_PASSWORD_VALIDATORS	../Challenges/settings.py	/^AUTH_PASSWORD_VALIDATORS = [$/;"	kind:variable	line:112
+AUTH_USER_MODEL	../Challenges/settings.py	/^AUTH_USER_MODEL = 'authentification.Users'$/;"	kind:variable	line:147
+AddManagerCourse	../application/Api/ManagementApi.py	/^class AddManagerCourse(generics.GenericAPIView):$/;"	kind:class	line:42
+AddUserGroupForStaff	../application/Api/GroupApi.py	/^class AddUserGroupForStaff(generics.GenericAPIView):$/;"	kind:class	line:221
+AddUserToGroup	../application/Api/GroupApi.py	/^class AddUserToGroup(generics.GenericAPIView):$/;"	kind:class	line:30
+AuthentificationConfig	../authentification/apps.py	/^class AuthentificationConfig(AppConfig):$/;"	kind:class	line:4
+BASE_DIR	../Challenges/settings.py	/^BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))$/;"	kind:variable	line:18
+CSRF_COOKIE_SECURE	../Challenges/settings.py	/^CSRF_COOKIE_SECURE = True$/;"	kind:variable	line:140
+ChallengeApi.py	../application/Api/ChallengeApi.py	1;"	kind:file	line:1
+ChallengeFetch	../application/Api/ChallengeApi.py	/^class ChallengeFetch(generics.ListAPIView):$/;"	kind:class	line:28
+ChallengeSerializer	../application/serializers.py	/^class ChallengeSerializer(serializers.ModelSerializer):$/;"	kind:class	line:10
+Challenges	../application/models.py	/^class Challenges(models.Model):$/;"	kind:class	line:22
+ChangeInformationsSerializer	../authentification/serializers.py	/^class ChangeInformationsSerializer(serializers.Serializer):$/;"	kind:class	line:57
+ChangeInformationsView	../authentification/api.py	/^class ChangeInformationsView(generics.UpdateAPIView):$/;"	kind:class	line:86
+ChangePasswordSerializer	../authentification/serializers.py	/^class ChangePasswordSerializer(serializers.Serializer):$/;"	kind:class	line:48
+ChangePasswordView	../authentification/api.py	/^class ChangePasswordView(generics.UpdateAPIView):$/;"	kind:class	line:61
+Course	../application/models.py	/^class Course(models.Model):$/;"	kind:class	line:8
+CourseApi.py	../application/Api/CourseApi.py	1;"	kind:file	line:1
+CourseFetch	../application/Api/CourseApi.py	/^class CourseFetch(generics.ListAPIView):$/;"	kind:class	line:29
+CourseSerializer	../application/serializers.py	/^class CourseSerializer(serializers.ModelSerializer):$/;"	kind:class	line:19
+CreateChallenge	../application/Api/ChallengeApi.py	/^class CreateChallenge(generics.GenericAPIView):$/;"	kind:class	line:12
+CreateCourse	../application/Api/CourseApi.py	/^class CreateCourse(generics.GenericAPIView):$/;"	kind:class	line:12
+CustomPasswordResetSerializer	../authentification/serializers.py	/^class CustomPasswordResetSerializer(PasswordResetSerializer):$/;"	kind:class	line:62
+CustomPasswordResetView	../authentification/views.py	/^class CustomPasswordResetView:$/;"	kind:class	line:21
+CustomPasswordTokenVerificationView	../authentification/views.py	/^class CustomPasswordTokenVerificationView(APIView):$/;"	kind:class	line:56
+CustomTokenSerializer	../authentification/serializers.py	/^class CustomTokenSerializer(serializers.Serializer):$/;"	kind:class	line:95
+DATABASES	../Challenges/settings.py	/^DATABASES = {$/;"	kind:variable	line:101
+DEBUG	../Challenges/settings.py	/^DEBUG = True$/;"	kind:variable	line:27
+DJANGO_REST_LOOKUP_FIELD	../Challenges/settings.py	/^DJANGO_REST_LOOKUP_FIELD = 'email'$/;"	kind:variable	line:162
+DJANGO_REST_MULTITOKENAUTH_RESET_TOKEN_EXPIRY_TIME	../Challenges/settings.py	/^DJANGO_REST_MULTITOKENAUTH_RESET_TOKEN_EXPIRY_TIME = 999$/;"	kind:variable	line:160
+EMAIL_BACKEND	../Challenges/settings.py	/^EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'$/;"	kind:variable	line:164
+EMAIL_HOST	../Challenges/settings.py	/^EMAIL_HOST = 'smtp.mailtrap.io'$/;"	kind:variable	line:155
+EMAIL_HOST_PASSWORD	../Challenges/settings.py	/^EMAIL_HOST_PASSWORD = '3d8e11aafa47c7'$/;"	kind:variable	line:157
+EMAIL_HOST_USER	../Challenges/settings.py	/^EMAIL_HOST_USER = '2f3c244a8c23d5'$/;"	kind:variable	line:156
+EMAIL_PORT	../Challenges/settings.py	/^EMAIL_PORT = '2525'$/;"	kind:variable	line:158
+EnrollCourse	../application/Api/EnrollmentApi.py	/^class EnrollCourse(generics.GenericAPIView):$/;"	kind:class	line:33
+Enrollment	../application/models.py	/^class Enrollment(models.Model):$/;"	kind:class	line:58
+EnrollmentApi.py	../application/Api/EnrollmentApi.py	1;"	kind:file	line:1
+EnrollmentListSerializer	../application/serializers.py	/^class EnrollmentListSerializer(serializers.ModelSerializer):$/;"	kind:class	line:73
+EnrollmentSerializer	../application/serializers.py	/^class EnrollmentSerializer(serializers.ModelSerializer):$/;"	kind:class	line:33
+FetchEnrolled	../application/Api/EnrollmentApi.py	/^class FetchEnrolled(generics.ListAPIView):$/;"	kind:class	line:48
+FetchManager	../application/Api/ManagementApi.py	/^class FetchManager(generics.ListAPIView):$/;"	kind:class	line:83
+FetchNonManager	../application/Api/ManagementApi.py	/^class FetchNonManager(generics.ListAPIView):$/;"	kind:class	line:16
+FetchUsersNonEnrolled	../application/Api/EnrollmentApi.py	/^class FetchUsersNonEnrolled(generics.ListAPIView):$/;"	kind:class	line:15
+FetchUsersNotInGroup	../application/Api/GroupApi.py	/^class FetchUsersNotInGroup(generics.ListAPIView):$/;"	kind:class	line:104
+FrontendConfig	../frontend/apps.py	/^class FrontendConfig(AppConfig):$/;"	kind:class	line:4
+GroupApi.py	../application/Api/GroupApi.py	1;"	kind:file	line:1
+GroupListSerializer	../application/serializers.py	/^class GroupListSerializer(serializers.ModelSerializer):$/;"	kind:class	line:45
+GroupSerializer	../application/serializers.py	/^class GroupSerializer(serializers.ModelSerializer):$/;"	kind:class	line:26
+Group_Urls.py	../application/Urls/Group_Urls.py	1;"	kind:file	line:1
+Groups	../application/models.py	/^class Groups(models.Model):$/;"	kind:class	line:40
+INSTALLED_APPS	../Challenges/settings.py	/^INSTALLED_APPS = [$/;"	kind:variable	line:35
+IsAdmin	../authentification/permissions.py	/^class IsAdmin(permissions.BasePermission):$/;"	kind:class	line:11
+IsStaff	../authentification/permissions.py	/^class IsStaff(permissions.BasePermission):$/;"	kind:class	line:4
+LANGUAGE_CODE	../Challenges/settings.py	/^LANGUAGE_CODE = 'fr-FR'$/;"	kind:variable	line:130
+LeaveGroup	../application/Api/GroupApi.py	/^class LeaveGroup(generics.DestroyAPIView):$/;"	kind:class	line:127
+ListGroupsChallenge	../application/Api/GroupApi.py	/^class ListGroupsChallenge(generics.ListAPIView):$/;"	kind:class	line:176
+LoginAPI	../authentification/api.py	/^class LoginAPI(generics.GenericAPIView):$/;"	kind:class	line:34
+LoginSerializer	../authentification/serializers.py	/^class LoginSerializer(serializers.Serializer):$/;"	kind:class	line:37
+MIDDLEWARE	../Challenges/settings.py	/^MIDDLEWARE = [$/;"	kind:variable	line:56
+Management	../application/models.py	/^class Management(models.Model):$/;"	kind:class	line:74
+ManagementApi.py	../application/Api/ManagementApi.py	1;"	kind:file	line:1
+ManagementSerializer	../application/serializers.py	/^class ManagementSerializer(serializers.ModelSerializer):$/;"	kind:class	line:39
+ManagerListSerializer	../application/serializers.py	/^class ManagerListSerializer(serializers.ModelSerializer):$/;"	kind:class	line:62
+Meta	../application/models.py	/^    class Meta:$/;"	kind:class	line:23
+Meta	../application/models.py	/^    class Meta:$/;"	kind:class	line:41
+Meta	../application/models.py	/^    class Meta:$/;"	kind:class	line:59
+Meta	../application/models.py	/^    class Meta:$/;"	kind:class	line:75
+Meta	../application/models.py	/^    class Meta:$/;"	kind:class	line:9
+Meta	../application/serializers.py	/^    class Meta:$/;"	kind:class	line:13
+Meta	../application/serializers.py	/^    class Meta:$/;"	kind:class	line:20
+Meta	../application/serializers.py	/^    class Meta:$/;"	kind:class	line:27
+Meta	../application/serializers.py	/^    class Meta:$/;"	kind:class	line:34
+Meta	../application/serializers.py	/^    class Meta:$/;"	kind:class	line:40
+Meta	../application/serializers.py	/^    class Meta:$/;"	kind:class	line:48
+Meta	../application/serializers.py	/^    class Meta:$/;"	kind:class	line:57
+Meta	../application/serializers.py	/^    class Meta:$/;"	kind:class	line:65
+Meta	../application/serializers.py	/^    class Meta:$/;"	kind:class	line:76
+Meta	../authentification/models.py	/^    class Meta:$/;"	kind:class	line:71
+Meta	../authentification/serializers.py	/^    class Meta:$/;"	kind:class	line:17
+Meta	../authentification/serializers.py	/^    class Meta:$/;"	kind:class	line:24
+Migration	../application/migrations/0001_initial.py	/^class Migration(migrations.Migration):$/;"	kind:class	line:9
+Migration	../authentification/migrations/0001_initial.py	/^class Migration(migrations.Migration):$/;"	kind:class	line:8
+MyUserManager	../authentification/models.py	/^class MyUserManager(BaseUserManager):$/;"	kind:class	line:6
+REQUIRED_FIELDS	../application/models.py	/^    REQUIRED_FIELDS = ['challenge_id', 'course']$/;"	kind:variable	line:27
+REQUIRED_FIELDS	../application/models.py	/^    REQUIRED_FIELDS = ['course_id']$/;"	kind:variable	line:12
+REQUIRED_FIELDS	../application/models.py	/^    REQUIRED_FIELDS = ['user', 'challenge']$/;"	kind:variable	line:47
+REQUIRED_FIELDS	../application/models.py	/^    REQUIRED_FIELDS = ['user', 'course']$/;"	kind:variable	line:65
+REQUIRED_FIELDS	../application/models.py	/^    REQUIRED_FIELDS = ['user', 'course']$/;"	kind:variable	line:81
+REQUIRED_FIELDS	../authentification/models.py	/^    REQUIRED_FIELDS = ["matricule"]$/;"	kind:variable	line:66
+REST_FRAMEWORK	../Challenges/settings.py	/^REST_FRAMEWORK = {$/;"	kind:variable	line:149
+ROOT_URLCONF	../Challenges/settings.py	/^ROOT_URLCONF = 'Challenges.urls'$/;"	kind:variable	line:66
+RegisterAPI	../authentification/api.py	/^class RegisterAPI(generics.GenericAPIView):$/;"	kind:class	line:16
+RegisterSerializer	../authentification/serializers.py	/^class RegisterSerializer(serializers.ModelSerializer):$/;"	kind:class	line:23
+RemoveChallenge	../application/Api/ChallengeApi.py	/^class RemoveChallenge(generics.DestroyAPIView):$/;"	kind:class	line:44
+RemoveEnrollment	../application/Api/EnrollmentApi.py	/^class RemoveEnrollment(generics.DestroyAPIView):$/;"	kind:class	line:59
+RemoveEnrollment	../application/Api/EnrollmentApi.py	/^class RemoveEnrollment(generics.DestroyAPIView):$/;"	kind:class	line:80
+RemoveManager	../application/Api/ManagementApi.py	/^class RemoveManager(generics.DestroyAPIView):$/;"	kind:class	line:93
+RemoveUserGroup	../application/Api/GroupApi.py	/^class RemoveUserGroup(generics.DestroyAPIView):$/;"	kind:class	line:191
+RetrieveGroupList	../application/Api/GroupApi.py	/^class RetrieveGroupList(generics.ListAPIView):$/;"	kind:class	line:156
+STATIC_URL	../Challenges/settings.py	/^STATIC_URL = '\/static\/'$/;"	kind:variable	line:145
+SimpleUserSerializer	../application/serializers.py	/^class SimpleUserSerializer(serializers.ModelSerializer):$/;"	kind:class	line:56
+SwitchVisibility	../application/Api/ChallengeApi.py	/^class SwitchVisibility(generics.UpdateAPIView):$/;"	kind:class	line:65
+TEMPLATES	../Challenges/settings.py	/^TEMPLATES = [$/;"	kind:variable	line:68
+TIME_ZONE	../Challenges/settings.py	/^TIME_ZONE = 'UTC'$/;"	kind:variable	line:132
+USERNAME_FIELD	../authentification/models.py	/^    USERNAME_FIELD = "email"$/;"	kind:variable	line:65
+USE_I18N	../Challenges/settings.py	/^USE_I18N = True$/;"	kind:variable	line:134
+USE_L10N	../Challenges/settings.py	/^USE_L10N = True$/;"	kind:variable	line:136
+USE_TZ	../Challenges/settings.py	/^USE_TZ = True$/;"	kind:variable	line:138
+UserAPI	../authentification/api.py	/^class UserAPI(generics.RetrieveAPIView):$/;"	kind:class	line:52
+UserSerializer	../authentification/serializers.py	/^class UserSerializer(serializers.ModelSerializer):$/;"	kind:class	line:16
+UserTypes	../authentification/models.py	/^    UserTypes = ($/;"	kind:variable	line:87
+Users	../authentification/models.py	/^class Users(AbstractBaseUser):$/;"	kind:class	line:50
+UsersConfig	../application/apps.py	/^class UsersConfig(AppConfig):$/;"	kind:class	line:4
+WSGI_APPLICATION	../Challenges/settings.py	/^WSGI_APPLICATION = 'Challenges.wsgi.application'$/;"	kind:variable	line:85
+__init__.py	../Challenges/__init__.py	1;"	kind:file	line:1
+__init__.py	../application/Api/__init__.py	1;"	kind:file	line:1
+__init__.py	../application/__init__.py	1;"	kind:file	line:1
+__init__.py	../application/migrations/__init__.py	1;"	kind:file	line:1
+__init__.py	../authentification/__init__.py	1;"	kind:file	line:1
+__init__.py	../authentification/migrations/__init__.py	1;"	kind:file	line:1
+__init__.py	../frontend/__init__.py	1;"	kind:file	line:1
+__init__.py	../frontend/migrations/__init__.py	1;"	kind:file	line:1
+__str__	../application/models.py	/^    def __str__(self):$/;"	kind:member	line:54
+__str__	../application/models.py	/^    def __str__(self):$/;"	kind:member	line:70
+__str__	../application/models.py	/^    def __str__(self):$/;"	kind:member	line:88
+__str__	../authentification/models.py	/^    def __str__(self):$/;"	kind:member	line:74
+__unicode__	../authentification/models.py	/^    def __unicode__(self):$/;"	kind:member	line:77
+admin.py	../application/admin.py	1;"	kind:file	line:1
+admin.py	../authentification/admin.py	1;"	kind:file	line:1
+admin.py	../frontend/admin.py	1;"	kind:file	line:1
+api.py	../authentification/api.py	1;"	kind:file	line:1
+application	../Challenges/wsgi.py	/^application = get_wsgi_application()$/;"	kind:variable	line:16
+apps.py	../application/apps.py	1;"	kind:file	line:1
+apps.py	../authentification/apps.py	1;"	kind:file	line:1
+apps.py	../frontend/apps.py	1;"	kind:file	line:1
+authentication_classes	../application/Api/ChallengeApi.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:14
+authentication_classes	../application/Api/ChallengeApi.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:30
+authentication_classes	../application/Api/ChallengeApi.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:46
+authentication_classes	../application/Api/ChallengeApi.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:67
+authentication_classes	../application/Api/CourseApi.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:14
+authentication_classes	../application/Api/CourseApi.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:31
+authentication_classes	../application/Api/EnrollmentApi.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:17
+authentication_classes	../application/Api/EnrollmentApi.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:35
+authentication_classes	../application/Api/EnrollmentApi.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:50
+authentication_classes	../application/Api/EnrollmentApi.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:61
+authentication_classes	../application/Api/EnrollmentApi.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:82
+authentication_classes	../application/Api/GroupApi.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:106
+authentication_classes	../application/Api/GroupApi.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:129
+authentication_classes	../application/Api/GroupApi.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:158
+authentication_classes	../application/Api/GroupApi.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:178
+authentication_classes	../application/Api/GroupApi.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:193
+authentication_classes	../application/Api/GroupApi.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:223
+authentication_classes	../application/Api/GroupApi.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:32
+authentication_classes	../application/Api/ManagementApi.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:18
+authentication_classes	../application/Api/ManagementApi.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:44
+authentication_classes	../application/Api/ManagementApi.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:85
+authentication_classes	../application/Api/ManagementApi.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:95
+authentication_classes	../authentification/api.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:18
+authentication_classes	../authentification/api.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:54
+authentication_classes	../authentification/api.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:63
+authentication_classes	../authentification/api.py	/^    authentication_classes = (TokenAuthentication,)$/;"	kind:variable	line:88
+challenge	../application/models.py	/^    challenge = models.ForeignKey(Challenges, on_delete=models.CASCADE, error_messages={'invalide': 'n\\'éxiste pas'})$/;"	kind:variable	line:51
+challenge_id	../application/models.py	/^    challenge_id = models.AutoField(primary_key=True)$/;"	kind:variable	line:29
+constraint	../application/migrations/0001_initial.py	/^            constraint=models.UniqueConstraint(fields=('user', 'challenge'), name='UNIQUE_GROUP_ENTRY'),$/;"	kind:variable	line:96
+constraint	../application/migrations/0001_initial.py	/^            constraint=models.UniqueConstraint(fields=('user', 'course'), name='UNIQUE_ENROLLMENT_ENTRY'),$/;"	kind:variable	line:100
+constraint	../application/migrations/0001_initial.py	/^            constraint=models.UniqueConstraint(fields=('user', 'course'), name='UNIQUE_MANAGEMENT_ENTRY'),$/;"	kind:variable	line:92
+constraints	../application/models.py	/^        constraints = [$/;"	kind:variable	line:43
+constraints	../application/models.py	/^        constraints = [$/;"	kind:variable	line:61
+constraints	../application/models.py	/^        constraints = [$/;"	kind:variable	line:77
+course	../application/models.py	/^    course = models.ForeignKey(Course, on_delete=models.CASCADE, error_messages={'invalide': 'n\\'éxiste pas'})$/;"	kind:variable	line:30
+course	../application/models.py	/^    course = models.ForeignKey(Course, on_delete=models.CASCADE, error_messages={'invalide': 'n\\'éxiste pas'})$/;"	kind:variable	line:67
+course	../application/models.py	/^    course = models.ForeignKey(Course, on_delete=models.CASCADE, error_messages={'invalide': 'n\\'éxiste pas'})$/;"	kind:variable	line:83
+course_id	../application/models.py	/^    course_id = models.AutoField(primary_key=True)$/;"	kind:variable	line:14
+create	../authentification/serializers.py	/^    def create(self, validated_data):$/;"	kind:member	line:101
+create	../authentification/serializers.py	/^    def create(self, validated_data):$/;"	kind:member	line:29
+create	../authentification/serializers.py	/^    def create(self, validated_data):$/;"	kind:member	line:91
+create_staffuser	../authentification/models.py	/^    def create_staffuser(self, email, password, matricule):$/;"	kind:member	line:25
+create_superuser	../authentification/models.py	/^    def create_superuser(self, email, password, matricule):$/;"	kind:member	line:9
+create_user	../application/views.py	/^def create_user(request):$/;"	kind:function	line:45
+create_user	../authentification/models.py	/^    def create_user(self, email, password, matricule):$/;"	kind:member	line:38
+date_joined	../authentification/models.py	/^    date_joined = models.DateTimeField(default=timezone.now)$/;"	kind:variable	line:61
+db_table	../application/models.py	/^        db_table = "challenges"$/;"	kind:variable	line:25
+db_table	../application/models.py	/^        db_table = "course"$/;"	kind:variable	line:10
+db_table	../application/models.py	/^        db_table = "enrollment"$/;"	kind:variable	line:60
+db_table	../application/models.py	/^        db_table = "groups"$/;"	kind:variable	line:42
+db_table	../application/models.py	/^        db_table = "management"$/;"	kind:variable	line:76
+db_table	../authentification/models.py	/^        db_table = "users"$/;"	kind:variable	line:72
+dependencies	../application/migrations/0001_initial.py	/^    dependencies = [$/;"	kind:variable	line:13
+dependencies	../authentification/migrations/0001_initial.py	/^    dependencies = [$/;"	kind:variable	line:12
+description	../application/models.py	/^    description = models.TextField()$/;"	kind:variable	line:16
+description	../application/models.py	/^    description = models.TextField()$/;"	kind:variable	line:33
+destroy	../application/Api/ChallengeApi.py	/^    def destroy(self, request, *args, **kwargs):$/;"	kind:member	line:55
+destroy	../application/Api/EnrollmentApi.py	/^    def destroy(self, request, *args, **kwargs):$/;"	kind:member	line:70
+destroy	../application/Api/EnrollmentApi.py	/^    def destroy(self, request, *args, **kwargs):$/;"	kind:member	line:99
+destroy	../application/Api/GroupApi.py	/^    def destroy(self, request, *args, **kwargs):$/;"	kind:member	line:138
+destroy	../application/Api/GroupApi.py	/^    def destroy(self, request, *args, **kwargs):$/;"	kind:member	line:204
+destroy	../application/Api/ManagementApi.py	/^    def destroy(self, request, *args, **kwargs):$/;"	kind:member	line:111
+exist_mail	../application/views.py	/^def exist_mail(mail):$/;"	kind:function	line:74
+exist_matricule	../application/views.py	/^def exist_matricule(matricule):$/;"	kind:function	line:82
+exist_email	../application/views.py	/^def exist_email(email):$/;"	kind:function	line:66
+extra_kwargs	../authentification/serializers.py	/^        extra_kwargs = {'password': {'write_only': True}}$/;"	kind:variable	line:27
+field	../application/migrations/0001_initial.py	/^            field=models.ForeignKey(error_messages={'invalide': "n'éxiste pas"}, on_delete=django.db.models.deletion.CASCADE, to='application.Course'),$/;"	kind:variable	line:88
+fields	../application/migrations/0001_initial.py	/^            fields=[$/;"	kind:variable	line:20
+fields	../application/migrations/0001_initial.py	/^            fields=[$/;"	kind:variable	line:36
+fields	../application/migrations/0001_initial.py	/^            fields=[$/;"	kind:variable	line:50
+fields	../application/migrations/0001_initial.py	/^            fields=[$/;"	kind:variable	line:63
+fields	../application/migrations/0001_initial.py	/^            fields=[$/;"	kind:variable	line:76
+fields	../application/serializers.py	/^        fields = '__all__'$/;"	kind:variable	line:15
+fields	../application/serializers.py	/^        fields = '__all__'$/;"	kind:variable	line:22
+fields	../application/serializers.py	/^        fields = '__all__'$/;"	kind:variable	line:29
+fields	../application/serializers.py	/^        fields = '__all__'$/;"	kind:variable	line:36
+fields	../application/serializers.py	/^        fields = '__all__'$/;"	kind:variable	line:42
+fields	../application/serializers.py	/^        fields = '__all__'$/;"	kind:variable	line:50
+fields	../application/serializers.py	/^        fields = '__all__'$/;"	kind:variable	line:67
+fields	../application/serializers.py	/^        fields = '__all__'$/;"	kind:variable	line:78
+fields	../application/serializers.py	/^        fields = ('user_id', 'matricule', 'email', 'first_name', 'last_name')$/;"	kind:variable	line:59
+fields	../authentification/migrations/0001_initial.py	/^            fields=[$/;"	kind:variable	line:18
+fields	../authentification/serializers.py	/^        fields = ('user_id', 'matricule', 'email', 'first_name', 'last_name', 'is_staff', 'is_admin')$/;"	kind:variable	line:19
+fields	../authentification/serializers.py	/^        fields = ('user_id', 'matricule', 'email', 'password')$/;"	kind:variable	line:26
+first_name	../authentification/models.py	/^    first_name = models.CharField(max_length=127)$/;"	kind:variable	line:56
+first_name	../authentification/serializers.py	/^    first_name = serializers.CharField(required=True)$/;"	kind:variable	line:59
+freqSubmit	../application/models.py	/^    freqSubmit = models.IntegerField(default=0)$/;"	kind:variable	line:17
+freqSubmit	../application/models.py	/^    freqSubmit = models.IntegerField(default=0)$/;"	kind:variable	line:34
+get_full_name	../authentification/models.py	/^    def get_full_name(self):$/;"	kind:member	line:80
+get_object	../authentification/api.py	/^    def get_object(self):$/;"	kind:member	line:57
+get_object	../authentification/api.py	/^    def get_object(self, queryset=None):$/;"	kind:member	line:67
+get_object	../authentification/api.py	/^    def get_object(self, queryset=None):$/;"	kind:member	line:92
+get_queryset	../application/Api/ChallengeApi.py	/^    def get_queryset(self):$/;"	kind:member	line:33
+get_queryset	../application/Api/ChallengeApi.py	/^    def get_queryset(self):$/;"	kind:member	line:50
+get_queryset	../application/Api/ChallengeApi.py	/^    def get_queryset(self):$/;"	kind:member	line:71
+get_queryset	../application/Api/CourseApi.py	/^    def get_queryset(self):$/;"	kind:member	line:34
+get_queryset	../application/Api/EnrollmentApi.py	/^    def get_queryset(self):$/;"	kind:member	line:20
+get_queryset	../application/Api/EnrollmentApi.py	/^    def get_queryset(self):$/;"	kind:member	line:53
+get_queryset	../application/Api/EnrollmentApi.py	/^    def get_queryset(self):$/;"	kind:member	line:65
+get_queryset	../application/Api/EnrollmentApi.py	/^    def get_queryset(self):$/;"	kind:member	line:87
+get_queryset	../application/Api/GroupApi.py	/^    def get_queryset(self):$/;"	kind:member	line:109
+get_queryset	../application/Api/GroupApi.py	/^    def get_queryset(self):$/;"	kind:member	line:134
+get_queryset	../application/Api/GroupApi.py	/^    def get_queryset(self):$/;"	kind:member	line:162
+get_queryset	../application/Api/GroupApi.py	/^    def get_queryset(self):$/;"	kind:member	line:182
+get_queryset	../application/Api/GroupApi.py	/^    def get_queryset(self):$/;"	kind:member	line:198
+get_queryset	../application/Api/ManagementApi.py	/^    def get_queryset(self):$/;"	kind:member	line:100
+get_queryset	../application/Api/ManagementApi.py	/^    def get_queryset(self):$/;"	kind:member	line:21
+get_queryset	../application/Api/ManagementApi.py	/^    def get_queryset(self):$/;"	kind:member	line:88
+get_short_name	../authentification/models.py	/^    def get_short_name(self):$/;"	kind:member	line:83
+get_user	../application/serializers.py	/^    def get_user(self, obj):$/;"	kind:member	line:52
+get_user	../application/serializers.py	/^    def get_user(self, obj):$/;"	kind:member	line:69
+get_user	../application/serializers.py	/^    def get_user(self, obj):$/;"	kind:member	line:80
+group_id	../application/models.py	/^    group_id = models.IntegerField()$/;"	kind:variable	line:49
+has_permission	../authentification/permissions.py	/^    def has_permission(self, request, view):$/;"	kind:member	line:14
+has_permission	../authentification/permissions.py	/^    def has_permission(self, request, view):$/;"	kind:member	line:7
+index	../frontend/views.py	/^def index(request):$/;"	kind:function	line:4
+initial	../application/migrations/0001_initial.py	/^    initial = True$/;"	kind:variable	line:11
+initial	../authentification/migrations/0001_initial.py	/^    initial = True$/;"	kind:variable	line:10
+input_types	../application/models.py	/^    input_types = ListField(default=[])$/;"	kind:variable	line:37
+input_types	../application/serializers.py	/^    input_types = serializers.ListField(default=[])$/;"	kind:variable	line:11
+is_active	../authentification/models.py	/^    is_active = models.BooleanField(default=True)$/;"	kind:variable	line:59
+is_admin	../authentification/models.py	/^    is_admin = models.BooleanField(default=False)$/;"	kind:variable	line:60
+is_course_admin	../application/models.py	/^    is_course_admin = models.BooleanField(default=False)$/;"	kind:variable	line:85
+is_group_admin	../application/models.py	/^    is_group_admin = models.BooleanField(default=False)$/;"	kind:variable	line:86
+is_staff	../authentification/models.py	/^    is_staff = models.BooleanField(default=False)$/;"	kind:variable	line:58
+is_visible	../application/models.py	/^    is_visible = models.BooleanField(default=False)$/;"	kind:variable	line:31
+last_name	../authentification/models.py	/^    last_name = models.CharField(max_length=127)$/;"	kind:variable	line:57
+last_name	../authentification/serializers.py	/^    last_name = serializers.CharField(required=True)$/;"	kind:variable	line:58
+login	../application/views.py	/^def login(request):$/;"	kind:function	line:11
+logout	../application/views.py	/^def logout(request):$/;"	kind:function	line:35
+lookup_field	../application/Api/ChallengeApi.py	/^    lookup_field = 'challenge_id'$/;"	kind:variable	line:48
+lookup_field	../application/Api/ChallengeApi.py	/^    lookup_field = 'challenge_id'$/;"	kind:variable	line:69
+lookup_field	../application/Api/EnrollmentApi.py	/^    lookup_field = 'id'$/;"	kind:variable	line:63
+lookup_field	../application/Api/EnrollmentApi.py	/^    lookup_field = 'id'$/;"	kind:variable	line:84
+lookup_field	../application/Api/GroupApi.py	/^    lookup_field = 'challenge'$/;"	kind:variable	line:131
+lookup_field	../application/Api/GroupApi.py	/^    lookup_field = 'id'$/;"	kind:variable	line:195
+lookup_field	../application/Api/ManagementApi.py	/^    lookup_field = 'id'$/;"	kind:variable	line:97
+main	../manage.py	/^def main():$/;"	kind:function	line:7
+manage.py	../manage.py	1;"	kind:file	line:1
+managers	../authentification/migrations/0001_initial.py	/^            managers=[$/;"	kind:variable	line:35
+matricule	../authentification/models.py	/^    matricule = models.BigIntegerField(unique=True, error_messages={'unique': 'n\\'est pas disponible'})$/;"	kind:variable	line:55
+message	../authentification/permissions.py	/^    message = 'Vous n\\'avez pas les droit d\\'admin.'$/;"	kind:variable	line:12
+message	../authentification/permissions.py	/^    message = 'Vous ne faites pas parti du staff.'$/;"	kind:variable	line:5
+model	../application/serializers.py	/^        model = Challenges$/;"	kind:variable	line:14
+model	../application/serializers.py	/^        model = Course$/;"	kind:variable	line:21
+model	../application/serializers.py	/^        model = Enrollment$/;"	kind:variable	line:35
+model	../application/serializers.py	/^        model = Groups$/;"	kind:variable	line:28
+model	../application/serializers.py	/^        model = Groups$/;"	kind:variable	line:49
+model	../application/serializers.py	/^        model = Management$/;"	kind:variable	line:41
+model	../application/serializers.py	/^        model = Management$/;"	kind:variable	line:66
+model	../application/serializers.py	/^        model = Management$/;"	kind:variable	line:77
+model	../application/serializers.py	/^        model = Users$/;"	kind:variable	line:58
+model	../authentification/api.py	/^    model = Users$/;"	kind:variable	line:65
+model	../authentification/api.py	/^    model = Users$/;"	kind:variable	line:90
+model	../authentification/serializers.py	/^        model = Users$/;"	kind:variable	line:18
+model	../authentification/serializers.py	/^        model = Users$/;"	kind:variable	line:25
+model_name	../application/migrations/0001_initial.py	/^            model_name='challenges',$/;"	kind:variable	line:86
+model_name	../application/migrations/0001_initial.py	/^            model_name='enrollment',$/;"	kind:variable	line:99
+model_name	../application/migrations/0001_initial.py	/^            model_name='groups',$/;"	kind:variable	line:95
+model_name	../application/migrations/0001_initial.py	/^            model_name='management',$/;"	kind:variable	line:91
+models.py	../application/models.py	1;"	kind:file	line:1
+models.py	../authentification/models.py	1;"	kind:file	line:1
+models.py	../frontend/models.py	1;"	kind:file	line:1
+name	../application/apps.py	/^    name = 'application'$/;"	kind:variable	line:5
+name	../application/migrations/0001_initial.py	/^            name='Challenges',$/;"	kind:variable	line:19
+name	../application/migrations/0001_initial.py	/^            name='Course',$/;"	kind:variable	line:35
+name	../application/migrations/0001_initial.py	/^            name='Enrollment',$/;"	kind:variable	line:75
+name	../application/migrations/0001_initial.py	/^            name='Groups',$/;"	kind:variable	line:62
+name	../application/migrations/0001_initial.py	/^            name='Management',$/;"	kind:variable	line:49
+name	../application/migrations/0001_initial.py	/^            name='challenges',$/;"	kind:variable	line:103
+name	../application/migrations/0001_initial.py	/^            name='course',$/;"	kind:variable	line:87
+name	../authentification/apps.py	/^    name = 'authentification'$/;"	kind:variable	line:5
+name	../authentification/migrations/0001_initial.py	/^            name='Users',$/;"	kind:variable	line:17
+name	../frontend/apps.py	/^    name = 'frontend'$/;"	kind:variable	line:5
+nbStudent	../application/models.py	/^    nbStudent = models.IntegerField(default=-1)$/;"	kind:variable	line:19
+nbStudent	../application/models.py	/^    nbStudent = models.IntegerField(default=-1)$/;"	kind:variable	line:36
+nbSubmit	../application/models.py	/^    nbSubmit = models.IntegerField(default=-1)$/;"	kind:variable	line:18
+nbSubmit	../application/models.py	/^    nbSubmit = models.IntegerField(default=-1)$/;"	kind:variable	line:35
+new_password	../authentification/serializers.py	/^    new_password = serializers.CharField(required=True)$/;"	kind:variable	line:50
+objects	../authentification/models.py	/^    objects = MyUserManager()$/;"	kind:variable	line:63
+old_password	../authentification/serializers.py	/^    old_password = serializers.CharField(required=True)$/;"	kind:variable	line:49
+operations	../application/migrations/0001_initial.py	/^    operations = [$/;"	kind:variable	line:17
+operations	../authentification/migrations/0001_initial.py	/^    operations = [$/;"	kind:variable	line:15
+options	../application/migrations/0001_initial.py	/^            options={$/;"	kind:variable	line:30
+options	../application/migrations/0001_initial.py	/^            options={$/;"	kind:variable	line:44
+options	../application/migrations/0001_initial.py	/^            options={$/;"	kind:variable	line:57
+options	../application/migrations/0001_initial.py	/^            options={$/;"	kind:variable	line:70
+options	../application/migrations/0001_initial.py	/^            options={$/;"	kind:variable	line:81
+options	../authentification/migrations/0001_initial.py	/^            options={$/;"	kind:variable	line:32
+owner	../application/models.py	/^    owner = models.BooleanField(default=False)$/;"	kind:variable	line:52
+owner	../application/models.py	/^    owner = models.ForeignKey(Users, on_delete=models.CASCADE, error_messages={'invalide': 'n\\'éxiste pas'})$/;"	kind:variable	line:15
+parser_classes	../authentification/views.py	/^    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)$/;"	kind:variable	line:63
+password	../authentification/models.py	/^    password = models.CharField(max_length=255)$/;"	kind:variable	line:54
+password	../authentification/serializers.py	/^    password = serializers.CharField()$/;"	kind:variable	line:39
+password_reset_form_class	../authentification/serializers.py	/^    password_reset_form_class = ResetPasswordForm$/;"	kind:variable	line:64
+password_reset_token_created	../authentification/views.py	/^    def password_reset_token_created(sender, reset_password_token, *args, **kwargs):$/;"	kind:member	line:23
+permission_classes	../application/Api/ChallengeApi.py	/^    permission_classes = (IsAuthenticated,)$/;"	kind:variable	line:29
+permission_classes	../application/Api/ChallengeApi.py	/^    permission_classes = [IsAuthenticated, IsAdmin]$/;"	kind:variable	line:13
+permission_classes	../application/Api/ChallengeApi.py	/^    permission_classes = [IsAuthenticated, IsStaff]$/;"	kind:variable	line:45
+permission_classes	../application/Api/ChallengeApi.py	/^    permission_classes = [IsAuthenticated, IsStaff]$/;"	kind:variable	line:66
+permission_classes	../application/Api/CourseApi.py	/^    permission_classes = (IsAuthenticated,)$/;"	kind:variable	line:30
+permission_classes	../application/Api/CourseApi.py	/^    permission_classes = [IsAuthenticated, IsAdmin]$/;"	kind:variable	line:13
+permission_classes	../application/Api/EnrollmentApi.py	/^    permission_classes = [IsAuthenticated, IsStaff]$/;"	kind:variable	line:16
+permission_classes	../application/Api/EnrollmentApi.py	/^    permission_classes = [IsAuthenticated, IsStaff]$/;"	kind:variable	line:34
+permission_classes	../application/Api/EnrollmentApi.py	/^    permission_classes = [IsAuthenticated, IsStaff]$/;"	kind:variable	line:49
+permission_classes	../application/Api/EnrollmentApi.py	/^    permission_classes = [IsAuthenticated, IsStaff]$/;"	kind:variable	line:60
+permission_classes	../application/Api/EnrollmentApi.py	/^    permission_classes = [IsAuthenticated, IsStaff]$/;"	kind:variable	line:81
+permission_classes	../application/Api/GroupApi.py	/^    permission_classes = (IsAuthenticated,)$/;"	kind:variable	line:105
+permission_classes	../application/Api/GroupApi.py	/^    permission_classes = (IsAuthenticated,)$/;"	kind:variable	line:128
+permission_classes	../application/Api/GroupApi.py	/^    permission_classes = (IsAuthenticated,)$/;"	kind:variable	line:157
+permission_classes	../application/Api/GroupApi.py	/^    permission_classes = (IsAuthenticated,)$/;"	kind:variable	line:31
+permission_classes	../application/Api/GroupApi.py	/^    permission_classes = [IsAuthenticated, IsStaff]$/;"	kind:variable	line:177
+permission_classes	../application/Api/GroupApi.py	/^    permission_classes = [IsAuthenticated, IsStaff]$/;"	kind:variable	line:192
+permission_classes	../application/Api/GroupApi.py	/^    permission_classes = [IsAuthenticated, IsStaff]$/;"	kind:variable	line:222
+permission_classes	../application/Api/ManagementApi.py	/^    permission_classes = [IsAuthenticated, IsAdmin]$/;"	kind:variable	line:43
+permission_classes	../application/Api/ManagementApi.py	/^    permission_classes = [IsAuthenticated, IsStaff]$/;"	kind:variable	line:17
+permission_classes	../application/Api/ManagementApi.py	/^    permission_classes = [IsAuthenticated, IsStaff]$/;"	kind:variable	line:84
+permission_classes	../application/Api/ManagementApi.py	/^    permission_classes = [IsAuthenticated, IsStaff]$/;"	kind:variable	line:94
+permission_classes	../authentification/api.py	/^    permission_classes = (IsAuthenticated,)$/;"	kind:variable	line:17
+permission_classes	../authentification/api.py	/^    permission_classes = (IsAuthenticated,)$/;"	kind:variable	line:53
+permission_classes	../authentification/api.py	/^    permission_classes = (IsAuthenticated,)$/;"	kind:variable	line:62
+permission_classes	../authentification/api.py	/^    permission_classes = (IsAuthenticated,)$/;"	kind:variable	line:87
+permission_classes	../authentification/views.py	/^    permission_classes = ()$/;"	kind:variable	line:62
+permissions.py	../authentification/permissions.py	1;"	kind:file	line:1
+post	../application/Api/ChallengeApi.py	/^    def post(self, request, *args, **kwargs):$/;"	kind:member	line:17
+post	../application/Api/CourseApi.py	/^    def post(self, request, *args, **kwargs):$/;"	kind:member	line:17
+post	../application/Api/EnrollmentApi.py	/^    def post(self, request, *args, **kwargs):$/;"	kind:member	line:38
+post	../application/Api/GroupApi.py	/^    def post(self, request, *args, **kwargs):$/;"	kind:member	line:226
+post	../application/Api/GroupApi.py	/^    def post(self, request, *args, **kwargs):$/;"	kind:member	line:35
+post	../application/Api/ManagementApi.py	/^    def post(self, request, *args, **kwargs):$/;"	kind:member	line:47
+post	../authentification/api.py	/^    def post(self, request, *args, **kwargs):$/;"	kind:member	line:21
+post	../authentification/api.py	/^    def post(self, request, *args, **kwargs):$/;"	kind:member	line:37
+post	../authentification/views.py	/^    def post(self, request, *args, **kwargs):$/;"	kind:member	line:67
+random_int_generator	../application/Api/GroupApi.py	/^def random_int_generator():$/;"	kind:function	line:17
+read_only_fields	../application/serializers.py	/^        read_only_fields = ('owner',)$/;"	kind:variable	line:23
+read_only_fields	../application/serializers.py	/^        read_only_fields = ['group_id', 'user']$/;"	kind:variable	line:30
+renderer_classes	../authentification/views.py	/^    renderer_classes = (renderers.JSONRenderer,)$/;"	kind:variable	line:64
+save	../authentification/serializers.py	/^    def save(self):$/;"	kind:member	line:77
+serializer_class	../application/Api/ChallengeApi.py	/^    serializer_class = ChallengeSerializer$/;"	kind:variable	line:15
+serializer_class	../application/Api/ChallengeApi.py	/^    serializer_class = ChallengeSerializer$/;"	kind:variable	line:31
+serializer_class	../application/Api/ChallengeApi.py	/^    serializer_class = ChallengeSerializer$/;"	kind:variable	line:47
+serializer_class	../application/Api/ChallengeApi.py	/^    serializer_class = ChallengeSerializer$/;"	kind:variable	line:68
+serializer_class	../application/Api/CourseApi.py	/^    serializer_class = CourseSerializer$/;"	kind:variable	line:15
+serializer_class	../application/Api/CourseApi.py	/^    serializer_class = CourseSerializer$/;"	kind:variable	line:32
+serializer_class	../application/Api/EnrollmentApi.py	/^    serializer_class = EnrollmentListSerializer$/;"	kind:variable	line:51
+serializer_class	../application/Api/EnrollmentApi.py	/^    serializer_class = EnrollmentSerializer$/;"	kind:variable	line:36
+serializer_class	../application/Api/EnrollmentApi.py	/^    serializer_class = EnrollmentSerializer$/;"	kind:variable	line:62
+serializer_class	../application/Api/EnrollmentApi.py	/^    serializer_class = EnrollmentSerializer$/;"	kind:variable	line:83
+serializer_class	../application/Api/EnrollmentApi.py	/^    serializer_class = UserSerializer$/;"	kind:variable	line:18
+serializer_class	../application/Api/GroupApi.py	/^    serializer_class = GroupListSerializer$/;"	kind:variable	line:159
+serializer_class	../application/Api/GroupApi.py	/^    serializer_class = GroupListSerializer$/;"	kind:variable	line:179
+serializer_class	../application/Api/GroupApi.py	/^    serializer_class = GroupSerializer$/;"	kind:variable	line:224
+serializer_class	../application/Api/GroupApi.py	/^    serializer_class = GroupSerializer$/;"	kind:variable	line:33
+serializer_class	../application/Api/GroupApi.py	/^    serializer_class = UserSerializer$/;"	kind:variable	line:107
+serializer_class	../application/Api/GroupApi.py	/^    serializer_class = UserSerializer$/;"	kind:variable	line:130
+serializer_class	../application/Api/GroupApi.py	/^    serializer_class = UserSerializer$/;"	kind:variable	line:194
+serializer_class	../application/Api/ManagementApi.py	/^    serializer_class = ManagementSerializer$/;"	kind:variable	line:45
+serializer_class	../application/Api/ManagementApi.py	/^    serializer_class = ManagementSerializer$/;"	kind:variable	line:96
+serializer_class	../application/Api/ManagementApi.py	/^    serializer_class = ManagerListSerializer$/;"	kind:variable	line:86
+serializer_class	../application/Api/ManagementApi.py	/^    serializer_class = UserSerializer$/;"	kind:variable	line:19
+serializer_class	../authentification/api.py	/^    serializer_class = ChangeInformationsSerializer$/;"	kind:variable	line:89
+serializer_class	../authentification/api.py	/^    serializer_class = ChangePasswordSerializer$/;"	kind:variable	line:64
+serializer_class	../authentification/api.py	/^    serializer_class = LoginSerializer$/;"	kind:variable	line:35
+serializer_class	../authentification/api.py	/^    serializer_class = RegisterSerializer$/;"	kind:variable	line:19
+serializer_class	../authentification/api.py	/^    serializer_class = UserSerializer$/;"	kind:variable	line:55
+serializer_class	../authentification/views.py	/^    serializer_class = CustomTokenSerializer$/;"	kind:variable	line:65
+serializers.py	../application/serializers.py	1;"	kind:file	line:1
+serializers.py	../authentification/serializers.py	1;"	kind:file	line:1
+settings.py	../Challenges/settings.py	1;"	kind:file	line:1
+site_full_name	../authentification/views.py	/^site_full_name = 'Challenge';$/;"	kind:variable	line:17
+site_shortcut_name	../authentification/views.py	/^site_shortcut_name = 'Challenge';$/;"	kind:variable	line:18
+site_url	../authentification/views.py	/^site_url = 'http:\/\/127.0.0.1:8000\/#';$/;"	kind:variable	line:16
+tests.py	../application/tests.py	1;"	kind:file	line:1
+tests.py	../authentification/tests.py	1;"	kind:file	line:1
+tests.py	../frontend/tests.py	1;"	kind:file	line:1
+throttle_classes	../authentification/views.py	/^    throttle_classes = ()$/;"	kind:variable	line:61
+title	../application/models.py	/^    title = models.TextField()$/;"	kind:variable	line:32
+token	../authentification/serializers.py	/^    token = serializers.CharField()$/;"	kind:variable	line:96
+unique_group_id_generator	../application/Api/GroupApi.py	/^def unique_group_id_generator(instance):$/;"	kind:function	line:21
+unique_together	../application/migrations/0001_initial.py	/^            unique_together={('challenge_id', 'course')},$/;"	kind:variable	line:104
+unique_together	../application/models.py	/^        unique_together = (('challenge_id', 'course'),)$/;"	kind:variable	line:24
+update	../application/Api/ChallengeApi.py	/^    def update(self, request, *args, **kwargs):$/;"	kind:member	line:76
+update	../authentification/api.py	/^    def update(self, request, *args, **kwargs):$/;"	kind:member	line:70
+update	../authentification/api.py	/^    def update(self, request, *args, **kwargs):$/;"	kind:member	line:95
+update	../authentification/serializers.py	/^    def update(self, instance, validated_data):$/;"	kind:member	line:88
+update	../authentification/serializers.py	/^    def update(self, instance, validated_data):$/;"	kind:member	line:98
+urlpatterns	../Challenges/urls.py	/^urlpatterns = [$/;"	kind:variable	line:18
+urlpatterns	../application/Urls/Group_Urls.py	/^urlpatterns = [$/;"	kind:variable	line:7
+urlpatterns	../application/urls.py	/^urlpatterns = [$/;"	kind:variable	line:9
+urlpatterns	../authentification/urls.py	/^urlpatterns = [$/;"	kind:variable	line:8
+urlpatterns	../frontend/urls.py	/^urlpatterns = [$/;"	kind:variable	line:5
+urls.py	../Challenges/urls.py	1;"	kind:file	line:1
+urls.py	../application/urls.py	1;"	kind:file	line:1
+urls.py	../authentification/urls.py	1;"	kind:file	line:1
+urls.py	../frontend/urls.py	1;"	kind:file	line:1
+use_in_migrations	../authentification/models.py	/^    use_in_migrations = True$/;"	kind:variable	line:7
+user	../application/models.py	/^    user = models.ForeignKey(Users, on_delete=models.CASCADE, error_messages={'invalide': 'n\\'éxiste pas'})$/;"	kind:variable	line:50
+user	../application/models.py	/^    user = models.ForeignKey(Users, on_delete=models.CASCADE, error_messages={'invalide': 'n\\'éxiste pas'})$/;"	kind:variable	line:68
+user	../application/models.py	/^    user = models.ForeignKey(Users, on_delete=models.CASCADE, error_messages={'invalide': 'n\\'éxiste pas'})$/;"	kind:variable	line:84
+user	../application/serializers.py	/^    user = SerializerMethodField()$/;"	kind:variable	line:46
+user	../application/serializers.py	/^    user = SerializerMethodField()$/;"	kind:variable	line:63
+user	../application/serializers.py	/^    user = SerializerMethodField()$/;"	kind:variable	line:74
+user_id	../authentification/models.py	/^    user_id = models.AutoField(primary_key=True)$/;"	kind:variable	line:51
+user_type	../authentification/models.py	/^    user_type = models.IntegerField(choices=UserTypes, default=3)$/;"	kind:variable	line:94
+email	../authentification/models.py	/^    email = models.EmailField(max_length=127, unique=True, null=True,$/;"	kind:variable	line:52
+email	../authentification/serializers.py	/^    email = serializers.CharField()$/;"	kind:variable	line:38
+email	../authentification/serializers.py	/^    email = serializers.EmailField()$/;"	kind:variable	line:63
+validate	../authentification/serializers.py	/^    def validate(self, data):$/;"	kind:member	line:41
+validate_email	../authentification/serializers.py	/^    def validate_email(self, value):$/;"	kind:member	line:66
+validate_new_password	../authentification/serializers.py	/^    def validate_new_password(self, value):$/;"	kind:member	line:52
+views.py	../application/views.py	1;"	kind:file	line:1
+views.py	../authentification/views.py	1;"	kind:file	line:1
+views.py	../frontend/views.py	1;"	kind:file	line:1
+wsgi.py	../Challenges/wsgi.py	1;"	kind:file	line:1
