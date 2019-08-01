@@ -2,16 +2,17 @@ import axios from "axios";
 import {createMessage, returnErrors} from "./messages";
 
 import {
-    ADD_COURSE, ADD_COURSE_FAIL,
-    AUTH_ERROR, CREATE_MESSAGE,
+    AUTH_ERROR,
+    INFORMATIONS_UPDATED,
     LOGIN_FAIL,
     LOGIN_SUCCESS,
     LOGOUT_SUCCESS,
-    REGISTER_FAIL,
-    REGISTER_SUCCESS,
     USER_LOADED,
-    USER_LOADING
+    USER_LOADING,
+    WAIT_ASK,
+    WAIT_FINISH
 } from "./types";
+import {enrollUser, fetchChallenges, fetchCourses} from "./application";
 
 // CHECK TOKEN & LOAD USER
 export const loadUser = () => (dispatch, getState) => {
@@ -25,6 +26,9 @@ export const loadUser = () => (dispatch, getState) => {
                 type: USER_LOADED,
                 payload: res.data
             });
+            dispatch(fetchChallenges())
+            dispatch(fetchCourses())
+
         })
         .catch(err => {
             dispatch(returnErrors(err.response.data, err.response.status));
@@ -35,7 +39,7 @@ export const loadUser = () => (dispatch, getState) => {
 };
 
 // LOGIN USER
-export const login = (username, password) => dispatch => {
+export const login = (email, password) => dispatch => {
     // Headers
     const config = {
         headers: {
@@ -44,7 +48,7 @@ export const login = (username, password) => dispatch => {
     };
 
     // Request Body
-    const body = JSON.stringify({username, password});
+    const body = JSON.stringify({email, password});
 
     axios
         .post("/api/auth/login", body, config)
@@ -53,9 +57,10 @@ export const login = (username, password) => dispatch => {
                 type: LOGIN_SUCCESS,
                 payload: res.data
             });
+            dispatch(fetchChallenges())
+            dispatch(fetchCourses())
         })
         .catch(err => {
-            console.log(err);
             dispatch(returnErrors(err.response.data, err.response.status));
             dispatch({
                 type: LOGIN_FAIL
@@ -64,32 +69,136 @@ export const login = (username, password) => dispatch => {
 };
 
 // REGISTER USER
-export const createUser = ({matricule, username}) => (dispatch, getState) => {
+export const createUser = ({email, listCourseId}) => (dispatch, getState) => {
 
 
-
-    const password='rand'
-    const body = JSON.stringify({matricule, username,password});
+    const password = 'sEFlTJAbAW'
+    const body = JSON.stringify({email, password});
 
     axios
         .post("/api/auth/createUser", body, tokenConfig(getState))
         .then(res => {
-            dispatch(createMessage({ addUser: "Le compte à été crée."}));
+            dispatch(createMessage({addUser: "Le compte à été crée."}));
+            listCourseId.map((course) => {
+                dispatch(enrollUser({course, user: res.data.user.user_id}))
+            });
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+
+        });
+};
+
+
+// REGISTER USER
+export const createStaff = ({email}) => (dispatch, getState) => {
+
+
+    const password = 'sEFlTJAbAW'
+    const body = JSON.stringify({email, password});
+
+    axios
+        .post("/api/auth/createStaff", body, tokenConfig(getState))
+        .then(res => {
+            dispatch(createMessage({addUser: "Le compte à été crée."}));
+
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+
+        });
+};
+
+// REGISTER USER
+export const updatePassword = ({old_password, new_password}) => (dispatch, getState) => {
+
+
+    const body = JSON.stringify({old_password, new_password});
+
+    axios
+        .put("/api/auth/change_password", body, tokenConfig(getState))
+        .then(res => {
+            dispatch(createMessage({addUser: "Le mot de passe à été changé."}));
+
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+
+        });
+};
+
+export const resetPassword = (password, token) => (dispatch) => {
+
+    const body = JSON.stringify({password, token});
+    const config = {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    };
+
+    axios
+        .post("/api/auth/reset-password/confirm", body, config)
+        .then(res => {
+            dispatch(createMessage({addUser: "Mot de passe changé."}));
             dispatch({
-                type: REGISTER_SUCCESS,
+                type: WAIT_FINISH
+            });
+
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+            dispatch({
+                type: WAIT_ASK
+            });
+
+        });
+};
+
+
+export const requestReset = ({email}) => (dispatch) => {
+
+    const body = JSON.stringify({email});
+    const config = {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    };
+
+    axios
+        .post("/api/auth/reset-password", body, config)
+        .then(res => {
+            dispatch(createMessage({addUser: "Email envoyé."}));
+
+
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+
+
+        });
+};
+
+// REGISTER USER
+export const updateInformations = ({first_name, last_name}) => (dispatch, getState) => {
+
+
+    const body = JSON.stringify({first_name, last_name});
+
+    axios
+        .put("/api/auth/change_informations", body, tokenConfig(getState))
+        .then(res => {
+            dispatch(createMessage({addUser: "Vos informations ont été changées."}));
+            dispatch({
+                type: INFORMATIONS_UPDATED,
                 payload: res.data
             });
         })
         .catch(err => {
             console.log(err)
             dispatch(returnErrors(err.response.data, err.response.status));
-            dispatch({
-                type: REGISTER_FAIL
-            });
+
         });
 };
-
-
 
 
 // LOGOUT USER

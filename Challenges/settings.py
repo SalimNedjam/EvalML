@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import mongoengine as mongoengine
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -26,7 +25,7 @@ SECRET_KEY = 'nu^va-swk2@sqi72y=dao=trkjdi0s0()@3*!-e+l62u#ekff7'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -37,6 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
     'application',
     'authentification',
     'rest_framework',
@@ -44,6 +45,10 @@ INSTALLED_APPS = [
     'frontend',
     'rest_framework.authtoken',
     'rest_framework_mongoengine',
+    'django_rest_passwordreset',
+    'allauth',
+    'allauth.account',
+    'django_cleanup.apps.CleanupConfig',
 
 ]
 
@@ -78,25 +83,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Challenges.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',  # Backends disponibles : 'postgresql', 'mysql', 'sqlite3' et 'oracle'.
-#         'NAME': 'Challenge',  # Nom de la base de données
-#         'USER': 'root',
-#         'PASSWORD': '',
-#         'HOST': '127.0.0.1',  # Utile si votre base de données est sur une autre machine
-#         'PORT': '3306',  # ... et si elle utilise un autre port que celui par défaut
-#     }
-# }
-
 DATABASES = {
     'default':
         {
             'ENGINE': 'djongo',
-            'NAME': 'Challenge'
+            'NAME': 'Challenge',
+            'ENFORCE_SCHEMA': False,
+
         }
 }
 
@@ -144,9 +137,22 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     ),
+
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '1/minute'
+    }
+
 }
 
 EMAIL_HOST = 'smtp.mailtrap.io'
-EMAIL_HOST_USER = '9c678f0070d249'
-EMAIL_HOST_PASSWORD = '4a0628de95e0e5'
+EMAIL_HOST_USER = '2f3c244a8c23d5'
+EMAIL_HOST_PASSWORD = '3d8e11aafa47c7'
 EMAIL_PORT = '2525'
+
+DJANGO_REST_MULTITOKENAUTH_RESET_TOKEN_EXPIRY_TIME = 999
+
+DJANGO_REST_LOOKUP_FIELD = 'email'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_ACCEPT_CONTENT = ['pickle']

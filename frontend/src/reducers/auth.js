@@ -1,19 +1,23 @@
 import {
     AUTH_ERROR,
+    INFORMATIONS_UPDATED,
     LOGIN_FAIL,
     LOGIN_SUCCESS,
     LOGOUT_SUCCESS,
     REGISTER_FAIL,
     REGISTER_SUCCESS,
     USER_LOADED,
-    USER_LOADING
+    USER_LOADING,
+    WAIT_ASK,
+    WAIT_FINISH
 } from "../actions/types";
 
 const initialState = {
     token: localStorage.getItem("token"),
     isAuthenticated: null,
     isLoading: false,
-    user: null
+    user: null,
+    done: false
 };
 
 export default function (state = initialState, action) {
@@ -39,11 +43,29 @@ export default function (state = initialState, action) {
                 isLoading: false
             };
         case REGISTER_FAIL:
+            return {
+                ...state,
+                isLoading: false
+            };
         case REGISTER_SUCCESS:
             return {
                 ...state,
-                ...action.payload,
                 isLoading: false
+            };
+        case WAIT_ASK:
+            return {
+                ...state,
+                done: false
+            };
+        case WAIT_FINISH:
+            return {
+                ...state,
+                done: true
+            };
+        case INFORMATIONS_UPDATED:
+            return {
+                ...state,
+                ...action.payload,
             };
         case AUTH_ERROR:
         case LOGIN_FAIL:

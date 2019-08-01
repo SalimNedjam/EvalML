@@ -1,13 +1,23 @@
 import {combineReducers} from "redux";
-import application from "./application";
 import messages from "./messages";
 import auth from "./auth";
 import err from "./err";
+import management from "./management";
+import group from "./group";
+import enrollment from "./enrollment";
+import course from "./course";
+import challenge from "./challenge";
+import submission from "./submission";
 
 
 export default combineReducers({
-    application,
+    challenge,
+    course,
+    enrollment,
+    group,
+    management,
     err,
     messages,
+    submission,
     auth
 });
