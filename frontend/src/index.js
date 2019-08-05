@@ -3,9 +3,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from "react-redux";
 import store from "./store";
-import {HashRouter as Router,} from "react-router-dom";
+import {browserHistory} from 'react-router'
+import {BrowserRouter as Router} from 'react-router-dom'
 
 import {Provider as AlertProvider} from "react-alert";
+import {syncHistoryWithStore} from "react-router-redux";
 
 
 const alertOptions = {
@@ -28,10 +30,13 @@ const AlertTemplate = ({style, options, message, close}) => (
     </div>
 
 );
+
+export const history = syncHistoryWithStore(browserHistory, store)
+
 const myApp = (
     <Provider store={store}>
         <AlertProvider template={AlertTemplate} {...alertOptions}>
-            <Router>
+            <Router history={history}>
                 <App/>
             </Router>
         </AlertProvider>

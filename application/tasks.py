@@ -27,21 +27,24 @@ def run_eval(commandLine, submission_id,logfile):
     except:
         print("Unexpected error:", sys.exc_info()[0])
         submission.status = "FAIL"
-        submission.score = [0]
 
     finally:
         submission.save()
-        my_group = Groups.objects.get(
-                Q(user_id=submission.user_id) &
-                Q(challenge_id=submission.challenge_id))
-        query_group = Groups.objects.filter(group_id=my_group.group_id).exclude(user_id=submission.user_id)
-        query_output=Output.objects.filter(submission=submission)
+        try:
+            my_group = Groups.objects.get(
+                    Q(user_id=submission.user_id) &
+                    Q(challenge_id=submission.challenge_id))
+            query_group = Groups.objects.filter(group_id=my_group.group_id).exclude(user_id=submission.user_id)
+            query_output=Output.objects.filter(submission=submission)
 
-        for student in query_group:
-            submission.user_id=student.user_id
-            submission.id=None
-            submission.save()
-            for output in query_output:
-                output.file_id=None
-                output.submission_id=submission.id
-                output.save()
+            for student in query_group:
+                submission.user_id=student.user_id
+                submission.id=None
+                submission.save()
+                for output in query_output:
+                    output.file_id=None
+                    output.submission_id=submission.id
+                    output.save()
+        except:
+            print("Unexpected error:", sys.exc_info()[0])
+

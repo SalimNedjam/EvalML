@@ -20,8 +20,8 @@ export class LeaderBoardTable extends Component {
 
 
     render() {
-        console.log(this.state.data);
-        const sample = this.state.data[0]
+        const sample = this.props.listChallenge.find(chal => chal.challenge_id = this.props.challenge)
+
 
         return (
             <div>
@@ -44,18 +44,18 @@ export class LeaderBoardTable extends Component {
 
                         />
                         {
-                            sample && Object.entries(sample.score[0]).map(score => {
+                            sample && sample.scoreKeys.map(scoreKey => {
 
                                 return <Table.Column
                                     defaultSortOrder={'descend'}
                                     sorter={
-                                        (a, b) => (a.score[0])[score[0]] - (b.score[0])[score[0]]
+                                        (a, b) => (a.score[0])[scoreKey] - (b.score[0])[scoreKey]
                                     }
-                                    title={score[0]}
-                                    key={score[0]}
+                                    title={scoreKey}
+                                    key={scoreKey}
                                     render={(text, record) => {
 
-                                        return (record.score[0])[score[0]]
+                                        return (record.score[0])[scoreKey]
                                     }
 
 
@@ -89,7 +89,7 @@ export class LeaderBoardTable extends Component {
     };
 
     getRanking() {
-        const token = this.props.token;
+        const token = this.props.auth.token
         const config = {
             headers: {
                 "Content-Type": "application/json"
@@ -122,10 +122,9 @@ export class LeaderBoardTable extends Component {
 const mapStateToProps = (state) => {
     return {
         auth: state.auth,
+        listChallenge: state.challenge.listChallenge
 
     };
 };
 
-export default connect(
-    mapStateToProps,
-)(LeaderBoardTable);
+export default connect(mapStateToProps)(LeaderBoardTable);

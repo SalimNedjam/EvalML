@@ -1,10 +1,17 @@
 import React, {Component} from "react";
-import {Modal, Table, Tag} from 'antd'
+import {Dropdown, Menu, Modal, Select, Table, Tag} from 'antd'
 import {Link} from "react-router-dom";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
-import {removeChallenge, switchGroup, switchSubmission, switchVisibility} from "../../../actions/application";
-import {FiEdit, FiTrash} from "react-icons/fi";
+import {
+    duplicateChallenge,
+    removeChallenge,
+    switchGroup,
+    switchSubmission,
+    switchVisibility
+} from "../../../actions/application";
+import {FiCopy, FiEdit, FiSettings, FiSliders, FiTrash} from "react-icons/fi";
+import {createMessage} from "../../../actions/messages";
 
 const {confirm} = Modal;
 
@@ -15,6 +22,9 @@ export class TableChallenge extends Component {
         switchVisibility: PropTypes.func.isRequired,
 
     };
+    state = {
+        course: -1
+    }
     column = [
         {
             title: 'Id',
@@ -68,13 +78,9 @@ export class TableChallenge extends Component {
             title: 'Action',
             key: 'action',
             render: (text, record) => (
-                [<a onClick={() => this.doDelete(record)} key='1'><FiTrash style={IconStyle}/></a>
-                    ,
-                    <a onClick={() => this.props.history.push("/challenge/editChallenge/" + record.challenge_id + "/")}
-                       key='2'>
-                        <FiEdit style={IconStyle}/></a>
-
-                ]
+                <Dropdown overlay={this.dropdown(record)} trigger={['click']}>
+                    <a className="ant-dropdown-link"><FiSettings/></a>
+                </Dropdown>
 
             ),
         },
@@ -82,6 +88,25 @@ export class TableChallenge extends Component {
 
     constructor(props) {
         super(props)
+    }
+
+    dropdown(record) {
+        return <Menu>
+            <Menu.Item key="0">
+                <a onClick={() => this.props.history.push("/testSubmission/" + record.challenge_id + "/")}><FiSliders/>{" Tester la soumission"}
+                </a>
+            </Menu.Item>
+            <Menu.Item key="1">
+                <a onClick={() => this.props.history.push("/challenge/editChallenge/" + record.challenge_id + "/")}><FiEdit/>{" Edit"}
+                </a>
+            </Menu.Item>
+            <Menu.Item key="2">
+                <a onClick={() => this.doDuplicate(record)}><FiCopy/> {" Duplicate"}</a>
+            </Menu.Item>
+            <Menu.Item key="3">
+                <a onClick={() => this.doDelete(record)}><FiTrash/> {" Delete"}</a>
+            </Menu.Item>
+        </Menu>
     }
 
     render() {
@@ -100,7 +125,7 @@ export class TableChallenge extends Component {
                     onRow={(record, rowIndex) => {
                         return {
                             onDoubleClick: () => {
-                                this.props.history.push("/challengeGroups/" + record.challenge_id + "/")
+                                this.props.history.push("/challengeStaff/" + record.challenge_id + "/")
                             }
                         }
                     }
@@ -108,21 +133,30 @@ export class TableChallenge extends Component {
                     rowKey='challenge_id'
                     expandedRowRender={challenge => (
                         <div>
-                            <h6>Description: </h6>
+                            <strong>Description:</strong>
+                            <br/>
                             {challenge.description}
                             <br/>
                             <br/>
-                            <h6>Nombre de soumission au maximum: </h6>
+                            <strong>Date limite de soumission:</strong>
+                            <br/>
+                            {new Date(challenge.limitDate).toLocaleString()}
+                            <br/>
+                            <br/>
+                            <strong>Nombre de soumission au maximum:</strong>
+                            <br/>
                             {challenge.nbSubmit === 0 ? "Pas de limite" : challenge.nbSubmit + " soumissions"}
                             <br/>
                             <br/>
-                            <h6>Nombre d'étudiants: </h6>
+                            <strong>Nombre d'étudiants:</strong>
+                            <br/>
                             {challenge.nbStudent === 0 ? "Pas de limite" : challenge.nbStudent + " étudiants"}
 
                         </div>)
                     }
                     dataSource={listChallengeForCourse}
-                    footer={() => <Link to={"/challenge/createChallenge"}>Add new challenge </Link>}
+                    footer={() => <Link to={"/challenge/createChallenge/" + this.props.course}>Add new
+                        challenge </Link>}
 
                 />
             </div>)
@@ -145,6 +179,56 @@ export class TableChallenge extends Component {
             onCancel() {
             },
         });
+    }
+
+    doDuplicate(record) {
+        const _this = this;
+        confirm({
+            title: 'Veuillez selectioner le cours de destination ?',
+            content: <div className="form-group">
+                <label>Selectioner le cours</label>
+                <div>
+                    <Select defaultValue={-1} style={{width: 200}} onChange={(value => {
+                        console.log(value);
+                        _this.setState({course: value})
+                    })}>
+                        <Select.Option value={-1}/>
+                        {_this.renderList()}
+
+                    </Select>
+                </div>
+
+            </div>
+            ,
+            okText: 'Dupliquer',
+            okType: 'info',
+            cancelText: 'No',
+            onOk() {
+                if (_this.state.course != -1) {
+                    const challenge = {challenge_id: record.challenge_id, course_id: _this.state.course}
+                    _this.props.duplicateChallenge(challenge)
+                } else
+                    _this.props.createMessage({isEmptyTitle: "Veuillez séléctioné une cours"})
+            },
+            onCancel() {
+            },
+        });
+    }
+
+    onChangeCourse(value) {
+
+
+        this.setState({
+            course: value,
+        })
+
+
+    }
+
+    renderList() {
+        return this.props.listCourse.map((course) => {
+            return <Select.Option value={course.course_id} key={course.course_id}>{course.description}</Select.Option>
+        })
     }
 
     switchStatus(record) {
@@ -215,12 +299,15 @@ const IconStyle = {
 const mapStateToProps = (state) => {
 
     return {
-        listChallenge: state.challenge.listChallenge
+        listChallenge: state.challenge.listChallenge,
+        listCourse: state.course.listCourse
 
     };
 };
 
 
 export default connect(
-    mapStateToProps, {removeChallenge, switchVisibility, switchGroup, switchSubmission}
+    mapStateToProps, {
+        createMessage, removeChallenge, switchVisibility, switchGroup, switchSubmission, duplicateChallenge
+    }
 )(TableChallenge);

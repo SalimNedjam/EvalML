@@ -14,8 +14,8 @@ export class DatasetTable extends Component {
             title: 'file',
             key: 'file',
             render: (text, record) => {
-                let array=record.file.split('/');
-                return array[array.length-1]
+                let array = record.file.split('/');
+                return array[array.length - 1]
             },
 
 
@@ -43,7 +43,7 @@ export class DatasetTable extends Component {
         config.headers["Authorization"] = `Token ${token}`;
 
 
-        axios.get('api/challenge/get_file/?file_id=' + record.file_id, config)
+        axios.get('/api/challenge/get_file/?file_id=' + record.file_id, config)
             .then(res => {
                 let fileName = res.headers["content-disposition"].split("filename=")[1];
                 const url = window.URL.createObjectURL(new Blob([res.data]));
@@ -57,14 +57,15 @@ export class DatasetTable extends Component {
         })
     }
 
-    getChallange(){
-        const _this=this
-        return this.props.listChallenge.find(function(element) {
+    getChallange() {
+        const _this = this
+        return this.props.listChallenge.find(function (element) {
             return element.challenge_id == _this.props.challenge;
         })
     }
+
     render() {
-        const challenge=this.getChallange()
+        const challenge = this.getChallange()
         return (
             <div>
                 <h4 className="text-center">Dataset</h4>
@@ -73,7 +74,7 @@ export class DatasetTable extends Component {
                     className="components-table-demo-nested"
                     columns={this.column}
                     rowKey='file_id'
-                    dataSource={challenge!=undefined?challenge.dataset:[]}
+                    dataSource={challenge != undefined ? challenge.dataset : []}
                 />
             </div>)
 
@@ -81,6 +82,7 @@ export class DatasetTable extends Component {
     }
 
 }
+
 const IconStyle = {
     fontSize: '18px',
     marginRight: '5px'

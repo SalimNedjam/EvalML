@@ -6,7 +6,7 @@ import {Col, Row} from 'antd'
 import TableSubmission from "./TableSubmission";
 
 import TableGroup from "./TableGroup";
-import {LeaderBoardTable} from "./LeaderBoardTable";
+import LeaderBoardTable from "./LeaderBoardTable";
 import DatasetTable from "./DatasetTable";
 
 export class Challenge extends Component {
@@ -24,7 +24,7 @@ export class Challenge extends Component {
             }}>
 
                 <Col xs={24} sm={26} md={20} lg={14} xl={12}>
-                    <LeaderBoardTable challenge={challenge} token={this.props.auth.token}/>
+                    <LeaderBoardTable challenge={challenge}/>
                 </Col>
 
                 <Col xs={30} sm={26} md={20} lg={14} xl={12}>

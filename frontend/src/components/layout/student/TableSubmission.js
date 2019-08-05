@@ -22,7 +22,7 @@ export class TableSubmission extends Component {
     }
 
     render() {
-        const sample = this.props.listSubmission.find(sub => sub.status == "SUCCESS")
+        const sample = this.props.listChallenge.find(chal => chal.challenge_id = this.props.challenge)
 
         return (
             <div>
@@ -54,14 +54,16 @@ export class TableSubmission extends Component {
                 >
                     <Table.ColumnGroup>
                         {
-                            sample && Object.entries(sample.score[0]).map(score => {
+                            sample && sample.scoreKeys.map(scoreKey => {
 
                                 return <Table.Column
-                                    title={score[0]}
-                                    key={score[0]}
+                                    title={scoreKey}
+                                    key={scoreKey}
                                     render={(text, record) => {
-                                        const map = record.score[0]
-                                        return map[score[0]]
+                                        if (record.status == "SUCCESS")
+                                            return record.score[0][scoreKey]
+                                        return "-"
+
                                     }
 
 
@@ -113,6 +115,7 @@ export class TableSubmission extends Component {
     }
 
     askFile(file_id) {
+        console.log(file_id)
         const token = this.props.auth.token
         const config = {
             headers: {
@@ -122,8 +125,10 @@ export class TableSubmission extends Component {
         config.headers["Authorization"] = `Token ${token}`;
 
 
-        axios.get('api/submission/get_file/?id=' + file_id, config)
+        axios.get('/api/submission/get_file/?id=' + file_id, config)
             .then(res => {
+                console.log(res.data)
+
                 let fileName = res.headers["content-disposition"].split("filename=")[1];
                 const url = window.URL.createObjectURL(new Blob([res.data]));
                 const link = document.createElement('a');
@@ -163,6 +168,7 @@ const IconStyle = {
 const mapStateToProps = (state) => {
     return {
         listSubmission: state.submission.listSubmission,
+        listChallenge: state.challenge.listChallenge,
         auth: state.auth,
 
     };

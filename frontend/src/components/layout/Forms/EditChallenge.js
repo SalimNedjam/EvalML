@@ -38,7 +38,7 @@ export class EditChallenge extends Component {
         datasets: [],
         challenge: undefined,
         challenge_id: undefined,
-
+        scoreKeys: [""],
         scriptFile: [],
         uploading: false,
         nbStudent: "",
@@ -131,6 +131,68 @@ export class EditChallenge extends Component {
         )
     }
 
+    handleScoreKeyNameChange = idx => evt => {
+        const newInput = this.state.scoreKeys.map((input, sidx) => {
+            if (idx !== sidx)
+                return input;
+            return evt.target.value;
+        });
+
+        this.setState({scoreKeys: newInput});
+    };
+
+
+    handleAddScoreKey = () => {
+        if (this.state.scoreKeys.length === 0 || this.state.scoreKeys[this.state.scoreKeys.length - 1] !== "")
+            this.setState({
+                scoreKeys: [...this.state.scoreKeys, ""]
+            });
+
+    };
+
+    handleRemoveScoreKey = idx => () => {
+        this.setState({
+            scoreKeys: this.state.scoreKeys.filter((s, sidx) => idx !== sidx)
+        });
+    };
+
+
+    renderScoreKey() {
+        return (
+            <div>
+                <div>
+                    <label>Donner les clés des score qui sont dans le fichier score.json</label>
+
+
+                </div>
+                <div>
+                    {
+                        this.state.scoreKeys.map((input, idx) => (
+                            <div className="form-row align-items-center" key={idx}>
+                                <div className="col-sm-4 my-1">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="key"
+                                        value={input}
+                                        onChange={this.handleScoreKeyNameChange(idx)}
+                                    />
+                                </div>
+                                <div className="col-auto my-1">
+                                    <button type="button" className="close" onClick={this.handleRemoveScoreKey(idx)}
+                                            aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>))}
+
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={this.handleAddScoreKey}>
+                        Add new score key
+                    </button>
+                </div>
+            </div>
+        )
+    }
 
     handleOutputChangeParam = idx => evt => {
         const newOutput = this.state.outputs.map((output, sidx) => {
@@ -348,7 +410,7 @@ export class EditChallenge extends Component {
 
     onSubmit = e => {
         e.preventDefault();
-        const {description, title, course, nbStudent, nbSubmit, limitDate, scriptFile, inputExt, inputParam, outputs, truthFiles, datasets, challenge_id, command, args} = this.state;
+        const {description, title, course, nbStudent, nbSubmit, limitDate, scriptFile, inputExt, inputParam, outputs, truthFiles, datasets, challenge_id, command, args, scoreKeys} = this.state;
 
         if (course === -1)
             this.props.createMessage({selectItem: "Veuiller séléctioner un cours"});
@@ -366,6 +428,8 @@ export class EditChallenge extends Component {
             this.props.createMessage({isEmptyTitle: "La commande pour lancer le script ne peut pas etre vide"});
         else if (scriptFile.length === 0)
             this.props.createMessage({isEmptyTitle: "Le script d'évalution ne peut pas etre vide"});
+        else if (scoreKeys.length === 0 || (scoreKeys.length === 1 && scoreKeys[0] == ""))
+            this.props.createMessage({isEmptyTitle: "Il faut donner au moin une clé de score"});
         else if (inputExt === "")
             this.props.createMessage({isEmptyTitle: "L'extension du fichier de soumission ne peut pas etre vide"});
         else if (inputParam === "")
@@ -384,6 +448,7 @@ export class EditChallenge extends Component {
                 inputExt,
                 outputs,
                 truthFiles,
+                scoreKeys,
                 datasets,
                 command,
                 challenge_id,
@@ -412,6 +477,7 @@ export class EditChallenge extends Component {
                 inputExt: challenge.inputExt,
                 inputParam: challenge.inputParam,
                 limitDate: challenge.limitDate,
+                scoreKeys: challenge.scoreKeys
 
             })
 
@@ -420,6 +486,9 @@ export class EditChallenge extends Component {
 
     onChange = e => {
         this.setState({[e.target.name]: e.target.value})
+    };
+    onChangeName = e => {
+        this.setState({[e.target.name]: e.target.value.replace(/\s+/g, '')})
     };
 
     onTimeChange = (value, dateString) => {
@@ -530,7 +599,7 @@ export class EditChallenge extends Component {
                                 type="text"
                                 className="form-control"
                                 name="title"
-                                onChange={this.onChange}
+                                onChange={this.onChangeName}
                                 value={title}
                             />
                         </div>
@@ -606,6 +675,11 @@ export class EditChallenge extends Component {
                             </Upload>
 
                         </div>
+                        <div className="form-group">
+                            {
+                                this.renderScoreKey()
+                            }
+                        </div>
                         < div className="form-group">
                             <label>Information sur le fichier de soumission</label>
 
@@ -656,7 +730,7 @@ export class EditChallenge extends Component {
 
                         <div className="form-group">
                             <button type="submit" className="btn btn-primary">
-                                Ajouter
+                                Modifier
                             </button>
                         </div>
 

@@ -102,7 +102,8 @@ export class TableGroup extends Component {
                     dataSource={this.props.listGroup}
                     size="small"
                     rowKey='username'
-                    footer={() => this.props.listGroup.length > 0 ? <Link to={"/add_to_group"}>Add new member </Link> :
+                    footer={() => this.props.listGroup.length > 0 ?
+                        <Link to={"/add_to_group/" + this.props.challenge}>Add new member </Link> :
                         <a href="javascript:;" onClick={() => this.props.createGroup(this.props.challenge)}>Create
                             Group</a>}
                 />

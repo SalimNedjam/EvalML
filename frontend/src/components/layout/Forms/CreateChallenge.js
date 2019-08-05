@@ -18,6 +18,7 @@ export class CreateChallenge extends Component {
         title: "",
         inputParam: "",
         inputExt: "",
+        scoreKeys: [""],
         outputs: [
             {
                 param: "",
@@ -211,6 +212,70 @@ export class CreateChallenge extends Component {
     }
 
 
+    handleScoreKeyNameChange = idx => evt => {
+        const newInput = this.state.scoreKeys.map((input, sidx) => {
+            if (idx !== sidx)
+                return input;
+            return evt.target.value;
+        });
+
+        this.setState({scoreKeys: newInput});
+    };
+
+
+    handleAddScoreKey = () => {
+        if (this.state.scoreKeys.length === 0 || this.state.scoreKeys[this.state.scoreKeys.length - 1] !== "")
+            this.setState({
+                scoreKeys: [...this.state.scoreKeys, ""]
+            });
+
+    };
+
+    handleRemoveScoreKey = idx => () => {
+        this.setState({
+            scoreKeys: this.state.scoreKeys.filter((s, sidx) => idx !== sidx)
+        });
+    };
+
+
+    renderScoreKey() {
+        return (
+            <div>
+                <div>
+                    <label>Donner les clés des score qui sont dans le fichier score.json</label>
+
+
+                </div>
+                <div>
+                    {
+                        this.state.scoreKeys.map((input, idx) => (
+                            <div className="form-row align-items-center" key={idx}>
+                                <div className="col-sm-4 my-1">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="key"
+                                        value={input}
+                                        onChange={this.handleScoreKeyNameChange(idx)}
+                                    />
+                                </div>
+                                <div className="col-auto my-1">
+                                    <button type="button" className="close" onClick={this.handleRemoveScoreKey(idx)}
+                                            aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>))}
+
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={this.handleAddScoreKey}>
+                        Add new score key
+                    </button>
+                </div>
+            </div>
+        )
+    }
+
+
     handleTruthChangeParam = idx => evt => {
         const newOutput = this.state.truthFiles.map((truth, sidx) => {
             if (idx !== sidx) return truth;
@@ -346,11 +411,10 @@ export class CreateChallenge extends Component {
 
     onSubmit = e => {
         e.preventDefault();
-        const {description, title, course, nbStudent, nbSubmit, limitDate, scriptFile, inputExt, inputParam, outputs, truthFiles, datasets, command, args} = this.state;
+        const {description, title, course, nbStudent, nbSubmit, limitDate, scriptFile, inputExt, inputParam, outputs, truthFiles, datasets, command, args, scoreKeys} = this.state;
 
-        if (course === -1)
-            this.props.createMessage({selectItem: "Veuiller séléctioner un cours"});
-        else if (title === "")
+
+        if (title === "")
             this.props.createMessage({isEmptyDescription: "La description ne peut pas etre vide"});
         else if (description === "")
             this.props.createMessage({isEmptyTitle: "La nom du challenge ne peut pas etre vide"});
@@ -364,6 +428,8 @@ export class CreateChallenge extends Component {
             this.props.createMessage({isEmptyTitle: "La commande pour lancer le script ne peut pas etre vide"});
         else if (scriptFile.length === 0)
             this.props.createMessage({isEmptyTitle: "Le script d'évalution ne peut pas etre vide"});
+        else if (scoreKeys.length === 0 || (scoreKeys.length === 1 && scoreKeys[0] == ""))
+            this.props.createMessage({isEmptyTitle: "Il faut donner au moin une clé de score"});
         else if (inputExt === "")
             this.props.createMessage({isEmptyTitle: "L'extension du fichier de soumission ne peut pas etre vide"});
         else if (inputParam === "")
@@ -383,6 +449,7 @@ export class CreateChallenge extends Component {
                 outputs,
                 truthFiles,
                 datasets,
+                scoreKeys,
                 command,
                 args
             };
@@ -391,39 +458,22 @@ export class CreateChallenge extends Component {
 
 
     };
-    onChangeCourse = e => {
 
-        var course = this.props.listCourse.find(item => item.course_id == e.target.value);
-
-        this.setState({
-            [e.target.name]: e.target.value,
-            nbStudent: course.nbStudent,
-            nbSubmit: course.nbSubmit,
-        })
+    componentDidMount() {
+        const {match = {}} = this.props;
+        const course_id = match.params.course_id
+        var course = this.props.listCourse.find(item => item.course_id == course_id);
+        if (course != undefined)
+            this.setState({
+                course: course_id,
+                nbStudent: course.nbStudent,
+                nbSubmit: course.nbSubmit,
+            })
 
 
     }
 
-    onChangeChallenge = e => {
 
-        if (e.target.value != -1) {
-            var challenge = this.props.listChallenge.find(item => item.challenge_id == e.target.value);
-            this.setState({
-                [e.target.name]: e.target.value,
-                nbStudent: challenge.nbStudent,
-                nbSubmit: challenge.nbSubmit,
-                description: challenge.description,
-                title: challenge.title,
-                input_types: challenge.input_types
-            })
-        } else {
-            this.setState({
-                [e.target.name]: e.target.value,
-            })
-        }
-
-
-    }
     onChange = e => {
         this.setState({[e.target.name]: e.target.value})
     };
@@ -447,6 +497,10 @@ export class CreateChallenge extends Component {
             return <option value={challenge.challenge_id} key={challenge.challenge_id}>{challenge.title}</option>
         })
     }
+
+    onChangeName = e => {
+        this.setState({[e.target.name]: e.target.value.replace(/\s+/g, '')})
+    };
 
     printHeader() {
         const {command, inputParam, inputExt, scriptFile} = this.state;
@@ -527,45 +581,15 @@ export class CreateChallenge extends Component {
                     <h2 className="text-center">Ajouter un challenge</h2>
 
                     <form onSubmit={this.onSubmit}>
-                        <div className="form-group">
-                            <div className="form-group">
-                                <label>Selectioner le cours</label>
-                                <select
-                                    className="form-control"
-                                    name="course"
-                                    value={course}
-                                    onChange={this.onChangeCourse}>
 
-                                    <option value={-1}/>
-                                    {this.renderList()}
-                                </select>
-                            </div>
-                        </div>
 
-                        <div className="form-group">
-                            <div className="form-group">
-                                <br/>
-                                <label>Pre-remplir en suivant un challenge existant</label>
-                                <label>(Si vous voulez créer un nouveau challenge ignorer ce champs)</label>
-
-                                <select
-                                    className="form-control"
-                                    name="challenge"
-                                    value={challenge}
-                                    onChange={this.onChangeChallenge}>
-                                    <option value={-1}/>
-                                    {this.renderListChallenge()}
-                                </select>
-                            </div>
-                        </div>
-                        <br/>
                         <div className="form-group">
                             <label>Nom du challenge</label>
                             <input
                                 type="text"
                                 className="form-control"
                                 name="title"
-                                onChange={this.onChange}
+                                onChange={this.onChangeName}
                                 value={title}
                             />
                         </div>
@@ -640,6 +664,11 @@ export class CreateChallenge extends Component {
                                 </Button>
                             </Upload>
 
+                        </div>
+                        <div className="form-group">
+                            {
+                                this.renderScoreKey()
+                            }
                         </div>
                         < div className="form-group">
                             <label>Information sur le fichier de soumission</label>

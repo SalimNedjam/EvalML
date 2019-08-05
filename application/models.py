@@ -28,7 +28,7 @@ def script_path(instance, filename):
 
 class Challenges(models.Model):
     class Meta:
-        unique_together = (('challenge_id', 'course'),)
+        unique_together = [('challenge_id', 'course'), ('title', 'course')]
         db_table = "challenges"
 
     REQUIRED_FIELDS = ['challenge_id', 'course']
@@ -47,6 +47,8 @@ class Challenges(models.Model):
     scriptFile = models.FileField(upload_to=script_path)
     args = ListField(default=[])
     outputs = ListField(default=[])
+    scoreKeys = ListField(default=[])
+
     enable_edit_group = models.BooleanField(default=False)
     enable_delete_submission = models.BooleanField(default=False)
 
@@ -135,7 +137,7 @@ class Submission(models.Model):
 
     date_submit = models.DateTimeField(default=timezone.now)
     score = ListField(default=[])
-    
+
     input_file = models.FileField(upload_to=directory_path)
     status = models.CharField(choices=STATUS_CHOICES, default=PENDING, max_length=10)
     tags = ListField(default=[])

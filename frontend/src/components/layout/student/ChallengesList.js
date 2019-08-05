@@ -16,28 +16,26 @@ class ChallengesList extends Component {
 
         return (
 
-            this.props.listCourse.map(course=>{
-            let array=this.props.listChallenge.filter(chal => chal.course==course.course_id
-            )
-            return <Row gutter={16} style={{
-                margin: '24px 16px',
-                padding: 24,
-                background: '#fff',
-            }}>
-                <h5>{course.description}</h5>
-                {
-                array.map((challenge) => {
-                    return (
-                        this.renderOne(challenge)
-                    )
-                })}
-            </Row>
+            this.props.listCourse.map(course => {
+                let array = this.props.listChallenge.filter(chal => chal.course == course.course_id
+                )
+                return <Row gutter={16} style={{
+                    margin: '24px 16px',
+                    padding: 24,
+                    background: '#fff',
+                }}>
+                    <h5>{course.description}</h5>
+                    {
+                        array.map((challenge) => {
+                            return (
+                                this.renderOne(challenge)
+                            )
+                        })}
+                </Row>
             })
 
         )
     };
-
-
 
 
     renderOne = (challenge) => {
@@ -54,6 +52,11 @@ class ChallengesList extends Component {
                 <strong>Description:</strong>
                 <br/>
                 {challenge.description}
+                <br/>
+                <br/>
+                <strong>Date limite de soumission:</strong>
+                <br/>
+                {new Date(challenge.limitDate).toLocaleString()}
                 <br/>
                 <br/>
                 <strong>Nombre de soumission au maximum:</strong>
@@ -74,7 +77,7 @@ class ChallengesList extends Component {
 const mapStateToProps = (state) => {
     return {
         listChallenge: state.challenge.listChallenge,
-        listCourse:state.course.listCourse
+        listCourse: state.course.listCourse
     };
 };
 

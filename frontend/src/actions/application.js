@@ -7,6 +7,8 @@ import {
     ADD_TO_GROUP,
     CREATE_GROUP,
     CREATE_SUBMISSION,
+    EDIT_CHALLENGE,
+    EDIT_COURSE,
     ENROLL_USER,
     FETCH_CHALLENGES,
     FETCH_COURSES,
@@ -23,6 +25,7 @@ import {
     FETCH_NON_MANAGER_FAIL,
     FETCH_SUBMISSION,
     REMOVE_CHALLENGE,
+    REMOVE_COURSE,
     REMOVE_ENROLLMENT,
     REMOVE_GROUP,
     REMOVE_MANAGER,
@@ -35,6 +38,7 @@ import {
 import axios from 'axios';
 import {createMessage, returnErrors} from "./messages";
 import {tokenConfig} from "./auth";
+import {goBack} from "react-router-redux";
 
 
 export const fetchChallenges = () => (dispatch, getState) => {
@@ -67,7 +71,47 @@ export const fetchCourses = () => (dispatch, getState) => {
 };
 
 
-export const createChallenge = ({description, title, course, nbStudent, nbSubmit, limitDate, scriptFile, inputParam, inputExt, outputs, truthFiles, datasets, command, args}) => (dispatch, getState) => {
+export const duplicateChallenge = ({course_id, challenge_id}) => (dispatch, getState) => {
+
+    const body = JSON.stringify({course_id, challenge_id});
+    axios
+        .post("/api/challenge/duplicate_challenge", body, tokenConfig(getState))
+        .then(res => {
+            dispatch(createMessage({addUser: "Le challenge à bien été dupliqué."}));
+            dispatch({
+                type: ADD_CHALLENGE,
+                payload: res.data.challenge
+            });
+
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+
+        });
+};
+
+export const duplicateCourse = (course_id) => (dispatch, getState) => {
+
+    const body = JSON.stringify({course_id});
+    axios
+        .post("/api/course/duplicate_course", body, tokenConfig(getState))
+        .then(res => {
+            dispatch(createMessage({addUser: "Le cours à bien été dupliqué."}));
+            dispatch({
+                type: ADD_COURSE,
+                payload: res.data.course
+            });
+            store.dispatch(goBack())
+
+            dispatch(fetchChallenges())
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+
+        });
+};
+
+export const createChallenge = ({description, title, course, nbStudent, nbSubmit, limitDate, scriptFile, inputParam, inputExt, outputs, truthFiles, datasets, command, args, scoreKeys}) => (dispatch, getState) => {
         let data = new FormData();
         data.append("description", description)
         data.append("title", title)
@@ -78,6 +122,10 @@ export const createChallenge = ({description, title, course, nbStudent, nbSubmit
         for (let i = 0; i < scriptFile.length; i++) {
             if (scriptFile[i] !== undefined)
                 data.append("scriptFile", scriptFile[i])
+        }
+        for (let i = 0; i < scoreKeys.length; i++) {
+            if (scoreKeys[i] !== "")
+                data.append("scoreKeys[" + i + "]", scoreKeys[i])
         }
         for (let i = 0; i < datasets.length; i++) {
             if (datasets[i] !== undefined)
@@ -113,6 +161,7 @@ export const createChallenge = ({description, title, course, nbStudent, nbSubmit
                     type: ADD_CHALLENGE,
                     payload: res.data.challenge
                 });
+                dispatch(goBack())
             })
             .catch(err => {
                 dispatch(returnErrors(err.response.data, err.response.status));
@@ -124,7 +173,7 @@ export const createChallenge = ({description, title, course, nbStudent, nbSubmit
 ;
 
 
-export const updateChallenge = ({challenge_id, description, title, course, nbStudent, nbSubmit, limitDate, scriptFile, inputParam, inputExt, outputs, truthFiles, datasets, command, args}) => (dispatch, getState) => {
+export const updateChallenge = ({challenge_id, description, title, course, nbStudent, nbSubmit, limitDate, scriptFile, inputParam, inputExt, outputs, truthFiles, datasets, command, args, scoreKeys}) => (dispatch, getState) => {
         let data = new FormData();
         data.append("description", description)
         data.append("title", title)
@@ -136,6 +185,10 @@ export const updateChallenge = ({challenge_id, description, title, course, nbStu
         for (let i = 0; i < scriptFile.length; i++) {
             if (scriptFile[i] !== undefined)
                 data.append("scriptFile", scriptFile[i])
+        }
+        for (let i = 0; i < scoreKeys.length; i++) {
+            if (scoreKeys[i] !== "")
+                data.append("scoreKeys[" + i + "]", scoreKeys[i])
         }
         for (let i = 0; i < datasets.length; i++) {
             if (datasets[i] !== undefined)
@@ -168,9 +221,10 @@ export const updateChallenge = ({challenge_id, description, title, course, nbStu
             .then(res => {
                 dispatch(createMessage({addUser: "Le challenge à été mis à jour."}));
                 dispatch({
-                    type: ADD_CHALLENGE,
+                    type: EDIT_CHALLENGE,
                     payload: res.data.challenge
                 });
+                dispatch(goBack())
             })
             .catch(err => {
                 dispatch(returnErrors(err.response.data, err.response.status));
@@ -196,6 +250,7 @@ export const createCourse = ({description, nbStudent, nbSubmit}) => (dispatch, g
                 type: ADD_COURSE,
                 payload: res.data.course
             });
+            dispatch(goBack())
         })
         .catch(err => {
             console.log(err)
@@ -206,6 +261,27 @@ export const createCourse = ({description, nbStudent, nbSubmit}) => (dispatch, g
         });
 };
 
+export const editCourse = ({description, nbStudent, nbSubmit}) => (dispatch, getState) => {
+
+
+    const body = JSON.stringify({description, nbStudent, nbSubmit});
+
+    axios
+        .put("/api/course/edit_course", body, tokenConfig(getState))
+        .then(res => {
+            dispatch(createMessage({addCourse: "Le cours à été modifié."}));
+            dispatch({
+                type: EDIT_COURSE,
+                payload: res.data.course
+            });
+            dispatch(goBack())
+
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+
+        });
+};
 
 export const fetchNonEnrolled = course => (dispatch, getState) => {
 
@@ -264,11 +340,13 @@ export const enrollUser = ({course, user}) => (dispatch, getState) => {
                 type: ENROLL_USER,
                 payload: user
             });
+            dispatch(goBack())
         })
         .catch(err => {
             dispatch(returnErrors(err.response.data, err.response.status));
 
         });
+
 };
 
 
@@ -354,6 +432,7 @@ export const addManager = ({course, user, is_course_admin, is_group_admin}) => (
                 type: ADD_MANAGER,
                 payload: user
             });
+            dispatch(goBack())
         })
         .catch(err => {
             dispatch(returnErrors(err.response.data, err.response.status));
@@ -373,6 +452,7 @@ export const addToGroup = ({challenge, user}) => (dispatch, getState) => {
                 type: ADD_TO_GROUP,
                 payload: user
             });
+            dispatch(goBack())
         })
         .catch(err => {
             dispatch(returnErrors(err.response.data, err.response.status));
@@ -391,6 +471,7 @@ export const forceAddToGroup = ({challenge, user, group_id}) => (dispatch, getSt
                 type: ADD_TO_GROUP,
                 payload: user
             });
+            dispatch(goBack())
         })
         .catch(err => {
             dispatch(returnErrors(err.response.data, err.response.status));
@@ -452,7 +533,22 @@ export const removeChallenge = (id) => (dispatch, getState) => {
         });
 };
 
+export const removeCourse = (id) => (dispatch, getState) => {
 
+    axios
+        .delete("/api/course/remove_course/" + id + "/", tokenConfig(getState))
+        .then(res => {
+            dispatch(createMessage({addUser: "Le cours à été retiré."}));
+            dispatch({
+                type: REMOVE_COURSE,
+                payload: id
+            });
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+
+        });
+};
 export const switchVisibility = (id) => (dispatch, getState) => {
 
     axios
@@ -462,6 +558,8 @@ export const switchVisibility = (id) => (dispatch, getState) => {
                 type: SWITCH_VISIBILITY,
                 payload: res.data.challenge
             });
+
+
         })
         .catch(err => {
             dispatch(returnErrors(err.response.data, err.response.status));
@@ -515,6 +613,7 @@ export const createSubmission = ({challenge, input_file}) => (dispatch, getState
                 payload: res.data
             })
 
+
         })
         .catch(err => {
             dispatch(returnErrors(err.response.data, err.response.status));
@@ -539,7 +638,19 @@ export const fetchSubmission = (challenge_id) => (dispatch, getState) => {
 
     });
 };
+export const fetchSubmissionStaff = ({challenge, user}) => (dispatch, getState) => {
 
+    axios.get('/api/submission/fetch_submission_staff?challenge_id=' + challenge + "&user=" + user, tokenConfig(getState))
+        .then(res => {
+            dispatch({
+                type: FETCH_SUBMISSION,
+                payload: res.data
+            })
+        }).catch(err => {
+        dispatch(returnErrors(err.response.data, err.response.status));
+
+    });
+};
 
 export const fetchGroup = (challenge_id) => (dispatch, getState) => {
 
@@ -563,7 +674,7 @@ export const fetchGroup = (challenge_id) => (dispatch, getState) => {
 
 export const forceFetchGroup = (challenge_id) => (dispatch, getState) => {
 
-    axios.get('api/group/list_groups_challenge?challenge=' + challenge_id, tokenConfig(getState))
+    axios.get('/api/group/list_groups_challenge?challenge=' + challenge_id, tokenConfig(getState))
         .then(res => {
 
             let array = []
@@ -701,3 +812,4 @@ export const tokenConfigMultiPart = getState => {
 
     return config;
 };
+

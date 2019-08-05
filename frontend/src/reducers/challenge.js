@@ -1,6 +1,7 @@
 import {
     ADD_CHALLENGE,
     ADD_CHALLENGE_FAIL,
+    EDIT_CHALLENGE,
     FETCH_CHALLENGES,
     REMOVE_CHALLENGE,
     SWITCH_GROUP_EDIT,
@@ -28,6 +29,16 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 listChallenge: [...state.listChallenge, action.payload]
+            }
+        case EDIT_CHALLENGE:
+
+            return {
+                ...state,
+                listChallenge: state.listChallenge.map(challenge => {
+                    if (challenge.challenge_id == action.payload.challenge_id)
+                        return action.payload
+                    return challenge
+                })
             }
         case REMOVE_CHALLENGE:
             return {

@@ -16,12 +16,13 @@ class ChallengeSerializer(serializers.ModelSerializer):
 
 class ChallengePrintSerializer(serializers.ModelSerializer):
     dataset = SerializerMethodField()
+    scoreKeys = serializers.ListField(default=[])
 
     class Meta:
         model = Challenges
         fields = ['challenge_id', 'course', 'description', 'inputParam', 'inputExt', 'is_visible', 'limitDate',
                   'nbStudent',
-                  'nbSubmit', 'title', 'dataset', 'enable_edit_group', 'enable_delete_submission']
+                  'nbSubmit', 'title', 'dataset', 'enable_edit_group', 'enable_delete_submission', 'scoreKeys']
 
     def get_dataset(self, obj):
         query_dataset = Dataset.objects.filter(challenge=obj)
@@ -68,6 +69,26 @@ class DatasetSerializer(serializers.ModelSerializer):
 
 
 class SubmissionSerializer(serializers.ModelSerializer):
+    tags = serializers.ListField(default=[])
+    score = serializers.ListField(default=[])
+
+    outputs = SerializerMethodField()
+
+    class Meta:
+        model = Submission
+        fields = '__all__'
+        read_only_fields = ['user', 'challenge', 'score', 'status']
+
+    def create(self, validated_data):
+        submit = Submission.objects.create(**validated_data)
+        return submit
+
+    def get_outputs(self, obj):
+        query_output = Output.objects.filter(submission=obj).exclude(ext="log")
+        return OutputSerializer(query_output, many=True).data
+
+
+class SubmissionStaffSerializer(serializers.ModelSerializer):
     tags = serializers.ListField(default=[])
     score = serializers.ListField(default=[])
 

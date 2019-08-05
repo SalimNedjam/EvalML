@@ -13,7 +13,7 @@ from rest_framework.views import APIView
 
 from .serializers import CustomTokenSerializer
 
-site_url = 'http://127.0.0.1:8000/#';
+site_url = 'http://127.0.0.1:8000';
 site_full_name = 'Challenge';
 site_shortcut_name = 'Challenge';
 
@@ -50,11 +50,6 @@ class CustomPasswordResetView:
         )
         msg.attach_alternative(email_html_message, "text/html")
         msg.send()
-
-
-
-
-
 
 
 class CustomPasswordTokenVerificationView(APIView):

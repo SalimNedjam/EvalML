@@ -28,7 +28,7 @@ export class TableManagers extends Component {
             key: 'Username',
 
         },
-        
+
         {
             title: 'Course permissions',
             dataIndex: 'is_course_admin',
@@ -83,7 +83,7 @@ export class TableManagers extends Component {
                     columns={this.column}
                     dataSource={this.props.listManager}
                     size="small"
-                    footer={() => <Link to={"/management/addManager"}>Add new manager </Link>}
+                    footer={() => <Link to={"/management/addManager/" + this.props.course}>Add new manager </Link>}
 
                 />
             </div>)

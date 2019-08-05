@@ -19,5 +19,5 @@ urlpatterns = [
     path('', include('application.urls')),
     path('', include('authentification.urls')),
     path('', include('frontend.urls')),
-
+    
 ]

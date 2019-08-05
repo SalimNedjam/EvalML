@@ -26,7 +26,7 @@ export class TableEnrolled extends Component {
             dataIndex: 'email',
             key: 'Username',
         },
-    
+
         {
             title: 'Last Name',
             dataIndex: 'last_name',
@@ -63,7 +63,7 @@ export class TableEnrolled extends Component {
                     columns={this.column}
                     dataSource={this.props.listEnrolled}
                     size="small"
-                    footer={() => <Link to={"/enrollment/enrollUser"}>Add new student </Link>}
+                    footer={() => <Link to={"/enrollment/enrollUser/" + this.props.course}>Add new student </Link>}
 
                 />
             </div>)

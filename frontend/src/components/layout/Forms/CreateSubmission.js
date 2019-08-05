@@ -3,7 +3,6 @@ import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import {Button, Icon, Upload} from 'antd';
 import {returnErrors} from "../../../actions/messages";
-import {Redirect} from "react-router-dom";
 import axios from "axios";
 
 export class CreateSubmission extends Component {
@@ -15,7 +14,6 @@ export class CreateSubmission extends Component {
         tags: [""],
         challenge: -1,
         uploading: false,
-        uploaded: false,
         fileList: [],
     };
 
@@ -132,8 +130,9 @@ export class CreateSubmission extends Component {
             .then(res => {
                 this.setState({
                     uploading: false,
-                    uploaded: true
                 })
+                this.props.history.goBack()
+
 
             })
             .catch(err => {
@@ -166,9 +165,7 @@ export class CreateSubmission extends Component {
     };
 
     render() {
-        if (this.state.uploaded) {
-            return <Redirect to="/success_submission"/>
-        }
+
         const {uploading, fileList} = this.state;
         const props = {
             onRemove: file => {

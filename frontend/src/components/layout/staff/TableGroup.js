@@ -19,8 +19,11 @@ export class TableGroup extends Component {
         },
         {
             title: 'Email',
-            dataIndex: 'email',
             key: 'Username',
+            render: (record) => {
+                return <Link
+                    to={"/student/" + record.user_id + "/challenge/" + this.props.challenge}>{record.email} </Link>
+            }
         },
 
         {
@@ -53,15 +56,14 @@ export class TableGroup extends Component {
     }
 
     componentDidMount() {
-        const {match = {}} = this.props;
-        const challenge_id = match.params.challenge;
+        const challenge_id = this.props.challenge;
         this.props.forceFetchGroup(challenge_id)
 
     }
 
     fetch() {
-        const {match = {}} = this.props;
-        const challenge = match.params.challenge;
+        const challenge = this.props.challenge;
+
         const token = this.props.auth.token
         const config = {
             headers: {
@@ -71,7 +73,7 @@ export class TableGroup extends Component {
         config.headers["Authorization"] = `Token ${token}`;
 
 
-        axios.get('api/group/list_groups_challenge?challenge=' + challenge, config)
+        axios.get('/api/group/list_groups_challenge?challenge=' + challenge, config)
             .then(res => {
                 let groups = {};
                 res.data.forEach(function (item) {
@@ -110,10 +112,10 @@ export class TableGroup extends Component {
 
     render() {
         return <div style={{
-            margin: '24px 16px',
-            padding: 24,
-            background: '#fff',
+            margin: '0px 16px',
         }}>
+            <h4 className="text-center">Liste des groupes</h4>
+
             {this.iterateGroup()}
         </div>
     }
@@ -142,7 +144,7 @@ export class TableGroup extends Component {
                 return (
                     <Row>
                         <Col>
-
+                            <h6>Groupe: {array[0].group_id}</h6>
                             <Table
                                 columns={this.column}
                                 dataSource={array}
@@ -171,7 +173,7 @@ const mapStateToProps = (state) => {
         listGroup: state.group.listGroup,
         auth: state.auth
     }
-        ;
+
 };
 
 export default connect(

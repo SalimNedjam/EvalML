@@ -13,6 +13,7 @@ import {
     WAIT_FINISH
 } from "./types";
 import {enrollUser, fetchChallenges, fetchCourses} from "./application";
+import {goBack} from "react-router-redux";
 
 // CHECK TOKEN & LOAD USER
 export const loadUser = () => (dispatch, getState) => {
@@ -168,7 +169,7 @@ export const requestReset = ({email}) => (dispatch) => {
         .post("/api/auth/reset-password", body, config)
         .then(res => {
             dispatch(createMessage({addUser: "Email envoyé."}));
-
+            dispatch(goBack())
 
         })
         .catch(err => {

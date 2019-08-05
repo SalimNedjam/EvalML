@@ -53,44 +53,29 @@ export class AddUserGroup extends Component {
         })
     }
 
-    onChangeChallenge = e => {
+    componentDidMount() {
+        const {match = {}} = this.props;
+        const challenge_id = match.params.challenge_id
         this.setState({
-            [e.target.name]: e.target.value,
+            challenge: challenge_id,
             user: -1
         })
+        this.props.fetchNotInGroup(challenge_id)
 
-        if (e.target.value === -1 || e.target.value == "-1") {
-            this.props.clearNonGrouped()
-        } else {
-            this.props.fetchNotInGroup(e.target.value)
-
-        }
 
     }
 
 
     render() {
 
-        const {user, challenge} = this.state;
+        const {user} = this.state;
         return (
             <div className="col-md-6 m-auto">
                 <div className="card card-body mt-5">
                     <h4 className="text-center">Ajouter un étudiant à un groupe</h4>
 
                     <form onSubmit={this.onSubmit}>
-                        <div className="form-group">
-                            <div className="form-group">
-                                <label>Selectioner un challenge</label>
-                                <select
-                                    className="form-control"
-                                    name="challenge"
-                                    value={challenge}
-                                    onChange={this.onChangeChallenge}>
-                                    <option value={-1}/>
-                                    {this.renderListChallenge()}
-                                </select>
-                            </div>
-                        </div>
+
                         <div className="form-group">
                             <div className="form-group">
                                 <label>Selectioner l'étudiant</label>

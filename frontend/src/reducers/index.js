@@ -8,6 +8,7 @@ import enrollment from "./enrollment";
 import course from "./course";
 import challenge from "./challenge";
 import submission from "./submission";
+import {routerReducer as routing} from 'react-router-redux'
 
 
 export default combineReducers({
@@ -19,5 +20,6 @@ export default combineReducers({
     err,
     messages,
     submission,
-    auth
+    auth,
+    routing
 });

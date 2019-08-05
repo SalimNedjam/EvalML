@@ -53,44 +53,29 @@ export class CreateChallenge extends Component {
         })
     }
 
-    onChangeCourse = e => {
-        console.log((e.target.value))
+    componentDidMount() {
+        const {match = {}} = this.props;
+        const course_id = match.params.course_id
         this.setState({
-            [e.target.name]: e.target.value,
+            course: course_id,
             user: -1
         })
 
-        if (e.target.value === -1 || e.target.value !== "-1") {
-            this.props.fetchNonManager(e.target.value)
-        } else {
-            this.props.clearNonManager()
-        }
+        this.props.fetchNonManager(course_id)
+
 
     }
 
     render() {
 
-        const {user, course, is_course_admin, is_group_admin} = this.state;
+        const {user, is_course_admin, is_group_admin} = this.state;
         return (
             <div className="col-md-6 m-auto">
                 <div className="card card-body mt-5">
                     <h3 className="text-center">Ajouter un membre du staff au cours</h3>
 
                     <form onSubmit={this.onSubmit}>
-                        <div className="form-group">
-                            <div className="form-group">
-                                <label>Selectioner le cours</label>
-                                <select
-                                    className="form-control"
-                                    name="course"
-                                    value={course}
-                                    onChange={this.onChangeCourse}
-                                >
-                                    <option value={-1}/>
-                                    {this.renderListCourse()}
-                                </select>
-                            </div>
-                        </div>
+
                         <div className="form-group">
                             <div className="form-group">
                                 <label>Selectioner un membre du staff</label>

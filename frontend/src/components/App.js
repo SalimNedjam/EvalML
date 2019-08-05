@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import store from "../store";
+
 import {Link, Route, Switch} from "react-router-dom";
 import {connect} from "react-redux";
 import {loadUser, logout} from "../actions/auth";
@@ -22,14 +23,17 @@ import AddManager from "./layout/Forms/AddManager";
 import StaffRoute from "./common/StaffRoute";
 import CourseList from "./layout/staff/CourseList";
 import EnrollUser from "./layout/Forms/EnrollUser";
-import Challenge from "./layout/student/Challenge";
-import TableGroup from "./layout/staff/TableGroup";
 import CreateSubmission from "./layout/Forms/CreateSubmission";
 import Course from "./layout/staff/Course";
 import NotFound from "./layout/NotFound";
 import EditChallenge from "./layout/Forms/EditChallenge";
 import ForceAddUserGroup from "./layout/Forms/ForceAddUserGroup";
 import CreateManager from "./layout/Forms/CreateManager";
+import EditCourse from "./layout/Forms/EditCourse";
+import ChallengeStaff from "./layout/staff/ChallengeStaff";
+import Challenge from "./layout/student/Challenge";
+import {StudentChallengeDetail} from "./layout/staff/StudentChallengeDetail";
+import TestSubmission from "./layout/staff/TestSubmission";
 
 
 export class App extends Component {
@@ -63,7 +67,7 @@ export class App extends Component {
                 <AuthRoute exact path="/updateUser" component={UpdateUser}/>
 
                 <StudentRoute exact path="/" component={ChallengesList}/>
-                <StudentRoute exact path="/add_to_group" component={AddUserGroup}/>
+                <StudentRoute exact path="/add_to_group/:challenge_id" component={AddUserGroup}/>
 
                 <StaffRoute path="/group/force_add_to_group/:challenge_id/:group_id" component={ForceAddUserGroup}/>
 
@@ -71,26 +75,31 @@ export class App extends Component {
                 <StudentRoute exact path="/success_submission" component={SuccessSubmit}/>
 
                 <AdminRoute exact path="/courses/createCourse" component={CreateCourse}/>
-                <AdminRoute exact path="/challenge/createChallenge" component={CreateChallenge}/>
+                <AdminRoute path="/courses/editCourse/:course_id" component={EditCourse}/>
+
+                <AdminRoute exact path="/challenge/createChallenge/:course_id" component={CreateChallenge}/>
                 <AdminRoute exact path="/register" component={CreateUser}/>
                 <AdminRoute exact path="/createStaff" component={CreateManager}/>
 
-                <AdminRoute exact path="/management/addManager" component={AddManager}/>
+                <AdminRoute exact path="/management/addManager/:course_id" component={AddManager}/>
 
 
                 <StaffRoute exact path="/courses" component={CourseList}/>
 
-                <StaffRoute exact path="/enrollment/enrollUser" component={EnrollUser}/>
+                <StaffRoute exact path="/enrollment/enrollUser/:course_id" component={EnrollUser}/>
                 <StaffRoute path="/challenge/editChallenge/:challenge" component={EditChallenge}/>
                 <StudentRoute path="/challenge/:challenge" component={Challenge}/>
+                <StaffRoute path="/student/:user/challenge/:challenge" component={StudentChallengeDetail}/>
 
-                <StaffRoute path="/challengeGroups/:challenge" component={TableGroup}/>
+                <StaffRoute path="/challengeStaff/:challenge" component={ChallengeStaff}/>
                 <StudentRoute path="/submission/:challenge" component={CreateSubmission}/>
+                <StaffRoute path="/testSubmission/:challenge" component={TestSubmission}/>
+
                 <Route path="/password-reset/:token" component={ResetPassword}/>
                 <StaffRoute path="/courses/:course" component={Course}/>
 
 
-                <Route path="*" component={NotFound}/>
+                <Route component={NotFound}/>
 
             </Switch>
         </div>
@@ -122,7 +131,7 @@ export class App extends Component {
 
                 </Link>
             </Menu.Item>
-            <Menu.Item key="4" onClick={this.props.logout}>
+            <Menu.Item key="5" onClick={this.props.logout}>
                 <Icon type="logout"/>
                 <span>Se déconnecter</span>
             </Menu.Item>

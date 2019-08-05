@@ -2,8 +2,11 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
-import {Button, Card, Col, Row} from 'antd'
-import {FiChevronRight} from "react-icons/fi";
+import {Button, Card, Col, Dropdown, Menu, Modal, Row} from 'antd'
+import {FiChevronRight, FiCopy, FiEdit, FiSettings, FiTrash} from "react-icons/fi";
+import {duplicateCourse, editCourse, removeCourse} from "../../../actions/application";
+
+const {confirm} = Modal;
 
 class CourseList extends Component {
     static propTypes = {
@@ -12,6 +15,21 @@ class CourseList extends Component {
 
     };
 
+    dropdown(course) {
+        return <Menu>
+            <Menu.Item key="0">
+                <a onClick={() => this.props.history.push("/courses/editCourse/" + course.course_id + "/")}
+                   key='2'>
+                    <FiEdit/>{" Edit"}</a>
+            </Menu.Item>
+            <Menu.Item key="1">
+                <a onClick={() => this.doDuplicate(course.course_id)}><FiCopy/> {" Duplicate"}</a>
+            </Menu.Item>
+            <Menu.Item key="2">
+                <a onClick={() => this.doDelete(course.course_id)}><FiTrash/> {" Delete"}</a>
+            </Menu.Item>
+        </Menu>
+    }
 
     render() {
 
@@ -28,7 +46,6 @@ class CourseList extends Component {
         </div>)
     };
 
-
     renderList() {
         return this.props.listCourse.map((course) => {
             return (
@@ -39,25 +56,69 @@ class CourseList extends Component {
         })
     }
 
+    doDuplicate(course_id) {
+        const _this = this;
+        confirm({
+            title: 'Voulez vous vraiment dupliquer ce challenge?',
+            okText: 'Dupliquer',
+            okType: 'info',
+            cancelText: 'No',
+            onOk() {
+                _this.props.duplicateCourse(course_id)
+
+            },
+            onCancel() {
+            },
+        });
+    }
+
+    doDelete(course_id) {
+        const _this = this;
+        confirm({
+            title: 'Voulez vous vraiment supprimé ce cours?',
+            content: 'Cette action est définitive!',
+            okText: 'Yes',
+            okType: 'danger',
+            cancelText: 'No',
+            onOk() {
+                _this.props.removeCourse(course_id)
+
+            },
+            onCancel() {
+            },
+        });
+    }
+
     renderOne = (course) => {
         return <Col xs={16} sm={16} md={12} lg={8} xl={8} style={{marginTop: 10}} key={course.course_id}>
+
             <Card
+                title={course.description}
+                extra={
+                    <Dropdown overlay={this.dropdown(course)} trigger={['click']}>
+                        <a className="ant-dropdown-link"><FiSettings/></a>
+                    </Dropdown>
+                }
                 style={cardStyle}
                 actions={[
-                    <Link to={"/courses/" + course.course_id + "/"}><FiChevronRight/></Link>,
+                    <Link to={"/courses/" + course.course_id + "/"}><FiChevronRight/></Link>
                 ]}>
                 <Card.Meta
-                    title={course.description}
+                    description={
+                        <div>
+                            <strong>Nombre de soumission au maximum:</strong>
+                            <br/>
+                            {course.nbSubmit === 0 ? "Pas de limite" : course.nbSubmit + " soumissions"}
+                            <br/>
+                            <br/>
+                            <strong>Nombre d'étudiants:</strong>
+                            <br/>
+                            {course.nbStudent === 0 ? "Pas de limite" : course.nbStudent + " étudiants"}
+
+                        </div>
+                    }
                 />
-                <br/>
-                <strong>Nombre de soumission au maximum:</strong>
-                <br/>
-                {course.nbSubmit === 0 ? "Pas de limite" : course.nbSubmit + " soumissions"}
-                <br/>
-                <br/>
-                <strong>Nombre d'étudiants:</strong>
-                <br/>
-                {course.nbStudent === 0 ? "Pas de limite" : course.nbStudent + " étudiants"}
+
 
             </Card>
         </Col>
@@ -97,4 +158,4 @@ const mapStateToProps = (state) => {
     };
 };
 
-export default connect(mapStateToProps)(CourseList);
+export default connect(mapStateToProps, {duplicateCourse, editCourse, removeCourse})(CourseList);

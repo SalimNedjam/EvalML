@@ -1,6 +1,8 @@
 import os
+import uuid
 
 from django.conf import settings
+from django.core.files import File
 from django.db.models import Q
 from django.http import HttpResponse, Http404
 from knox.auth import TokenAuthentication
@@ -8,16 +10,54 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from application.models import Challenges, TruthFile, Dataset
+from application.models import Challenges, TruthFile, Dataset, Submission
 from application.serializers import ChallengeSerializer, ChallengePrintSerializer
 from authentification.permissions import IsAdmin, IsStaff
 
 
-def datasetToArray(data):
+def duplicate_challenge_func(destination_course_id, challenge_id):
+    challenge_source = Challenges.objects.get(challenge_id=challenge_id)
+    file = File(challenge_source.scriptFile)
+    filename = os.path.basename(file.name)
+    file.name = filename
+    try:
+        Challenges.objects.get(course_id=destination_course_id, title=challenge_source.title)
+        challenge_name = challenge_source.title + str(uuid.uuid1())[0:8]
+    except Challenges.DoesNotExist:
+        challenge_name = challenge_source.title
+
+    challenge = Challenges.objects.create(course_id=destination_course_id, title=challenge_name,
+                                          description=challenge_source.description,
+                                          limitDate=challenge_source.limitDate, nbSubmit=challenge_source.nbSubmit,
+                                          nbStudent=challenge_source.nbStudent, inputExt=challenge_source.inputExt,
+                                          inputParam=challenge_source.inputParam,
+                                          command=challenge_source.command,
+                                          scriptFile=File(file),
+                                          args=challenge_source.args, outputs=challenge_source.outputs,
+                                          scoreKeys=challenge_source.scoreKeys)
+    truths = TruthFile.objects.filter(challenge_id=challenge_id)
+    dataset = Dataset.objects.filter(challenge_id=challenge_id)
+
+    for item in truths:
+        file = File(item.file)
+        filename = os.path.basename(file.name)
+        file.name = filename
+        TruthFile.objects.create(param=item.param, file=file, course=challenge.course,
+                                 challenge=challenge)
+
+    for item in dataset:
+        file = File(item.file)
+        filename = os.path.basename(file.name)
+        file.name = filename
+        Dataset.objects.create(file=file, course=challenge.course, challenge=challenge)
+    return challenge
+
+
+def dataToArray(data, datakey):
     array = []
     i = 0
     while True:
-        itemFile = data.get("dataset" + "[" + str(i) + "]")
+        itemFile = data.get(datakey + "[" + str(i) + "]")
 
         if None == itemFile:
             break
@@ -85,9 +125,10 @@ class CreateChallenge(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        challenge = serializer.save(args=combinateArgs(self.request.data), outputs=combinateOutputs(self.request.data))
+        challenge = serializer.save(args=combinateArgs(self.request.data), outputs=combinateOutputs(self.request.data),
+                                    scoreKeys=dataToArray(self.request.data, "scoreKeys"))
         truths = combinateTruth(self.request.data)
-        dataset = datasetToArray(self.request.data)
+        dataset = dataToArray(self.request.data, "dataset")
         for item in truths:
             TruthFile.objects.create(param=item['param'], file=item['file'], course=challenge.course,
                                      challenge=challenge)
@@ -95,6 +136,21 @@ class CreateChallenge(generics.GenericAPIView):
         for item in dataset:
             Dataset.objects.create(file=item, course=challenge.course, challenge=challenge)
 
+        return Response(
+            {
+                "challenge": ChallengeSerializer(challenge, context=self.get_serializer_context()).data
+            }
+        )
+
+
+class DuplicateChallenge(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated, IsAdmin]
+    authentication_classes = (TokenAuthentication,)
+
+    def post(self, request, *args, **kwargs):
+        challenge_id = self.request.data.get("challenge_id")
+        destination_course_id = self.request.data.get("course_id")
+        challenge = duplicate_challenge_func(destination_course_id, challenge_id)
         return Response(
             {
                 "challenge": ChallengeSerializer(challenge, context=self.get_serializer_context()).data
@@ -114,13 +170,14 @@ class EditChallenge(generics.UpdateAPIView):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=self.request.data)
         serializer.is_valid(raise_exception=True)
-        challenge = serializer.save(args=combinateArgs(self.request.data), outputs=combinateOutputs(self.request.data))
+        challenge = serializer.save(args=combinateArgs(self.request.data), outputs=combinateOutputs(self.request.data),
+                                    scoreKeys=dataToArray(self.request.data, "scoreKeys"))
 
         TruthFile.objects.filter(challenge=challenge).delete()
         Dataset.objects.filter(challenge=challenge).delete()
 
         truths = combinateTruth(self.request.data)
-        dataset = datasetToArray(self.request.data)
+        dataset = dataToArray(self.request.data, "dataset")
         for item in truths:
             TruthFile.objects.create(param=item['param'], file=item['file'], course=challenge.course,
                                      challenge=challenge)
@@ -164,6 +221,10 @@ class RemoveChallenge(generics.DestroyAPIView):
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
+        TruthFile.objects.filter(challenge=instance).delete()
+        Dataset.objects.filter(challenge=instance).delete()
+        Submission.objects.filter(challenge=instance).delete()
+
         self.perform_destroy(instance)
 
         return Response(
