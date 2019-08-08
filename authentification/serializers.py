@@ -10,39 +10,39 @@ from django.utils.translation import ugettext_lazy as _
 from rest_auth.serializers import PasswordResetSerializer
 from rest_framework import serializers
 
-from application.models import Users
+from application.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Users
+        model = User
         fields = ('user_id', 'email', 'first_name', 'last_name', 'is_staff', 'is_admin')
 
 
 # CreateUser Serializer
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Users
+        model = User
         fields = ('user_id', 'email', 'password')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
         password = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 
-        user = Users.objects.create_user(validated_data['email'], password)
+        user = User.objects.create_user(validated_data['email'], password)
         return user
 
 
 class RegisterStaffSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Users
+        model = User
         fields = ('user_id', 'email', 'password')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
         password = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 
-        user = Users.objects.create_staffuser(validated_data['email'], password)
+        user = User.objects.create_staffuser(validated_data['email'], password)
         return user
 
 

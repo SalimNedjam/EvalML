@@ -5,7 +5,7 @@ from django.db import models
 from django.utils import timezone
 from djongo.models import ListField
 
-from authentification.models import Users
+from authentification.models import User
 
 
 class Course(models.Model):
@@ -15,7 +15,7 @@ class Course(models.Model):
     REQUIRED_FIELDS = ['course_id']
 
     course_id = models.AutoField(primary_key=True)
-    owner = models.ForeignKey(Users, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
     description = models.TextField()
     freqSubmit = models.IntegerField(default=0)
     nbSubmit = models.IntegerField(default=-1)
@@ -78,7 +78,7 @@ class Groups(models.Model):
     REQUIRED_FIELDS = ['user', 'challenge']
 
     group_id = models.IntegerField()
-    user = models.ForeignKey(Users, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
+    user = models.ForeignKey(User, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
     challenge = models.ForeignKey(Challenges, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
     owner = models.BooleanField(default=False)
 
@@ -93,7 +93,7 @@ class Enrollment(models.Model):
     REQUIRED_FIELDS = ['user', 'course']
 
     course = models.ForeignKey(Course, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
-    user = models.ForeignKey(Users, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
+    user = models.ForeignKey(User, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
 
 
 class Management(models.Model):
@@ -106,7 +106,7 @@ class Management(models.Model):
     REQUIRED_FIELDS = ['user', 'course']
 
     course = models.ForeignKey(Course, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
-    user = models.ForeignKey(Users, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
+    user = models.ForeignKey(User, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
     is_course_admin = models.BooleanField(default=False)
     is_group_admin = models.BooleanField(default=False)
 
@@ -133,7 +133,7 @@ class Submission(models.Model):
     )
 
     challenge = models.ForeignKey(Challenges, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
-    user = models.ForeignKey(Users, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
+    user = models.ForeignKey(User, on_delete=models.CASCADE, error_messages={'invalide': 'n\'éxiste pas'})
 
     date_submit = models.DateTimeField(default=timezone.now)
     score = ListField(default=[])

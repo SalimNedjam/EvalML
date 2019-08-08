@@ -17,8 +17,10 @@ from rest_framework.throttling import UserRateThrottle
 from application.models import Challenges, TruthFile, Groups
 from application.models import Output
 from application.models import Submission
-from application.serializers import SubmissionSerializer, LeaderBoardSerializer, SubmissionStaffSerializer
+from application.serializers import SubmissionSerializer, LeaderBoardSerializer, SubmissionStaffSerializer, \
+    StatsSerializer
 from application.tasks import run_eval
+from authentification.models import User
 from authentification.permissions import IsStaff
 
 
@@ -202,6 +204,24 @@ class SubmissionRating(generics.ListAPIView):
                 array.append(sub.id)
                 break
         return Submission.objects.filter(id__in=array)
+
+
+class SubmissionStats(generics.ListAPIView):
+    permission_classes = [IsAuthenticated, IsStaff]
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = StatsSerializer
+
+    def get_queryset(self):
+        challenge_id = self.kwargs['challenge_id']
+        try:
+            challenge = Challenges.objects.get(challenge_id=challenge_id)
+        except Challenges.DoesNotExist:
+            challenge = Challenges.objects.filter(challenge_id=challenge_id).first()
+
+        qs = User.objects.filter(enrollment__course__course_id=challenge.course_id)
+        for item in qs:
+            item.challenge_id = challenge_id
+        return qs
 
 
 class RemoveSubmission(generics.DestroyAPIView):

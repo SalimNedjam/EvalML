@@ -5,6 +5,7 @@ import {Col, Row} from 'antd'
 
 import TableGroup from "./TableGroup";
 import LeaderBoardTable from "./LeaderBoardTable";
+import ChallengeStats from "./ChallengeStats";
 
 export class ChallengeStaff extends Component {
 
@@ -21,6 +22,8 @@ export class ChallengeStaff extends Component {
             }}>
 
                 <Col xs={24} sm={26} md={20} lg={14} xl={12}>
+                    <ChallengeStats challenge={challenge}/>
+
                     <LeaderBoardTable challenge={challenge}/>
                 </Col>
 

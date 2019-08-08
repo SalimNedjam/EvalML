@@ -6,7 +6,7 @@ from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from authentification.models import Users
+from authentification.models import User
 from authentification.permissions import IsAdmin
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, ChangePasswordSerializer, \
     ChangeInformationsSerializer, RegisterStaffSerializer
@@ -73,7 +73,7 @@ class ChangePasswordView(generics.UpdateAPIView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (TokenAuthentication,)
     serializer_class = ChangePasswordSerializer
-    model = Users
+    model = User
 
     def get_object(self, queryset=None):
         return self.request.user
@@ -98,7 +98,7 @@ class ChangeInformationsView(generics.UpdateAPIView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (TokenAuthentication,)
     serializer_class = ChangeInformationsSerializer
-    model = Users
+    model = User
 
     def get_object(self, queryset=None):
         return self.request.user

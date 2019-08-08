@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from application.models import Course, Management
 from application.serializers import ManagementSerializer, ManagerListSerializer
-from authentification.models import Users
+from authentification.models import User
 from authentification.permissions import IsStaff, IsAdmin
 from authentification.serializers import UserSerializer
 
@@ -25,18 +25,18 @@ class FetchNonManager(generics.ListAPIView):
         criterion1 = Q(management__course__course_id=course_id)
 
         list1 = list(
-            Users.objects.filter(is_staff=True).values_list('user_id', flat=True))
+            User.objects.filter(is_staff=True).values_list('user_id', flat=True))
 
         if self.request.user.user_id in list1:
             list1.remove(self.request.user.user_id)
         if owner_id in list1:
             list1.remove(owner_id)
 
-        list2 = list(Users.objects.filter(criterion1).values_list('user_id', flat=True))
+        list2 = list(User.objects.filter(criterion1).values_list('user_id', flat=True))
 
         list3 = list(filter(lambda x: x not in list2, list1))
 
-        return Users.objects.filter(user_id__in=list3)
+        return User.objects.filter(user_id__in=list3)
 
 
 class AddManagerCourse(generics.GenericAPIView):
@@ -47,7 +47,7 @@ class AddManagerCourse(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         user_id = self.request.data.get('user')
         course_id = self.request.data.get('course')
-        user = Users.objects.get(user_id=user_id)
+        user = User.objects.get(user_id=user_id)
 
         if user.is_staff:
             owner_id = Course.objects.get(course_id=course_id).owner_id

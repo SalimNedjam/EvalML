@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from application.Api.ChallengeApi import duplicate_challenge_func
 from application.models import Course, Challenges
 from application.serializers import CourseSerializer
-from authentification.models import Users
+from authentification.models import User
 from authentification.permissions import IsAdmin, IsStaff
 
 
@@ -79,13 +79,13 @@ class SendEmail(generics.GenericAPIView):
         course = Course.objects.get(course_id=request.data.get('course_id'))
 
         email_from = request.user.email
-        query_recipients = Users.objects.filter(enrollment__course__course_id=request.data.get('course_id'))
+        query_recipients = User.objects.filter(enrollment__course__course_id=request.data.get('course_id'))
         recipients = []
         for user in query_recipients:
             recipients.append(user.email)
         recipients.append(request.user.email)
         if course.owner_id != request.user.user_id:
-            recipients.append(Users.objects.get(user_id=course.owner_id).email)
+            recipients.append(User.objects.get(user_id=course.owner_id).email)
         send_mail(subject, message, email_from, recipients)
         return Response(
             {

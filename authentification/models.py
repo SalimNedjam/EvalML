@@ -17,7 +17,7 @@ class MyUserManager(BaseUserManager):
         user.is_admin = True
         user.is_staff = True
         user.is_superuser = True
-        user.user_type = Users.ADMIN
+        user.user_type = User.ADMIN
         user.save(using=self._db)
         return user
 
@@ -29,7 +29,7 @@ class MyUserManager(BaseUserManager):
         )
         user.staff = True
         user.is_staff = True
-        user.user_type = Users.STAFF
+        user.user_type = User.STAFF
         user.save(using=self._db)
         return user
 
@@ -39,15 +39,15 @@ class MyUserManager(BaseUserManager):
 
         )
         user.set_password(password)
-        user.user_type = Users.USER
+        user.user_type = User.USER
         user.save(using=self._db)
         return user
 
 
-class Users(AbstractBaseUser):
+class User(AbstractBaseUser):
     user_id = models.AutoField(primary_key=True)
     email = models.EmailField(max_length=127, unique=True, null=True,
-                                 blank=False, error_messages={'unique': 'n\'est pas disponible'})
+                              blank=False, error_messages={'unique': 'n\'est pas disponible'})
     password = models.CharField(max_length=255)
     first_name = models.CharField(max_length=127)
     last_name = models.CharField(max_length=127)
@@ -64,7 +64,7 @@ class Users(AbstractBaseUser):
     # but should not contain the USERNAME_FIELD or password as these fields will always be prompted for.
 
     class Meta:
-        db_table = "users"
+        db_table = "user"
 
     def __str__(self):
         return self.email

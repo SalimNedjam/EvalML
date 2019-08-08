@@ -9,7 +9,7 @@ from rest_framework.response import Response
 
 from application.models import Groups, Challenges
 from application.serializers import GroupSerializer, GroupListSerializer
-from authentification.models import Users
+from authentification.models import User
 from authentification.permissions import IsStaff
 from authentification.serializers import UserSerializer
 
@@ -44,13 +44,13 @@ class AddUserToGroup(generics.GenericAPIView):
         course_id = challenge.course_id
 
         criterion1 = Q(enrollment__course__course_id=course_id)
-        list1 = list(Users.objects.filter(criterion1).values_list('user_id', flat=True))
+        list1 = list(User.objects.filter(criterion1).values_list('user_id', flat=True))
         if eval(user_adding) not in list1:
             raise ValidationError({"groupe": "Cet étudiant ne suit pas le cours du challenge."})
 
         # CHECK IF USER IS ALREADY IN A GROUP FOR THE CHALLENGE
         criterion2 = Q(groups__challenge__challenge_id=challenge_id)
-        list2 = list(Users.objects.filter(criterion2).values_list('user_id', flat=True))
+        list2 = list(User.objects.filter(criterion2).values_list('user_id', flat=True))
 
         if eval(user_adding) in list2:
             raise ValidationError({"groupe": "Cet étudiant est déjà dans un groupe pour ce challenge."})
@@ -155,15 +155,15 @@ class FetchUsersNotInGroup(generics.ListAPIView):
         criterion1 = Q(enrollment__course__course_id=course_id)
         criterion2 = Q(groups__challenge__challenge_id=challenge_id)
 
-        list1 = list(Users.objects.filter(criterion1)
+        list1 = list(User.objects.filter(criterion1)
                      .exclude(user_id=self.request.user.user_id).
                      values_list('user_id', flat=True))
 
-        list2 = list(Users.objects.filter(criterion2).values_list('user_id', flat=True))
+        list2 = list(User.objects.filter(criterion2).values_list('user_id', flat=True))
 
         list3 = list(filter(lambda x: x not in list2, list1))
 
-        return Users.objects.filter(user_id__in=list3)
+        return User.objects.filter(user_id__in=list3)
 
 
 class RemoveUser(generics.DestroyAPIView):
@@ -302,13 +302,13 @@ class AddUserGroupForStaff(generics.GenericAPIView):
             course_id = challenge.course_id
 
             criterion1 = Q(enrollment__course__course_id=course_id)
-            list1 = list(Users.objects.filter(criterion1).values_list('user_id', flat=True))
+            list1 = list(User.objects.filter(criterion1).values_list('user_id', flat=True))
             if eval(user_adding) not in list1:
                 raise ValidationError({"groupe": "Cet étudiant ne suit pas le cours du challenge."})
 
             # CHECK IF USER IS ALREADY IN A GROUP FOR THE CHALLENGE
             criterion2 = Q(groups__challenge__challenge_id=challenge_id)
-            list2 = list(Users.objects.filter(criterion2).values_list('user_id', flat=True))
+            list2 = list(User.objects.filter(criterion2).values_list('user_id', flat=True))
 
             if eval(user_adding) in list2:
                 raise ValidationError({"groupe": "Cet étudiant est déjà dans un groupe pour ce challenge."})

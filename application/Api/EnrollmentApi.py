@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from application.models import Enrollment, Course
 from application.serializers import EnrollmentSerializer, EnrollmentListSerializer
-from authentification.models import Users
+from authentification.models import User
 from authentification.permissions import IsStaff
 from authentification.serializers import UserSerializer
 
@@ -22,12 +22,12 @@ class FetchUsersNonEnrolled(generics.ListAPIView):
 
         criterion1 = Q(enrollment__course__course_id=course_id)
 
-        list1 = list(Users.objects.exclude(is_staff=True).values_list('user_id', flat=True))
-        list2 = list(Users.objects.filter(criterion1).values_list('user_id', flat=True))
+        list1 = list(User.objects.exclude(is_staff=True).values_list('user_id', flat=True))
+        list2 = list(User.objects.filter(criterion1).values_list('user_id', flat=True))
 
         list3 = list(filter(lambda x: x not in list2, list1))
 
-        return Users.objects.filter(user_id__in=list3)
+        return User.objects.filter(user_id__in=list3)
 
 
 class EnrollCourse(generics.GenericAPIView):
@@ -54,6 +54,17 @@ class FetchEnrolled(generics.ListAPIView):
         course_id = self.request.GET.get('course_id')
 
         return Enrollment.objects.filter(course_id=course_id)
+
+
+class FetchEnrolledChallenge(generics.ListAPIView):
+    permission_classes = [IsAuthenticated, IsStaff]
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = EnrollmentListSerializer
+
+    def get_queryset(self):
+        challenge = self.request.GET.get('challenge')
+
+        return Enrollment.objects.filter(course__challenges__challenge_id=challenge)
 
 
 class RemoveEnrollment(generics.DestroyAPIView):

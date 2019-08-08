@@ -4,7 +4,7 @@ from rest_framework.fields import SerializerMethodField
 
 from application.models import (Challenges, Course, Enrollment, Groups,
                                 Management, Output, Submission, Dataset)
-from authentification.models import Users
+from authentification.models import User
 from authentification.serializers import UserSerializer
 
 
@@ -120,7 +120,7 @@ class LeaderBoardSerializer(serializers.ModelSerializer):
     def get_users(self, obj):
         id_list = list(Submission.objects.filter(input_file=obj.input_file).values_list('user_id', flat=True))
 
-        query_users = Users.objects.filter(user_id__in=id_list)
+        query_users = User.objects.filter(user_id__in=id_list)
         return SimpleUserSerializer(query_users, many=True).data
 
 
@@ -134,15 +134,15 @@ class GroupListSerializer(serializers.ModelSerializer):
 
     def get_user(self, obj):
         try:
-            query_user = Users.objects.get(user_id=obj.user_id)
-        except Users.DoesNotExist:
-            query_user = Users.objects.filter(user_id=obj.user_id).first()
+            query_user = User.objects.get(user_id=obj.user_id)
+        except User.DoesNotExist:
+            query_user = User.objects.filter(user_id=obj.user_id).first()
         return SimpleUserSerializer(query_user).data
 
 
 class SimpleUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Users
+        model = User
         fields = ('user_id', 'email', 'first_name', 'last_name')
 
 
@@ -154,7 +154,7 @@ class ManagerListSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_user(self, obj):
-        return UserSerializer(Users.objects.get(user_id=obj.user.user_id)).data
+        return UserSerializer(User.objects.get(user_id=obj.user.user_id)).data
 
 
 class ManagerListSerializer(serializers.ModelSerializer):
@@ -165,7 +165,25 @@ class ManagerListSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_user(self, obj):
-        return UserSerializer(Users.objects.get(user_id=obj.user.user_id)).data
+        return UserSerializer(User.objects.get(user_id=obj.user.user_id)).data
+
+
+class MiniSubmissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Submission
+        fields = ['status']
+
+
+class StatsSerializer(serializers.ModelSerializer):
+    submissions = SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['email', 'user_id', 'submissions']
+
+    def get_submissions(self, obj):
+        qs = Submission.objects.filter(challenge_id=obj.challenge_id, user_id=obj.user_id)
+        return MiniSubmissionSerializer(qs, many=True).data
 
 
 class EnrollmentListSerializer(serializers.ModelSerializer):
@@ -176,4 +194,4 @@ class EnrollmentListSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_user(self, obj):
-        return UserSerializer(Users.objects.get(user_id=obj.user.user_id)).data
+        return UserSerializer(User.objects.get(user_id=obj.user.user_id)).data

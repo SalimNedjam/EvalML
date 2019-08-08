@@ -27,7 +27,6 @@ export class LeaderBoardTable extends Component {
 
         return (
             <div>
-                <h4 className="text-center">Leaderboard</h4>
 
                 <Table
                     className="components-table-demo-nested"
@@ -36,7 +35,7 @@ export class LeaderBoardTable extends Component {
                     dataSource={this.state.data}
                 >
 
-                    <Table.ColumnGroup>
+                    <Table.ColumnGroup title={<h4 className="text-center">Leaderboard</h4>}>
                         <Table.Column
 
                             title={'#'}
