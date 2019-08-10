@@ -69,6 +69,7 @@ class CourseFetch(generics.ListAPIView):
             return Course.objects.filter(enrollment__user_id=self.request.user)
 
 
+# Envoi d'emails à tout les étudiants d'un cours et au owner du cours
 class SendEmail(generics.GenericAPIView):
     permission_classes = [IsAuthenticated, IsStaff]
     authentication_classes = (TokenAuthentication,)

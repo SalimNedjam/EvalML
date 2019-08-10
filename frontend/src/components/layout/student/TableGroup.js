@@ -24,7 +24,7 @@ export class TableGroup extends Component {
             title: '',
             key: 'owner',
             render: record => {
-                if (record.owner == 'true')
+                if (record.owner.toString() == 'true')
                     return <FiStar style={IconStyle}/>
             }
         },
@@ -37,11 +37,13 @@ export class TableGroup extends Component {
         {
             title: 'First Name',
             dataIndex: 'first_name',
+
             key: 'first_name',
         },
         {
             title: 'Last Name',
             dataIndex: 'last_name',
+
             key: 'last_name',
 
         },
@@ -53,15 +55,13 @@ export class TableGroup extends Component {
                 if (this.props.auth.user.email == record.email)
                     return <a onClick={() => this.doDelete(record)}><FiUserMinus style={IconStyle}/></a>
 
-                if (this.state.user == undefined) {
-                    this.setState({
-                        user: this.props.listGroup.find(user => this.props.auth.user.email == user.email)
-                    })
-                }
-                if (this.state.user && this.state.user.owner == 'true') {
+                const user = this.props.listGroup.find(user => {
+                    return this.props.auth.user.email == user.email
+                });
+
+                if (user != undefined && user.owner.toString() == 'true') {
                     return <a onClick={() => this.doDelete(record)}><FiUserMinus style={IconStyle}/></a>
                 }
-
 
             },
         },
@@ -101,7 +101,7 @@ export class TableGroup extends Component {
                     columns={this.column}
                     dataSource={this.props.listGroup}
                     size="small"
-                    rowKey='username'
+                    rowKey='user'
                     footer={() => this.props.listGroup.length > 0 ?
                         <Link to={"/add_to_group/" + this.props.challenge}>Add new member </Link> :
                         <a href="javascript:;" onClick={() => this.props.createGroup(this.props.challenge)}>Create

@@ -18,7 +18,7 @@ from application.models import Challenges, TruthFile, Groups
 from application.models import Output
 from application.models import Submission
 from application.serializers import SubmissionSerializer, LeaderBoardSerializer, SubmissionStaffSerializer, \
-    StatsSerializer
+    StatsSerializer, MiniSubmissionSerializer, SimpleUserSerializer
 from application.tasks import run_eval
 from authentification.models import User
 from authentification.permissions import IsStaff
@@ -195,15 +195,16 @@ class SubmissionRating(generics.ListAPIView):
     def get_queryset(self):
         challenge_id = self.request.GET.get('challenge_id')
         input_files = Submission.objects.filter(challenge_id=challenge_id, status="SUCCESS",
-                                                user__is_staff=False).values(
-            "input_file").distinct()
-        array = []
+                                                user__is_staff=False).order_by('input_file').values(
+            'input_file').distinct()
+        wanted_items = set()
         for file in input_files:
-            query_sub = Submission.objects.filter(input_file=file["input_file"])
-            for sub in query_sub:
-                array.append(sub.id)
+            for item in Submission.objects.filter(input_file=file["input_file"]):
+                query_users = User.objects.filter(submission__input_file=file["input_file"])
+                item.users = SimpleUserSerializer(query_users, many=True).data
+                wanted_items.add(item)
                 break
-        return Submission.objects.filter(id__in=array)
+        return wanted_items
 
 
 class SubmissionStats(generics.ListAPIView):
@@ -221,6 +222,8 @@ class SubmissionStats(generics.ListAPIView):
         qs = User.objects.filter(enrollment__course__course_id=challenge.course_id)
         for item in qs:
             item.challenge_id = challenge_id
+            submission = Submission.objects.filter(challenge_id=challenge_id, user_id=item.user_id)
+            item.submissions = MiniSubmissionSerializer(submission, many=True).data
         return qs
 
 

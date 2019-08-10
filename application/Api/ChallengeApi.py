@@ -11,12 +11,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from application.models import Challenges, TruthFile, Dataset, Submission
-from application.serializers import ChallengeSerializer, ChallengePrintSerializer
+from application.serializers import ChallengeSerializer, ChallengePrintSerializer, DatasetSerializer
 from authentification.permissions import IsAdmin, IsStaff
 
 
+# Fonction de DUPLICATION D'UN CHALLENGE
 def duplicate_challenge_func(destination_course_id, challenge_id):
     challenge_source = Challenges.objects.get(challenge_id=challenge_id)
+    # Copie du fichier script
     file = File(challenge_source.scriptFile)
     filename = os.path.basename(file.name)
     file.name = filename
@@ -37,6 +39,7 @@ def duplicate_challenge_func(destination_course_id, challenge_id):
                                           scoreKeys=challenge_source.scoreKeys)
     truths = TruthFile.objects.filter(challenge_id=challenge_id)
     dataset = Dataset.objects.filter(challenge_id=challenge_id)
+    # Copie des fichiers truths
 
     for item in truths:
         file = File(item.file)
@@ -44,6 +47,7 @@ def duplicate_challenge_func(destination_course_id, challenge_id):
         file.name = filename
         TruthFile.objects.create(param=item.param, file=file, course=challenge.course,
                                  challenge=challenge)
+    # Copie des fichiers datasets
 
     for item in dataset:
         file = File(item.file)
@@ -53,6 +57,7 @@ def duplicate_challenge_func(destination_course_id, challenge_id):
     return challenge
 
 
+# DataParam parser
 def dataToArray(data, datakey):
     array = []
     i = 0
@@ -66,6 +71,7 @@ def dataToArray(data, datakey):
     return array
 
 
+# TurthParam parser
 def combinateTruth(data):
     array = []
     i = 0
@@ -83,6 +89,7 @@ def combinateTruth(data):
     return array
 
 
+# ArgsParam parser
 def combinateArgs(data):
     array = []
     i = 0
@@ -99,6 +106,8 @@ def combinateArgs(data):
         i += 1
     return array
 
+
+# OutputsParam parser
 
 def combinateOutputs(data):
     array = []
@@ -129,10 +138,11 @@ class CreateChallenge(generics.GenericAPIView):
                                     scoreKeys=dataToArray(self.request.data, "scoreKeys"))
         truths = combinateTruth(self.request.data)
         dataset = dataToArray(self.request.data, "dataset")
+        # Creation des truths
         for item in truths:
             TruthFile.objects.create(param=item['param'], file=item['file'], course=challenge.course,
                                      challenge=challenge)
-
+        # Creations des datasets
         for item in dataset:
             Dataset.objects.create(file=item, course=challenge.course, challenge=challenge)
 
@@ -172,12 +182,14 @@ class EditChallenge(generics.UpdateAPIView):
         serializer.is_valid(raise_exception=True)
         challenge = serializer.save(args=combinateArgs(self.request.data), outputs=combinateOutputs(self.request.data),
                                     scoreKeys=dataToArray(self.request.data, "scoreKeys"))
-
+        # Supression des anciens Truths et datasets
         TruthFile.objects.filter(challenge=challenge).delete()
         Dataset.objects.filter(challenge=challenge).delete()
 
         truths = combinateTruth(self.request.data)
         dataset = dataToArray(self.request.data, "dataset")
+        # Creation des nouveaux Truths et datasets
+
         for item in truths:
             TruthFile.objects.create(param=item['param'], file=item['file'], course=challenge.course,
                                      challenge=challenge)
@@ -198,14 +210,21 @@ class ChallengeFetch(generics.ListAPIView):
     serializer_class = ChallengePrintSerializer
 
     def get_queryset(self):
+        # Pour staff
         if self.request.user.is_staff:
             criterion1 = Q(course__owner_id=self.request.user)
             criterion2 = Q(course__management__user_id=self.request.user)
-            return Challenges.objects.filter(criterion1 | criterion2)
+            qs = Challenges.objects.filter(criterion1 | criterion2)
+        # Pour users
         else:
             criterion1 = Q(course__enrollment__user_id=self.request.user)
             criterion2 = Q(is_visible=True)
-            return Challenges.objects.filter(criterion1 & criterion2)
+            qs = Challenges.objects.filter(criterion1 & criterion2)
+            
+        for item in qs:
+            query_dataset = Dataset.objects.filter(challenge=item)
+            item.dataset = DatasetSerializer(query_dataset, many=True).data
+        return qs
 
 
 class RemoveChallenge(generics.DestroyAPIView):
@@ -233,6 +252,7 @@ class RemoveChallenge(generics.DestroyAPIView):
             })
 
 
+# Rendre un challenge visible ou non par les étudiants
 class SwitchVisibility(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated, IsStaff]
     authentication_classes = (TokenAuthentication,)
@@ -256,6 +276,8 @@ class SwitchVisibility(generics.UpdateAPIView):
         })
 
 
+# Autoriser ou non la supression des soumissions
+
 class SwitchDeleteSubmission(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated, IsStaff]
     authentication_classes = (TokenAuthentication,)
@@ -277,6 +299,9 @@ class SwitchDeleteSubmission(generics.UpdateAPIView):
             "challenge": ChallengeSerializer(instance, context=self.get_serializer_context()).data
 
         })
+
+
+# Autoriser ou non la modification des membre d'un groupe
 
 
 class SwitchEditGroup(generics.UpdateAPIView):
@@ -302,6 +327,7 @@ class SwitchEditGroup(generics.UpdateAPIView):
         })
 
 
+# Demande de telechargement des datasets
 class getDataset(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (TokenAuthentication,)

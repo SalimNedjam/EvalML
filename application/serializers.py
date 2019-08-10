@@ -15,7 +15,7 @@ class ChallengeSerializer(serializers.ModelSerializer):
 
 
 class ChallengePrintSerializer(serializers.ModelSerializer):
-    dataset = SerializerMethodField()
+    dataset = serializers.ListField()
     scoreKeys = serializers.ListField(default=[])
 
     class Meta:
@@ -23,10 +23,6 @@ class ChallengePrintSerializer(serializers.ModelSerializer):
         fields = ['challenge_id', 'course', 'description', 'inputParam', 'inputExt', 'is_visible', 'limitDate',
                   'nbStudent',
                   'nbSubmit', 'title', 'dataset', 'enable_edit_group', 'enable_delete_submission', 'scoreKeys']
-
-    def get_dataset(self, obj):
-        query_dataset = Dataset.objects.filter(challenge=obj)
-        return DatasetSerializer(query_dataset, many=True).data
 
 
 # CreateUser Serializer
@@ -109,23 +105,48 @@ class SubmissionStaffSerializer(serializers.ModelSerializer):
 
 
 class LeaderBoardSerializer(serializers.ModelSerializer):
-    users = SerializerMethodField()
+    users = serializers.ListField(default=[])
     score = serializers.ListField(default=[])
     tags = serializers.ListField(default=[])
 
     class Meta:
         model = Submission
-        fields = ['score', 'challenge_id', 'date_submit', 'tags', 'users']
-
-    def get_users(self, obj):
-        id_list = list(Submission.objects.filter(input_file=obj.input_file).values_list('user_id', flat=True))
-
-        query_users = User.objects.filter(user_id__in=id_list)
-        return SimpleUserSerializer(query_users, many=True).data
+        fields = ['score', 'tags', 'users']
 
 
 class GroupListSerializer(serializers.ModelSerializer):
-    user = SerializerMethodField()
+    email = SerializerMethodField(default="")
+    last_name = SerializerMethodField(default="")
+    first_name = SerializerMethodField(default="")
+
+    class Meta:
+        model = Groups
+        fields = ['id', 'group_id', 'user', 'challenge', 'owner', 'email', 'last_name', 'first_name']
+        read_only_fields = ('group_id',)
+
+    def get_email(self, obj):
+        return obj.user.email
+
+    def get_last_name(self, obj):
+        return obj.user.last_name
+
+    def get_first_name(self, obj):
+        return obj.user.first_name
+
+
+class GroupFetchSerializer(serializers.ModelSerializer):
+    group_id = serializers.IntegerField()
+    id = serializers.IntegerField()
+
+    owner = serializers.BooleanField()
+
+    class Meta:
+        model = User
+        fields = ['id', 'group_id', 'owner', 'email', 'last_name', 'first_name']
+
+
+class GroupCreateSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
 
     class Meta:
         model = Groups
@@ -175,15 +196,11 @@ class MiniSubmissionSerializer(serializers.ModelSerializer):
 
 
 class StatsSerializer(serializers.ModelSerializer):
-    submissions = SerializerMethodField()
+    submissions = serializers.ListField(default=[])
 
     class Meta:
         model = User
         fields = ['email', 'user_id', 'submissions']
-
-    def get_submissions(self, obj):
-        qs = Submission.objects.filter(challenge_id=obj.challenge_id, user_id=obj.user_id)
-        return MiniSubmissionSerializer(qs, many=True).data
 
 
 class EnrollmentListSerializer(serializers.ModelSerializer):

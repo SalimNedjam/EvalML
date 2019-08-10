@@ -2,8 +2,7 @@ import React, {Component} from "react";
 import {connect} from 'react-redux'
 import {Col, Empty, Modal, Row, Table} from 'antd'
 import {createMessage} from "../../../actions/messages";
-import axios from 'axios'
-import {forceFetchGroup, forceRemoveGroup, reduceObjValues} from "../../../actions/application";
+import {forceFetchGroup, forceRemoveGroup} from "../../../actions/application";
 import {FiUserMinus} from "react-icons/fi";
 import {Link} from "react-router-dom";
 
@@ -21,8 +20,9 @@ export class TableGroup extends Component {
             title: 'Email',
             key: 'Username',
             render: (record) => {
+                console.log(record)
                 return <Link
-                    to={"/student/" + record.user_id + "/challenge/" + this.props.challenge}>{record.email} </Link>
+                    to={"/student/" + record.user + "/challenge/" + this.props.challenge}>{record.email} </Link>
             }
         },
 
@@ -61,38 +61,6 @@ export class TableGroup extends Component {
 
     }
 
-    fetch() {
-        const challenge = this.props.challenge;
-
-        const token = this.props.auth.token
-        const config = {
-            headers: {
-                "Content-Type": "application/json"
-            }
-        };
-        config.headers["Authorization"] = `Token ${token}`;
-
-
-        axios.get('/api/group/list_groups_challenge?challenge=' + challenge, config)
-            .then(res => {
-                let groups = {};
-                res.data.forEach(function (item) {
-                    let list = groups[item.group_id];
-                    if (list) {
-                        list.push(item);
-                    } else {
-                        groups[item.group_id] = [item];
-                    }
-                });
-
-                this.setState({
-                    listGroups: Object.values(groups)
-
-                })
-            }).catch(err => {
-            console.log(err.data)
-        })
-    }
 
     doDelete(record) {
         const _this = this;
@@ -121,8 +89,10 @@ export class TableGroup extends Component {
     }
 
     iterateGroup() {
+        console.log(this.props.listGroup)
         let groups = {};
         this.props.listGroup.forEach(function (item) {
+
             let list = groups[item.group_id];
             if (list) {
                 list.push(item);
@@ -131,16 +101,15 @@ export class TableGroup extends Component {
             }
         });
         const array = Object.values(groups)
-        console.log(this.props.listGroup)
+        console.log(array)
+
         return array.length > 0 ?
             array.map(group => {
                 let array = [];
-                group.map((manager, index) => {
-                    let obj = reduceObjValues(manager)
-                    obj.key = index
-                    array.push(obj)
+                group.map((user, index) => {
+                    user.key = index
+                    array.push(user)
                 });
-                console.log(array);
                 return (
                     <Row>
                         <Col>

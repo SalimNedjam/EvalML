@@ -656,15 +656,9 @@ export const fetchGroup = (challenge_id) => (dispatch, getState) => {
 
     axios.get('/api/group/user_list_group_challenge?challenge=' + challenge_id, tokenConfig(getState))
         .then(res => {
-            let array = []
-            res.data.map((user, index) => {
-                let obj = reduceObjValues(user)
-                obj.key = index
-                array.push(obj)
-            });
             dispatch({
                 type: FETCH_GROUP,
-                payload: array
+                payload: res.data
             })
         }).catch(err => {
         dispatch(returnErrors(err.response.data, err.response.status));
@@ -677,15 +671,9 @@ export const forceFetchGroup = (challenge_id) => (dispatch, getState) => {
     axios.get('/api/group/list_groups_challenge?challenge=' + challenge_id, tokenConfig(getState))
         .then(res => {
 
-            let array = []
-            res.data.map((user, index) => {
-                let obj = reduceObjValues(user)
-                obj.key = index
-                array.push(obj)
-            });
             dispatch({
                 type: FETCH_GROUP,
-                payload: array
+                payload: res.data
             })
 
         }).catch(err => {

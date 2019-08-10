@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from application.models import Groups, Challenges
-from application.serializers import GroupSerializer, GroupListSerializer
+from application.serializers import GroupSerializer, GroupCreateSerializer, GroupFetchSerializer
 from authentification.models import User
 from authentification.permissions import IsStaff
 from authentification.serializers import UserSerializer
@@ -109,7 +109,7 @@ class AddUserToGroup(generics.GenericAPIView):
 class CreateGroup(generics.GenericAPIView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (TokenAuthentication,)
-    serializer_class = GroupListSerializer
+    serializer_class = GroupCreateSerializer
 
     def post(self, request, *args, **kwargs):
         challenge_id = request.data.get('challenge')
@@ -133,13 +133,19 @@ class CreateGroup(generics.GenericAPIView):
                 {"groupe": "Vous faites déja partis d'un groupe."})
 
         except Groups.DoesNotExist:
+
             # THE USER IS NOT IN A GROUP SO WE CREATE ONE AND ADD THE OTHER USER
             group_id = unique_group_id_generator(self)
             group = Groups.objects.create(user=request.user, group_id=group_id, challenge_id=challenge_id, owner=True)
+
         return Response(
+
             {
-                "groupe": GroupListSerializer(group, context=self.get_serializer_context()).data
+
+                "groupe": GroupCreateSerializer(group, context=self.get_serializer_context()).data
+
             }
+
         )
 
 
@@ -211,7 +217,7 @@ class RemoveUser(generics.DestroyAPIView):
 class RetrieveGroupList(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (TokenAuthentication,)
-    serializer_class = GroupListSerializer
+    serializer_class = GroupFetchSerializer
 
     # RETREIVE THE GROUP INSTANCE
     def get_queryset(self):
@@ -220,7 +226,14 @@ class RetrieveGroupList(generics.ListAPIView):
             group = Groups.objects.get(
                 Q(user_id=self.request.user) &
                 Q(challenge_id=challenge_id))
-            return Groups.objects.filter(group_id=group.group_id)
+            qs = User.objects.filter(groups__group_id=group.group_id)
+            for item in qs:
+                group = Groups.objects.get(user=item, challenge_id=challenge_id)
+                item.group_id = group.group_id
+                item.owner = group.owner
+                item.user = item
+                item.id = group.id
+            return qs
 
         except Groups.DoesNotExist:
             raise ValidationError(
@@ -231,19 +244,30 @@ class RetrieveGroupList(generics.ListAPIView):
 class ListGroupsChallenge(generics.ListAPIView):
     permission_classes = [IsAuthenticated, IsStaff]
     authentication_classes = (TokenAuthentication,)
-    serializer_class = GroupListSerializer
+    serializer_class = GroupFetchSerializer
 
     # RETREIVE THE GROUP INSTANCE
     def get_queryset(self):
         challenge_id = self.request.GET['challenge']
 
-        criterion1 = Q(course__owner_id=self.request.user)
-        criterion2 = Q(course__management__user_id=self.request.user)
-        list1 = list(
-            Challenges.objects.filter(criterion1 | criterion2, challenge_id=challenge_id).values_list('challenge_id',
-                                                                                                      flat=True))
-
-        return Groups.objects.filter(challenge_id__in=list1)
+        try:
+            criterion1 = Q(course__owner_id=self.request.user)
+            criterion2 = Q(course__management__user_id=self.request.user)
+            criterion3 = Q(challenge_id=challenge_id)
+            challenge = Challenges.objects.get(criterion3 & (criterion1 | criterion2))
+            qs = User.objects.filter(groups__challenge=challenge)
+            for item in qs:
+                group = Groups.objects.get(user=item, challenge=challenge)
+                item.group_id = group.group_id
+                item.owner = group.owner
+                item.user = item
+                item.id = group.id
+            return qs
+        except Challenges.DoesNotExist:
+            return Response(
+                {
+                    "detail": "Vous n'avez pas les droits ou aucun challenge n'existe"
+                })
 
 
 class RemoveUserGroup(generics.DestroyAPIView):
