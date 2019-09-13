@@ -17,12 +17,10 @@ export class CreateUser extends Component {
 
     onSubmit = e => {
         e.preventDefault();
+	const {match={}} = this.props;
+	const course_id=match.params.course_id
         const {description, nbStudent, nbSubmit} = this.state;
-        const editedCourse = {
-            description,
-            nbStudent,
-            nbSubmit,
-        }
+        const editedCourse = {description,nbStudent, nbSubmit,course_id}
 
         this.props.editCourse(editedCourse);
     };

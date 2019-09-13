@@ -207,8 +207,9 @@ class EnrollmentListSerializer(serializers.ModelSerializer):
     user = SerializerMethodField()
 
     class Meta:
-        model = Management
+        model = Enrollment
         fields = '__all__'
 
     def get_user(self, obj):
         return UserSerializer(User.objects.get(user_id=obj.user.user_id)).data
+

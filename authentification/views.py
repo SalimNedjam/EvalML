@@ -1,5 +1,4 @@
 from datetime import timedelta
-
 from django.core.mail import EmailMultiAlternatives
 from django.dispatch import receiver
 from django.template.loader import render_to_string
@@ -13,18 +12,15 @@ from rest_framework.views import APIView
 
 from .serializers import CustomTokenSerializer
 
-site_url = 'http://127.0.0.1:8000';
-site_full_name = 'Challenge';
-site_shortcut_name = 'Challenge';
+site_url = 'http://evalml.lip6.fr';
+site_full_name = 'evalml.lip6.fr';
+site_shortcut_name = 'EvalMl';
 
 
 class CustomPasswordResetView:
     @receiver(reset_password_token_created)
     def password_reset_token_created(sender, reset_password_token, *args, **kwargs):
-        """
-            Handles password reset tokens
-            When a token is created, an e-mail needs to be sent to the user
-        """
+	
         # send an e-mail to the user
         context = {
             'current_user': reset_password_token.user,
@@ -32,8 +28,7 @@ class CustomPasswordResetView:
             'reset_password_url': "{}/password-reset/{}".format(site_url, reset_password_token.key),
             'site_name': site_shortcut_name,
             'site_domain': site_url
-        }
-
+	}
         # render email text
         email_html_message = render_to_string('./frontend/email/user_reset_password.html', context)
         email_plaintext_message = render_to_string('./frontend/email/user_reset_password.txt', context)
@@ -46,11 +41,9 @@ class CustomPasswordResetView:
             # from:
             "noreply@{}".format(site_url),
             # to:
-            [reset_password_token.user.email]
-        )
+            [reset_password_token.user.email])
         msg.attach_alternative(email_html_message, "text/html")
         msg.send()
-
 
 class CustomPasswordTokenVerificationView(APIView):
     """

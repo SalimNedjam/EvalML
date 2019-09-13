@@ -79,17 +79,17 @@ class SubmissionCreate(generics.CreateAPIView):
                 args = challenge.args
                 queryOutputs = Output.objects.filter(submission=submission)
                 result = command + " "
-                result += str(script) + " "
-                result += "-" + inputParam + " " + str(submission.input_file) + " "
+                result += "/home/evalml/" + str(script) + " "
+                result += "-" + inputParam + " " +"/home/evalml/"+ str(submission.input_file) + " "
 
                 for truth in queryTruth:
-                    result += "-" + truth.param + " " + str(truth.file) + " "
+                    result += "-" + truth.param + " " +"/home/evalml/"+str(truth.file) + " "
 
                 for arg in args:
                     result += "-" + arg['param'] + " " + arg['value'] + " "
 
                 for output in queryOutputs:
-                    result += "-" + output.param + " " + str(output.file) + " "
+                    result += "-" + output.param + " " + "/home/evalml/"+str(output.file) + " "
                 run_eval.delay(result, submission.id, str(logfile.file))
 
                 return Response(
@@ -140,17 +140,17 @@ class SubmissionTest(generics.CreateAPIView):
                 args = challenge.args
                 queryOutputs = Output.objects.filter(submission=submission)
                 result = command + " "
-                result += str(script) + " "
-                result += "-" + inputParam + " " + str(submission.input_file) + " "
+                result += "/home/evalml/"+str(script) + " "
+                result += "-" + inputParam + " " + "/home/evalml/"+str(submission.input_file) + " "
 
                 for truth in queryTruth:
-                    result += "-" + truth.param + " " + str(truth.file) + " "
+                    result += "-" + truth.param + " " +"/home/evalml/"+ str(truth.file) + " "
 
                 for arg in args:
                     result += "-" + arg['param'] + " " + arg['value'] + " "
 
                 for output in queryOutputs:
-                    result += "-" + output.param + " " + str(output.file) + " "
+                    result += "-" + output.param + " " + "/home/evalml/"+str(output.file) + " "
                 run_eval.delay(result, submission.id, str(logfile.file))
 
                 return Response(

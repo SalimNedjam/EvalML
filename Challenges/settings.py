@@ -1,3 +1,4 @@
+
 """
 Django settings for Challenges project.
 
@@ -17,7 +18,6 @@ from datetime import timedelta
 from rest_framework.settings import api_settings
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-
     'application',
     'authentification',
     'rest_framework',
@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'django_cleanup.apps.CleanupConfig',
-
 ]
 
 MIDDLEWARE = [
@@ -69,8 +68,7 @@ ROOT_URLCONF = 'Challenges.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -84,17 +82,33 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Challenges.wsgi.application'
-
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
 DATABASES = {
     'default':
         {
             'ENGINE': 'djongo',
             'NAME': 'Challenge',
             'ENFORCE_SCHEMA': False,
-
+	    
         }
 }
-
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -132,7 +146,7 @@ CSRF_COOKIE_SECURE = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 AUTH_USER_MODEL = 'authentification.User'
 
 REST_FRAMEWORK = {
@@ -156,14 +170,16 @@ REST_KNOX = {
 }
 
 EMAIL_HOST = 'smtp.mailtrap.io'
-EMAIL_HOST_USER = '2f3c244a8c23d5'
-EMAIL_HOST_PASSWORD = '3d8e11aafa47c7'
+EMAIL_HOST_USER = '6e36f3966caaf8'
+EMAIL_HOST_PASSWORD = '5472dd841b7a62'
 EMAIL_PORT = '2525'
 
 DJANGO_REST_MULTITOKENAUTH_RESET_TOKEN_EXPIRY_TIME = 999
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 DJANGO_REST_LOOKUP_FIELD = 'email'
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 CELERY_BROKER_URL = 'amqp://localhost'
-CELERY_ACCEPT_CONTENT = ['pickle']
+CELERY_ACCEPT_CONTENT = ['pickle','json','application/text']
+

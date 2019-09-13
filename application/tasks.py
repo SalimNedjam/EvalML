@@ -11,20 +11,21 @@ import sys
 def run_eval(commandLine, submission_id,logfile):
     command = [commandLine]
     submission = Submission.objects.get(id=submission_id)
+    log = open("/home/evalml/"+logfile, 'w+')
     try:
-        with open(logfile, 'w') as log:
-            process = Popen(command, shell=True, stdout=PIPE, stderr=log)
-            output = process.stdout.read()
-            exitstatus = process.poll()
-
+        print(command)
+        process = Popen(command, shell=True, stdout=PIPE, stderr=log)
+        output = process.stdout.read()
+        exitstatus = process.poll()
         score_file=Output.objects.get(submission=submission,param='score').file
-        score = json.load(open(str(score_file)))
+        score = json.load(open("/home/evalml/"+str(score_file)))
 
 
         submission.status = "SUCCESS"
         submission.score = [score]
         
-    except:
+    except Exception as e:
+        log.write("Failed: {0}".format(str(e)))
         print("Unexpected error:", sys.exc_info()[0])
         submission.status = "FAIL"
 
@@ -45,6 +46,7 @@ def run_eval(commandLine, submission_id,logfile):
                     output.file_id=None
                     output.submission_id=submission.id
                     output.save()
-        except:
+        except Exception as e:
+            log.write("Failed: {0}".format(str(e)))
             print("Unexpected error:", sys.exc_info()[0])
 

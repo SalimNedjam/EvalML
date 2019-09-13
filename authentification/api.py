@@ -1,4 +1,5 @@
 import requests
+import json
 from django.utils import timezone
 from knox.auth import TokenAuthentication
 from knox.models import AuthToken
@@ -22,9 +23,7 @@ class RegisterAPI(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        requests.post('http://127.0.0.1:8000/api/auth/reset-password', data={'email': user.email})
-        return Response({
-            "user": UserSerializer(user, context=self.get_serializer_context()).data})
+        return Response({"user": UserSerializer(user, context=self.get_serializer_context()).data})
 
 
 class RegisterStaffAPI(generics.GenericAPIView):
@@ -34,12 +33,9 @@ class RegisterStaffAPI(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        serializer.is_valid(raise_exception=False)
         user = serializer.save()
-        requests.post('http://127.0.0.1:8000/api/auth/reset-password', data={'email': user.email})
-        return Response({
-            "user": UserSerializer(user, context=self.get_serializer_context()).data})
-
+        return Response({"user": UserSerializer(user, context=self.get_serializer_context()).data})
 
 # Login API
 class LoginAPI(generics.GenericAPIView):

@@ -261,10 +261,10 @@ export const createCourse = ({description, nbStudent, nbSubmit}) => (dispatch, g
         });
 };
 
-export const editCourse = ({description, nbStudent, nbSubmit}) => (dispatch, getState) => {
+export const editCourse = ({description, nbStudent, nbSubmit,course_id}) => (dispatch, getState) => {
 
 
-    const body = JSON.stringify({description, nbStudent, nbSubmit});
+    const body = JSON.stringify({description, nbStudent, nbSubmit,course_id});
 
     axios
         .put("/api/course/edit_course", body, tokenConfig(getState))

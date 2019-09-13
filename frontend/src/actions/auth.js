@@ -80,6 +80,7 @@ export const createUser = ({email, listCourseId}) => (dispatch, getState) => {
         .post("/api/auth/createUser", body, tokenConfig(getState))
         .then(res => {
             dispatch(createMessage({addUser: "Le compte à été crée."}));
+	    axios.post("/api/auth/reset-password",JSON.stringify({email}),{headers: { "Content-Type": "application/json"}})
             listCourseId.map((course) => {
                 dispatch(enrollUser({course, user: res.data.user.user_id}))
             });
@@ -102,7 +103,7 @@ export const createStaff = ({email}) => (dispatch, getState) => {
         .post("/api/auth/createStaff", body, tokenConfig(getState))
         .then(res => {
             dispatch(createMessage({addUser: "Le compte à été crée."}));
-
+            axios.post("/api/auth/reset-password",JSON.stringify({email}),{headers: { "Content-Type": "application/json"}})
         })
         .catch(err => {
             dispatch(returnErrors(err.response.data, err.response.status));

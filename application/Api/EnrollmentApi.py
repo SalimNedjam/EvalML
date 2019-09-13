@@ -52,7 +52,6 @@ class FetchEnrolled(generics.ListAPIView):
 
     def get_queryset(self):
         course_id = self.request.GET.get('course_id')
-
         return Enrollment.objects.filter(course_id=course_id)
 
 
