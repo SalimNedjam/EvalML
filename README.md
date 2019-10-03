@@ -1,7 +1,9 @@
 # Challenges
+### La plateforme est utilisé par les enseignants et etudiants de la licence et du master informatique de Sorbonne Université.
 ## Informations
-La platforme permet à des etudients de soumettres des resultat pour des devoirs, l'admin a la creation du challenge présente un script qui permet d'evaluer les resutats des étudiants.
+La plateforme permet à des etudients de soumettres des resultat pour des devoirs, l'admin a la creation du challenge présente un script qui permet d'evaluer les resutats des étudiants.
 Le projet est fait en DJANGO pour le coté serveur, coté client c'est plutot du reactJS, la gestion des taches asynchrone pour l'evaluation des scripts est faite avec le serveur RabitMQ et la librairie Celery. 
+
 ## Base de donnée
 Pour le stockage des informations, mon choix c'est porté sur une base de données non relationnelle ( MongoDB ), qui permet le stockage d'information massive, mais aussi pour son fonctionnement interne, en effet une base de données NOSQL, permet de ne pas avoir de schéma prédéfini, cette souplesse aide à avoir une diversité sur la structure des challenges que l'on peut composé j'ai rajouté à ça des contraintes entres les différentes collections pour assuré l'intégrité des données.
 
