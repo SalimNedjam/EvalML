@@ -1,5 +1,6 @@
 # Challenges
-### La plateforme est utilisé par les enseignants et etudiants de la licence et du master informatique de Sorbonne Université.
+#### La plateforme est utilisée par les enseignants et étudiants de la licence et du master informatique de Sorbonne Université.
+#### La plateforme est entièrement crée par mes soins. 
 ## Informations
 La plateforme permet à des etudients de soumettres des resultat pour des devoirs, l'admin a la creation du challenge présente un script qui permet d'evaluer les resutats des étudiants.
 Le projet est fait en DJANGO pour le coté serveur, coté client c'est plutot du reactJS, la gestion des taches asynchrone pour l'evaluation des scripts est faite avec le serveur RabitMQ et la librairie Celery. 
