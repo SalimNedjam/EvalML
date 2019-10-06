@@ -1,12 +1,12 @@
 from django.db.models import Q
 from knox.auth import TokenAuthentication
 from rest_framework import generics
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from application.models import Enrollment, Course
-from application.serializers import EnrollmentSerializer, EnrollmentListSerializer
+from application.serializers import EnrollmentSerializer, EnrollmentListSerializer,EnrollmentEmailSerializer
 from authentification.models import User
 from authentification.permissions import IsStaff
 from authentification.serializers import UserSerializer
@@ -43,6 +43,34 @@ class EnrollCourse(generics.GenericAPIView):
             {
             }
         )
+
+class EnrollCourseEmail(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated, IsStaff]
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = EnrollmentSerializer
+
+    def post(self, request, *args, **kwargs):
+
+        try:
+            user_id = User.objects.get(email=request.data.get("email")).user_id
+            try:
+                Enrollment.objects.get(user=user_id, course=request.data.get("course"))
+                raise ValidationError({"groupe": request.data.get("email") + " est déjà inscrit"})
+
+            except Enrollment.DoesNotExist:
+                request.data["user"] = user_id
+                serializer = self.get_serializer(data=request.data)
+                serializer.is_valid(raise_exception=False)
+                serializer.save()
+
+            return Response(
+                {
+                }
+            )
+        except User.DoesNotExist:
+            raise ValidationError({"groupe": request.data.get("email")+" n'éxiste pas."})
+
+
 
 
 class FetchEnrolled(generics.ListAPIView):

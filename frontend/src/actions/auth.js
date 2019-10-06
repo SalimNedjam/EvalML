@@ -12,7 +12,7 @@ import {
     WAIT_ASK,
     WAIT_FINISH
 } from "./types";
-import {enrollUser, fetchChallenges, fetchCourses} from "./application";
+import {enrollEmail, enrollUser, fetchChallenges, fetchCourses} from "./application";
 import {goBack} from "react-router-redux";
 
 // CHECK TOKEN & LOAD USER
@@ -75,20 +75,20 @@ export const createUser = ({email, listCourseId}) => (dispatch, getState) => {
 
     const password = 'sEFlTJAbAW'
     const body = JSON.stringify({email, password});
-
     axios
         .post("/api/auth/createUser", body, tokenConfig(getState))
         .then(res => {
             dispatch(createMessage({addUser: "Le compte à été crée."}));
-	    axios.post("/api/auth/reset-password",JSON.stringify({email}),{headers: { "Content-Type": "application/json"}})
-            listCourseId.map((course) => {
-                dispatch(enrollUser({course, user: res.data.user.user_id}))
-            });
+            axios.post("/api/auth/reset-password",JSON.stringify({email}),{headers: { "Content-Type": "application/json"}})
         })
         .catch(err => {
             dispatch(returnErrors(err.response.data, err.response.status));
 
-        });
+        })
+    listCourseId.map((course) => {
+        dispatch(enrollEmail({course,email}))
+    });
+
 };
 
 
@@ -128,6 +128,24 @@ export const updatePassword = ({old_password, new_password}) => (dispatch, getSt
 
         });
 };
+
+export const updatePasswordStaff = ({new_password,user_id}) => (dispatch, getState) => {
+
+
+    const body = JSON.stringify({new_password,user_id});
+
+    axios
+        .put("/api/auth/change_password_staff", body, tokenConfig(getState))
+        .then(res => {
+            dispatch(createMessage({addUser: "Le mot de passe à été changé."}));
+
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+
+        });
+};
+
 
 export const resetPassword = (password, token) => (dispatch) => {
 
@@ -196,7 +214,6 @@ export const updateInformations = ({first_name, last_name}) => (dispatch, getSta
             });
         })
         .catch(err => {
-            console.log(err)
             dispatch(returnErrors(err.response.data, err.response.status));
 
         });

@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {connect} from 'react-redux'
-import {Col, Empty, Modal, Row, Table} from 'antd'
+import {Col, Empty, Modal, Row, Table,Collapse,Icon} from 'antd'
 import {createMessage} from "../../../actions/messages";
 import {forceFetchGroup, forceRemoveGroup} from "../../../actions/application";
 import {FiUserMinus} from "react-icons/fi";
@@ -20,7 +20,6 @@ export class TableGroup extends Component {
             title: 'Email',
             key: 'Username',
             render: (record) => {
-                console.log(record)
                 return <Link
                     to={"/student/" + record.user + "/challenge/" + this.props.challenge}>{record.email} </Link>
             }
@@ -89,7 +88,6 @@ export class TableGroup extends Component {
     }
 
     iterateGroup() {
-        console.log(this.props.listGroup)
         let groups = {};
         this.props.listGroup.forEach(function (item) {
 
@@ -101,7 +99,6 @@ export class TableGroup extends Component {
             }
         });
         const array = Object.values(groups)
-        console.log(array)
 
         return array.length > 0 ?
             array.map(group => {
@@ -113,17 +110,24 @@ export class TableGroup extends Component {
                 return (
                     <Row>
                         <Col>
-                            <h6>Groupe: {array[0].group_id}</h6>
-                            <Table
+                            <Collapse
+                                bordered={false}
+                                expandIcon={({ isActive }) => <Icon type="caret-right" rotate={isActive ? 90 : 0} />}>
+                                <Collapse.Panel header={"Groupe: "+array[0].group_id} key="1" style={customPanelStyle}>
+                                  <Table
                                 columns={this.column}
                                 dataSource={array}
                                 size="small"
                                 footer={() => (
                                     <Link
-                                        to={"/group/force_add_to_group/" + array[0].challenge + "/" + array[0].group_id}>Add
+                                        to={"/group/force_add_to_group/" + this.props.challenge + "/" + array[0].group_id}>Add
                                         new member </Link>)
                                 }
                             />
+                                </Collapse.Panel>
+
+                              </Collapse>
+
 
                         </Col>
                     </Row>
@@ -136,6 +140,12 @@ export class TableGroup extends Component {
     }
 }
 
+const customPanelStyle = {
+  borderRadius: 4,
+
+  border: 0,
+  overflow: 'hidden',
+};
 
 const mapStateToProps = (state) => {
     return {

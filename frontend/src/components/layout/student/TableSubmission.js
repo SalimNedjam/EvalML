@@ -115,7 +115,6 @@ export class TableSubmission extends Component {
     }
 
     askFile(file_id) {
-        console.log(file_id)
         const token = this.props.auth.token
         const config = {
             headers: {
@@ -127,8 +126,6 @@ export class TableSubmission extends Component {
 
         axios.get('/api/submission/get_file/?id=' + file_id, config)
             .then(res => {
-                console.log(res.data)
-
                 let fileName = res.headers["content-disposition"].split("filename=")[1];
                 const url = window.URL.createObjectURL(new Blob([res.data]));
                 const link = document.createElement('a');
@@ -137,7 +134,6 @@ export class TableSubmission extends Component {
                 document.body.appendChild(link);
                 link.click();
             }).catch(err => {
-            console.log(err.data)
         })
     }
 

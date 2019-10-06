@@ -76,10 +76,9 @@ export class LeaderBoardTable extends Component {
     expandedRowRender = (record) => {
         const columns = [
             {
-                title: 'Étudiants',
+                title: record.date_submit,
                 key: 'email',
                 render: (record) => {
-                    console.log(record);
                     return <Link
                         to={"/student/" + record.user + "/challenge/" + this.props.challenge}>{record.email} </Link>
                 }

@@ -136,7 +136,6 @@ export class CreateSubmission extends Component {
 
             })
             .catch(err => {
-                console.log(err.response.data)
                 this.setState({
                     uploading: false
                 })

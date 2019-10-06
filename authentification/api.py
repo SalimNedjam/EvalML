@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from authentification.models import User
 from authentification.permissions import IsAdmin
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, ChangePasswordSerializer, \
-    ChangeInformationsSerializer, RegisterStaffSerializer
+    ChangeInformationsSerializer, RegisterStaffSerializer, ChangePasswordStaffSerializer
 
 
 # CreateUser API
@@ -83,6 +83,24 @@ class ChangePasswordView(generics.UpdateAPIView):
             if not self.object.check_password(old_password):
                 return Response({"Password": ["Mauvais mot de passe."]}, status=status.HTTP_400_BAD_REQUEST)
 
+            self.object.set_password(serializer.data.get("new_password"))
+            self.object.save()
+            return Response("Success.", status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ChangePasswordStaffView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated, IsAdmin]
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = ChangePasswordStaffSerializer
+    model = User
+
+    def update(self, request, *args, **kwargs):
+        self.object = User.objects.get(user_id=request.data.get("user_id"))
+        serializer = ChangePasswordStaffSerializer(data=request.data)
+
+        if serializer.is_valid():
             self.object.set_password(serializer.data.get("new_password"))
             self.object.save()
             return Response("Success.", status=status.HTTP_200_OK)

@@ -6,7 +6,7 @@ from rest_framework import generics
 from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-
+import requests
 from application.models import Groups, Challenges
 from application.serializers import GroupSerializer, GroupCreateSerializer, GroupFetchSerializer
 from authentification.models import User
@@ -104,6 +104,101 @@ class AddUserToGroup(generics.GenericAPIView):
                 "groupe": GroupSerializer(group, context=self.get_serializer_context()).data
             }
         )
+
+
+
+class DeployGroup(generics.GenericAPIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = GroupSerializer
+
+    def post(self, request, *args, **kwargs):
+        challenge_id = request.data.get('challenge')
+
+
+        # CHECK IF THE USER IS IN A GROUP
+        try:
+            # RETREIVE THE GROUP
+            my_group = Groups.objects.get(
+                Q(user_id=self.request.user) &
+                Q(challenge_id=challenge_id))
+
+            query_group=Groups.objects.filter(group_id=my_group.group_id).exclude(user=self.request.user)
+
+
+            criterion1 = Q(course__enrollment__user_id=self.request.user)
+            criterion2 = Q(is_visible=True)
+            criterion3 = Q(challenge_id=challenge_id)
+
+            query_challenge = Challenges.objects.filter(criterion1 & criterion2).exclude(criterion3)
+
+            for chal in query_challenge:
+                for student in query_group:
+                    user_adding = student.user.user_id
+
+                    # CHECK IF USER ENROLLED IN COURSE
+                    course_id = chal.course_id
+
+                    criterion1 = Q(enrollment__course__course_id=course_id)
+                    list1 = list(User.objects.filter(criterion1).values_list('user_id', flat=True))
+                    if user_adding not in list1:
+                        continue
+
+                    # CHECK IF USER IS ALREADY IN A GROUP FOR THE CHALLENGE
+                    criterion2 = Q(groups__challenge__challenge_id=chal.challenge_id)
+                    list2 = list(User.objects.filter(criterion2).values_list('user_id', flat=True))
+                    if user_adding in list2:
+                        continue
+
+                    # CHECK IF THE USER IS IN A GROUP
+                    try:
+                        # RETREIVE THE GROUP
+                        my_group = Groups.objects.get(
+                            Q(user_id=self.request.user) &
+                            Q(challenge_id=chal.challenge_id))
+
+                        # CHECK IF THE USER IS THE OWNER OF THE GROUP
+                        if not my_group.owner:
+                            break
+
+                        if not chal.enable_edit_group:
+                            break
+
+                        # CHECK IF THERE IS A FREE PLACE IN THE GROUP
+
+                        nb_student_in = Groups.objects.filter(
+                            Q(challenge_id=chal.challenge_id) &
+                            Q(group_id=my_group.group_id)).count()
+
+                        if chal.nbStudent == 0 or chal.nbStudent - nb_student_in > 0:
+                            group=Groups.objects.create(user_id=user_adding, group_id=my_group.group_id, challenge_id=chal.challenge_id, owner=False)
+                        else:
+                            break
+
+                    except Groups.DoesNotExist:
+                        # THE USER IS NOT IN A GROUP SO WE CREATE ONE AND ADD THE OTHER USER
+                        group_id = unique_group_id_generator(self)
+                        Groups.objects.create(user=request.user, group_id=group_id, challenge_id=chal.challenge_id,
+                                              owner=True)
+
+                        # CHECK IF THERE IS A FREE PLACE IN THE GROUP
+                        nb_student_in = Groups.objects.filter(
+                            Q(challenge_id=chal.challenge_id) &
+                            Q(group_id=group_id)).count()
+                        if chal.nbStudent == 0 or chal.nbStudent - nb_student_in > 0:
+                            group=Groups.objects.create(user_id=user_adding, group_id=group_id, challenge_id=chal.challenge_id, owner=False)
+                        else:
+                            break
+
+        except Groups.DoesNotExist:
+            raise ValidationError(
+                {"groupe": "Vous ne faites pas partis d'un groupe."})
+
+        return Response(
+            {
+                "detail": "ok"
+            })
+
 
 
 class CreateGroup(generics.GenericAPIView):

@@ -34,6 +34,8 @@ import ChallengeStaff from "./layout/staff/ChallengeStaff";
 import Challenge from "./layout/student/Challenge";
 import {StudentChallengeDetail} from "./layout/staff/StudentChallengeDetail";
 import TestSubmission from "./layout/staff/TestSubmission";
+import TableAllUsers from "./layout/staff/TableAllUsers";
+import UpdateStudent from "./layout/staff/UpdateStudent";
 
 
 export class App extends Component {
@@ -65,11 +67,13 @@ export class App extends Component {
                 <Route exact path="/password-reset" component={PasswordForgot}/>
 
                 <AuthRoute exact path="/updateUser" component={UpdateUser}/>
+                <StaffRoute exact path="/updateStudent/:user_id" component={UpdateStudent}/>
 
                 <StudentRoute exact path="/" component={ChallengesList}/>
                 <StudentRoute exact path="/add_to_group/:challenge_id" component={AddUserGroup}/>
 
                 <StaffRoute path="/group/force_add_to_group/:challenge_id/:group_id" component={ForceAddUserGroup}/>
+                <StaffRoute path="/showAllStudents" component={TableAllUsers}/>
 
 
                 <StudentRoute exact path="/success_submission" component={SuccessSubmit}/>
@@ -125,13 +129,19 @@ export class App extends Component {
                 </Link>
             </Menu.Item>
             <Menu.Item key="4">
+                <Link to="/showAllStudents">
+                    <Icon type="unordered-list" />
+                <span>Étudiants inscrits</span>
+                </Link>
+            </Menu.Item>
+            <Menu.Item key="5">
                 <Link to="/updateUser">
                     <Icon type="profile"/>
                     <span>Profile</span>
 
                 </Link>
             </Menu.Item>
-            <Menu.Item key="5" onClick={this.props.logout}>
+            <Menu.Item key="6" onClick={this.props.logout}>
                 <Icon type="logout"/>
                 <span>Se déconnecter</span>
             </Menu.Item>
@@ -232,7 +242,6 @@ export class App extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log(state)
     return ({
         auth: state.auth
     })

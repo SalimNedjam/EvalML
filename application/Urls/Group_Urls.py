@@ -3,7 +3,7 @@ from django.urls import path
 
 from application.Api.GroupApi import CreateGroup, AddUserToGroup, FetchUsersNotInGroup, RemoveUserGroup, \
     ListGroupsChallenge, \
-    RetrieveGroupList, RemoveUser, AddUserGroupForStaff
+    RetrieveGroupList, RemoveUser, AddUserGroupForStaff, DeployGroup
 
 urlpatterns = [
 
@@ -12,6 +12,8 @@ urlpatterns = [
     path('api/group/add_to_group', AddUserToGroup.as_view()),
 
     path('api/group/create_group', CreateGroup.as_view()),
+
+    path('api/group/deploy_group', DeployGroup.as_view()),
 
     # FOR USER : SEARCH NEW MEMBER
     path('api/group/fetch_non_grouped', FetchUsersNotInGroup.as_view()),

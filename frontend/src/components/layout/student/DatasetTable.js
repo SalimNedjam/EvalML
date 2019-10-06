@@ -53,7 +53,6 @@ export class DatasetTable extends Component {
                 document.body.appendChild(link);
                 link.click();
             }).catch(err => {
-            console.log(err.data)
         })
     }
 

@@ -651,7 +651,7 @@ export class CreateChallenge extends Component {
                                 type="text"
                                 className="form-control"
                                 name="command"
-                                placeholder="Exemple: Python3"
+                                placeholder="Exemple: python"
                                 onChange={this.onChange}
                                 value={command}
 

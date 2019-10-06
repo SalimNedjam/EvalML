@@ -45,6 +45,16 @@ class EnrollmentSerializer(serializers.ModelSerializer):
         model = Enrollment
         fields = '__all__'
 
+class EnrollmentEmailSerializer(serializers.ModelSerializer):
+    user = SerializerMethodField()
+
+    class Meta:
+        model = Enrollment
+        fields = '__all__'
+
+    def get_user(self, obj):
+        return User.objects.get(email=obj.email)
+
 
 class ManagementSerializer(serializers.ModelSerializer):
     class Meta:
@@ -56,6 +66,7 @@ class OutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = Output
         fields = '__all__'
+
 
 
 class DatasetSerializer(serializers.ModelSerializer):

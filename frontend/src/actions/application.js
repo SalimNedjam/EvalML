@@ -9,7 +9,7 @@ import {
     CREATE_SUBMISSION,
     EDIT_CHALLENGE,
     EDIT_COURSE,
-    ENROLL_USER,
+    ENROLL_USER, ENROLL_USER_EMAIL, FETCH_ALL,
     FETCH_CHALLENGES,
     FETCH_COURSES,
     FETCH_ENROLLED,
@@ -59,7 +59,6 @@ export const fetchCourses = () => (dispatch, getState) => {
 
     axios.get('/api/course/course', tokenConfig(getState))
         .then(res => {
-            console.log(res.data)
             dispatch({
                 type: FETCH_COURSES,
                 payload: res.data
@@ -253,7 +252,6 @@ export const createCourse = ({description, nbStudent, nbSubmit}) => (dispatch, g
             dispatch(goBack())
         })
         .catch(err => {
-            console.log(err)
             dispatch(returnErrors(err.response.data, err.response.status));
             dispatch({
                 type: ADD_COURSE_FAIL
@@ -348,7 +346,25 @@ export const enrollUser = ({course, user}) => (dispatch, getState) => {
         });
 
 };
+export const enrollEmail = ({course, email}) => (dispatch, getState) => {
 
+    const body = JSON.stringify({course, email});
+    axios
+        .post("/api/enrollment/enroll_course_email", body, tokenConfig(getState))
+        .then(res => {
+            dispatch(createMessage({addUser: "L'étudiant à été inscrit au cours."}));
+            dispatch({
+                type: ENROLL_USER_EMAIL,
+                payload: email
+            });
+            dispatch(goBack())
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+
+        });
+
+};
 
 export const fetchNonManager = course => (dispatch, getState) => {
 
@@ -388,6 +404,28 @@ export const fetchManager = (course) => (dispatch, getState) => {
         });
 }
 
+
+
+export const fetchAll = (course) => (dispatch, getState) => {
+
+    axios.get('/api/management/fetch_all', tokenConfig(getState))
+        .then(res => {
+            let array = []
+            res.data.map((manager, index) => {
+                let obj = reduceObjValues(manager)
+                obj.key = index
+                array.push(obj)
+            })
+            dispatch({
+                type: FETCH_ALL,
+                payload: array
+            })
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+            dispatch({type: FETCH_MANAGER_FAIL})
+        });
+}
 
 export const fetchNotInGroup = challenge => (dispatch, getState) => {
     axios.get('/api/group/fetch_non_grouped?challenge=' + challenge, tokenConfig(getState))
@@ -712,6 +750,19 @@ export const removeGroup = (id) => (dispatch, getState) => {
                 payload: id
             });
         })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+
+        });
+};
+
+
+export const deployGroup = (challenge) => (dispatch, getState) => {
+
+    const body = JSON.stringify({challenge});
+    axios
+        .post("/api/group/deploy_group", body, tokenConfig(getState))
+        .then(res => {})
         .catch(err => {
             dispatch(returnErrors(err.response.data, err.response.status));
 

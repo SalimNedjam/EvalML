@@ -1,5 +1,5 @@
 import {
-    ENROLL_USER,
+    ENROLL_USER, ENROLL_USER_EMAIL, FETCH_ALL,
     FETCH_ENROLLED,
     FETCH_ENROLLED_FAIL,
     FETCH_NON_ENROLLED,
@@ -11,6 +11,7 @@ const initialState = {
     challengeSelected: null,
     listChallenge: [],
     listCourse: [],
+    listAll:[],
     listNonEnrolled: [],
     listNonManager: [],
     listEnrolled: [],
@@ -28,6 +29,11 @@ export default function (state = initialState, action) {
                 ...state,
                 listNonEnrolled: action.payload
             }
+        case FETCH_ALL:
+            return {
+                ...state,
+                listAll: action.payload
+            }
         case FETCH_NON_ENROLLED_FAIL:
             return {
                 ...state,
@@ -42,6 +48,12 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 listEnrolled: []
+            }
+
+        case ENROLL_USER_EMAIL:
+            return {
+                ...state,
+                listNonEnrolled: state.listNonEnrolled.filter(user => user.email != action.payload)
             }
 
         case ENROLL_USER:

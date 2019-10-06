@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
-import {createGroup, fetchGroup, removeGroup} from "../../../actions/application";
+import {createGroup, fetchGroup, removeGroup,deployGroup} from "../../../actions/application";
 import {FiStar, FiUserMinus} from "react-icons/fi";
 
 const {confirm} = Modal;
@@ -13,6 +13,7 @@ export class TableGroup extends Component {
 
     static propTypes = {
         fetchGroup: PropTypes.func.isRequired,
+        deployGroup: PropTypes.func.isRequired,
         removeGroup: PropTypes.func.isRequired,
 
     };
@@ -102,10 +103,17 @@ export class TableGroup extends Component {
                     dataSource={this.props.listGroup}
                     size="small"
                     rowKey='user'
-                    footer={() => this.props.listGroup.length > 0 ?
+                    footer={() => <div>
+                        {
+                            this.props.listGroup.length > 0 ?
                         <Link to={"/add_to_group/" + this.props.challenge}>Add new member </Link> :
                         <a href="javascript:;" onClick={() => this.props.createGroup(this.props.challenge)}>Create
-                            Group</a>}
+                            Group</a>
+
+                        }
+                        <br/><a href="javascript:;" onClick={() => this.props.deployGroup(this.props.challenge)}>
+                            Appliquer ce groupe a tous les challenges</a>
+                    </div>}
                 />
             </div>)
 
@@ -114,6 +122,7 @@ export class TableGroup extends Component {
 
 
 }
+
 
 
 const IconStyle = {
@@ -132,5 +141,5 @@ const mapStateToProps = (state) => {
 
 export default connect(
     mapStateToProps,
-    {fetchGroup, removeGroup, createGroup}
+    {fetchGroup, removeGroup, createGroup,deployGroup}
 )(TableGroup);

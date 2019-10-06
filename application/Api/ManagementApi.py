@@ -90,6 +90,15 @@ class FetchManager(generics.ListAPIView):
         return Management.objects.filter(course_id=course_id, course__owner_id=self.request.user.user_id)
 
 
+class FetchAll(generics.ListAPIView):
+    permission_classes = [IsAuthenticated, IsStaff]
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        return User.objects.filter(is_staff=False)
+
+
 class RemoveManager(generics.DestroyAPIView):
     permission_classes = [IsAuthenticated, IsStaff]
     authentication_classes = (TokenAuthentication,)

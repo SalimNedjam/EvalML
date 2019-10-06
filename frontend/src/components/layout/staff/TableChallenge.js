@@ -189,7 +189,6 @@ export class TableChallenge extends Component {
                 <label>Selectioner le cours</label>
                 <div>
                     <Select defaultValue={-1} style={{width: 200}} onChange={(value => {
-                        console.log(value);
                         _this.setState({course: value})
                     })}>
                         <Select.Option value={-1}/>

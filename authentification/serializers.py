@@ -66,6 +66,14 @@ class ChangePasswordSerializer(serializers.Serializer):
         return value
 
 
+class ChangePasswordStaffSerializer(serializers.Serializer):
+    new_password = serializers.CharField(required=True)
+
+    def validate_new_password(self, value):
+        validate_password(value)
+        return value
+
+
 class ChangeInformationsSerializer(serializers.Serializer):
     last_name = serializers.CharField(required=True)
     first_name = serializers.CharField(required=True)

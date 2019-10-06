@@ -5,7 +5,7 @@ import {clearNonGrouped, fetchNotInGroup, forceAddToGroup} from "../../../action
 import {createMessage} from "../../../actions/messages";
 
 
-export class AddUserGroup extends Component {
+export class ForceAddUserGroup extends Component {
     static propTypes = {
         listChallenge: PropTypes.array.isRequired,
         listNonGrouped: PropTypes.array.isRequired,
@@ -113,4 +113,4 @@ export default connect(mapStateToProps, {
     fetchNotInGroup,
     clearNonGrouped,
     createMessage,
-})(AddUserGroup);
+})(ForceAddUserGroup);
