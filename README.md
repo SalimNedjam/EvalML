@@ -1,44 +1,44 @@
 # Challenges
-#### La plateforme est utilisée par les enseignants et étudiants de la licence et du master informatique de Sorbonne Université.
-#### La plateforme est entièrement crée par mes soins. 
+###### The platform is used by teachers and students of the Bachelor's and Master's degree in computer science at Sorbonne University.
+###### The platform is entirely created by me. 
 ## Informations
-La plateforme permet à des etudients de soumettres des resultat pour des devoirs, l'admin a la creation du challenge présente un script qui permet d'evaluer les resutats des étudiants.
-Le projet est fait en DJANGO pour le coté serveur, coté client c'est plutot du reactJS, la gestion des taches asynchrone pour l'evaluation des scripts est faite avec le serveur RabitMQ et la librairie Celery. 
+The platform allows students to submit results for assignments, the admin at the creation of the challenge presents a script that allows to evaluate the student's results.
+The project is done in DJANGO for the server side, on the client side it is more like reactJS, the management of asynchronous tasks for script evaluation is done with the RabitMQ server and the Celery library. 
 
-## Base de donnée
-Pour le stockage des informations, mon choix c'est porté sur une base de données non relationnelle ( MongoDB ), qui permet le stockage d'information massive, mais aussi pour son fonctionnement interne, en effet une base de données NOSQL, permet de ne pas avoir de schéma prédéfini, cette souplesse aide à avoir une diversité sur la structure des challenges que l'on peut composé j'ai rajouté à ça des contraintes entres les différentes collections pour assuré l'intégrité des données.
+## Database
+For the storage of information, my choice was made on a non-relational database ( MongoDB), which allows the storage of massive information, but also for its internal functioning, indeed a NOSQL database, allows not to have a predefined schema, this flexibility helps to have a diversity on the structure of the challenges that one can compose, I added to that constraints between the different collections to ensure the integrity of the data.
 
 
 
-## Fonctionnalités
-Le site web consiste en deux interfaces, l'une pour les membres du staff l'autre pour les étudiants, la première permet de modifier tout ce qui touche aux cours, challenges, groupes d'étudiant, soumission, et visualisation des statistiques.
+## Features
+The website consists of two interfaces, one for staff members and the other for students, the first one allows you to modify everything related to courses, challenges, student groups, submission, and viewing statistics.
 
-La seconde permet la soumission d'une réponse et la consultation du classement des étudiants
+The second allows the submission of a response and the consultation of the student ranking
 
-Il faut rajouter à ce-là la gestion en file d'attente et la limitation du nombre de requêtes pouvant être envoyé par l'utilisateur pour limité la surcharge du serveur.   
+To this must be added the queuing management and the limitation of the number of requests that can be sent by the user to limit the server overload.   
 
 	
-Les différentes fonctionnalités:
-1. Pour les Administrateurs:
-    - Créer un cours.
-    - Ajouter/Modifier/Supprimer un challenge à son cours.
-    - Ajouter/Modifier/Supprimer un membre du staff à gérer un cours.
-    - Création d'un compte étudiant avec envoie d'un lien pour le changement de mot de passe par email.
-    - Ajouter/Supprimer un étudiant à son cours.
-    - Envoyer un email à tous les étudiants qui suivent un cours.
-2. Pour les membres du staff et administrateurs:
-    - Ajouter/Modifier/Supprimer un étudiant à un cours que le membre du staff gère.
-    - Avoir la liste des étudiants qui suivent un cours.
-    - Consulter la liste des groupes.
-    - Consulter les challenges.
-    - Consulter les statistiques.
-    - Avoir la liste des étudiants qui n'ont pas encore répondu à un challenge.
-3. Pour les étudiants:
-    - Consulter les challenges d'un cours que l'étudiant suit.
-    - Ajoute un étudiant à une équipe pour un challenge précis.
-    - Soumettre une réponse à un challenge.
-    - Possibilité de consulter le score et l'état de chaque soumission.
-    - Consulter le leaderboard d'un challenge (Tous les scores des autres équipes).
-    - Possibilité de consulter l'historique de chaque soumission.
-4. Pour les visiteurs:
-    - Possibilité d'envoyer une demande de réinitialisation du mot de passe.
+The different functionalities:
+1. For Administrators:
+    - Create a course.
+    - Add/Modify/Remove a challenge to its course.
+    - Add/Modify/Remove a staff member to manage a course.
+    - Create a student account with a link to change your password by email.
+    - Add/Remove a student to the course.
+    - Send an email to all students who are taking a course.
+2. For staff members and administrators:
+    - Add/Modify/Remove a student to a course that the staff member manages.
+    - Have a list of students who are taking a course.
+    - Consult the list of groups.
+    - Consult the challenges.
+    - Consult the statistics.
+    - Have the list of students who have not yet answered a challenge.
+3. For students:
+    - Consult the challenges of a course the student is taking.
+    - Add a student to a team for a specific challenge.
+    - Submit an answer to a challenge.
+    - Possibility to consult the score and status of each submission.
+    - Consult the leaderboard of a challenge (All the scores of the other teams).
+    - Ability to view the history of each submission.
+4. For visitors:
+    - Possibility to send a password reset request.
