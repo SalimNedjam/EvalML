@@ -42,3 +42,9 @@ The different functionalities:
     - Ability to view the history of each submission.
 4. For visitors:
     - Possibility to send a password reset request.
+
+
+## For staff members and administrators
+![Screenshot](https://github.com/SalimNedjam/EvalML/blob/master/staff.png)
+## For students
+![Screenshot](https://github.com/SalimNedjam/EvalML/blob/master/student.png)
